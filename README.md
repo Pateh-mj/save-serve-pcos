@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PCOS — SaveServe
+
+**Patient-Centric Orchestration System for Healthcare Resource Equity Using Robin Hood Subsidization and Multi-Channel Access**
+
+> BSc ICT Final Year Project · Department of ICT, School of Engineering · Information and Communication University (ICU) · 2026  
+> **Author:** Patson Tembo
+
+---
+
+## Overview
+
+PCOS is a hybrid USSD-Web hospital management system that connects patients with their hospital's medical officers — regardless of internet access or income level. The system is built around two core innovations:
+
+- **Multi-Channel Access** — patients book appointments via a full Progressive Web App (PWA) *or* by dialling `*384#` from any feature phone on any mobile network, no internet required.
+- **Robin Hood Subsidization Model** — premium-tier patient billing generates a surplus that the Policy Guardian engine automatically redistributes to fund community-tier consultations within the same hospital.
+
+---
+
+## Key Concepts
+
+| Concept | Description |
+|---|---|
+| **Policy Guardian** | Automated engine that enforces hospital billing rules, calculates subsidy eligibility, and applies the Robin Hood model at every patient interaction |
+| **Robin Hood Model** | Internal hospital cross-subsidization — premium fees fund community-tier care, encoded as software logic not manual administration |
+| **USSD Channel** | `*384#` gateway via Africa's Talking API — works on any GSM network, zero internet required |
+| **EHR Sync** | USSD-originated appointments create offline stubs that sync to the centralised cloud EHR on reconnection |
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript + React 19 |
+| Styling | Tailwind CSS v4 + shadcn/ui |
+| Database | SQLite (dev) via Prisma 5 |
+| Auth | NextAuth v5 (Credentials + JWT) |
+| Icons | lucide-react |
+| USSD Gateway | Africa's Talking API |
+
+---
+
+## System Roles
+
+- **Patient** — Books via web PWA or USSD `*384#`; views health records and billing
+- **Medical Officer (Practitioner)** — Web Command Centre dashboard; manages schedule and EHR records
+- **Admin** — System-wide user and policy management
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+cd save-serve
+npm install
+
+# Set environment variables
+cp .env.example .env     # Set DATABASE_URL and NEXTAUTH_SECRET
+
+# Push schema and seed demo data
+npx prisma db push
+npx tsx prisma/seed.ts
+
+# Start dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Demo credentials (after seeding):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Role | Email | Password |
+|---|---|---|
+| Patient | demo@saveserve.org | password123 |
+| Practitioner | nurse.banda@saveserve.org | password123 |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+save-serve/
+├── app/
+│   ├── (auth)/          # Login + Register pages
+│   ├── (patient)/       # Patient dashboard, appointments, records, billing
+│   ├── (practitioner)/  # Medical Officer Command Centre
+│   ├── (ngo)/           # NGO dashboard
+│   ├── api/             # REST endpoints (auth, appointments, practitioners)
+│   ├── about/           # Research proposal summary page
+│   ├── patients/        # Public patients info page
+│   ├── contact/         # Contact page
+│   └── page.tsx         # Landing page
+├── components/
+│   ├── Navbar.tsx            # Public navigation
+│   └── DashboardSidebar.tsx  # Role-aware dashboard nav
+├── lib/
+│   ├── auth.ts           # NextAuth configuration
+│   ├── constants.ts      # Role/Tier/Status enums (SQLite-safe)
+│   └── prisma.ts         # Prisma client singleton
+├── prisma/
+│   ├── schema.prisma     # Full data model
+│   └── seed.ts           # Demo data seeder
+└── proxy.ts              # Route protection (Next.js 16 middleware)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Theoretical Foundation
 
-## Deploy on Vercel
+This system is grounded in four academic frameworks:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Digital Divide Theory** — Medium-Agnostic Design ensures the Policy Guardian serves all patients with equal clinical integrity regardless of hardware
+2. **Socio-Technical Systems Theory** — PCOS bridges social equity policy and technical execution within a functioning hospital
+3. **Health Equity Theory** *(Farantos et al., 2025)* — The Robin Hood Model implements closed-loop cross-subsidization as hard-coded software logic
+4. **Information Systems Continuity Theory** — USSD acts as a Resilience Layer independent of internet connectivity
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+*© 2026 Patson Tembo · Information and Communication University (ICU) · BSc Information and Communications Technology*
