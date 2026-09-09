@@ -15,7 +15,7 @@ export default function UssdSimulatorPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent border border-primary/20 text-xs font-semibold text-primary mb-4">
               <PhoneCall className="w-3.5 h-3.5" /> Africa&apos;s Talking USSD Gateway (*384#)
             </div>
-            <h1 className="text-3xl md:text-5xl font-extrabold text-foreground tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">
               Live USSD Gateway Simulator
             </h1>
             <p className="mt-3 text-muted-foreground text-base md:text-lg">
@@ -31,14 +31,14 @@ export default function UssdSimulatorPage() {
 
             {/* Live Guide & Architecture Explanation on Right */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm">
+              <div className="bg-card border border-border rounded-lg p-6 md:p-8 shadow-sm">
                 <h2 className="text-xl font-bold text-foreground mb-3 flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-primary" />
                   How to test this live prototype
                 </h2>
 
                 <div className="space-y-4 text-sm">
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-secondary/70">
+                  <div className="flex items-start gap-3 p-3.5 rounded-lg bg-secondary/70">
                     <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
                       1
                     </span>
@@ -50,7 +50,7 @@ export default function UssdSimulatorPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-secondary/70">
+                  <div className="flex items-start gap-3 p-3.5 rounded-lg bg-secondary/70">
                     <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
                       2
                     </span>
@@ -62,7 +62,7 @@ export default function UssdSimulatorPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-secondary/70">
+                  <div className="flex items-start gap-3 p-3.5 rounded-lg bg-secondary/70">
                     <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
                       3
                     </span>
@@ -74,7 +74,7 @@ export default function UssdSimulatorPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-secondary/70">
+                  <div className="flex items-start gap-3 p-3.5 rounded-lg bg-secondary/70">
                     <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
                       4
                     </span>
@@ -90,7 +90,7 @@ export default function UssdSimulatorPage() {
 
               {/* Research & Theory Cards */}
               <div className="grid sm:grid-cols-2 gap-4">
-                <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+                <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
                   <div className="flex items-center gap-2 mb-2 text-primary">
                     <ShieldCheck className="w-4 h-4" />
                     <h3 className="font-bold text-sm text-foreground">Medium-Agnostic Design</h3>
@@ -100,7 +100,7 @@ export default function UssdSimulatorPage() {
                   </p>
                 </div>
 
-                <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+                <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
                   <div className="flex items-center gap-2 mb-2 text-primary">
                     <Heart className="w-4 h-4" />
                     <h3 className="font-bold text-sm text-foreground">Robin Hood Subsidy</h3>
@@ -115,13 +115,13 @@ export default function UssdSimulatorPage() {
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link
                   href="/login"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground text-xs font-semibold rounded-xl hover:opacity-90 transition"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition"
                 >
                   Medical Officer Dashboard <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
                 <Link
                   href="/patients"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary text-foreground text-xs font-semibold rounded-xl hover:bg-muted transition"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary text-foreground text-xs font-semibold rounded-lg hover:bg-muted transition"
                 >
                   Patients Information Portal
                 </Link>

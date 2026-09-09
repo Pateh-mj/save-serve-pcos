@@ -7,8 +7,6 @@ import { Menu, X, PhoneCall } from "lucide-react";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/patients", label: "Patients" },
-  { href: "/practitioners", label: "Practitioners" },
   { href: "/ussd", label: "USSD *384#", highlight: true },
   { href: "/contact", label: "Contact" },
 ];
@@ -35,13 +33,12 @@ export default function Navbar() {
               <Link
                 key={href}
                 href={href}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
-                  active
-                    ? "text-primary bg-accent font-semibold"
-                    : highlight
-                    ? "text-primary bg-primary/10 hover:bg-primary/20 font-semibold"
-                    : "text-foreground/70 hover:text-foreground hover:bg-secondary"
-                }`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${active
+                  ? "text-primary bg-accent font-semibold"
+                  : highlight
+                    ? "text-amber-900 bg-amber/10 hover:bg-amber/20 font-semibold"
+                    : "text-amber/70 hover:text-foreground hover:bg-secondary"
+                  }`}
               >
                 {highlight && <PhoneCall className="w-3.5 h-3.5 text-primary" />}
                 {label}

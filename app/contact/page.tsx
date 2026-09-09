@@ -8,39 +8,46 @@ export default function ContactPage() {
     <div className="bg-background font-sans">
       <Navbar />
 
-      <section className="bg-white border-b border-border py-20">
-        <div className="container mx-auto px-6 max-w-3xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Contact</p>
-          <h1 className="text-5xl font-extrabold text-foreground mb-5">Get in Touch</h1>
-          <p className="text-lg text-muted-foreground">
-            Questions about the PCOS research, system access, or the ICU Final Year Project? Reach out below.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-20">
+      {/* Main Content */}
+      <section className="py-12">
         <div className="container mx-auto px-6 max-w-5xl grid md:grid-cols-2 gap-16">
-          {/* Form */}
+
+          {/* Contact Form */}
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-6">Send a Message</h2>
             <form className="space-y-4">
+              {/* Name Fields */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-1">First name</label>
-                  <input className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="First name" />
+                  <input
+                    className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    placeholder="First name"
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-1">Last name</label>
-                  <input className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="Last name" />
+                  <input
+                    className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    placeholder="Last name"
+                  />
                 </div>
               </div>
+              {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">Email</label>
-                <input type="email" className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="you@example.com" />
+                <input
+                  type="email"
+                  className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  placeholder="you@example.com"
+                />
               </div>
+              {/* Subject */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">Subject</label>
-                <select className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <select
+                  className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                >
                   <option value="">Select a topic</option>
                   <option value="general">General Enquiry</option>
                   <option value="research">Research / Academic Enquiry</option>
@@ -49,17 +56,26 @@ export default function ContactPage() {
                   <option value="hospital">Hospital Partnership</option>
                 </select>
               </div>
+              {/* Message */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">Message</label>
-                <textarea rows={5} className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" placeholder="Your message..." />
+                <textarea
+                  rows={5}
+                  className="w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                  placeholder="Your message..."
+                />
               </div>
-              <button type="submit" className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:opacity-90 transition-opacity">
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:opacity-90 transition"
+              >
                 Send Message
               </button>
             </form>
           </div>
 
-          {/* Contact info */}
+          {/* Contact Info */}
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-6">Contact Information</h2>
             <div className="space-y-5 mb-10">
@@ -81,9 +97,10 @@ export default function ContactPage() {
               ))}
             </div>
 
-            <div className="bg-secondary rounded-2xl p-6 border border-border">
+            {/* About this project */}
+            <div className="bg-secondary rounded-lg p-6 border border-border">
               <p className="text-sm font-semibold text-foreground mb-2">About this project</p>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed text-justify">
                 PCOS is a Final Year BSc ICT project by Patson Tembo, submitted to the Department of ICT, School of Engineering at the Information and Communication University (ICU), 2026. Responses may take 1–3 working days.
               </p>
             </div>

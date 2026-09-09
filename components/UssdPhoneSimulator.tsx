@@ -96,8 +96,8 @@ export default function UssdPhoneSimulator({ initialPhone = "+260971000001", onA
   return (
     <div className="flex flex-col items-center select-none">
       {/* Phone Body Container */}
-      <div className="w-[320px] bg-slate-900 border-4 border-slate-700 rounded-[44px] shadow-2xl p-5 flex flex-col items-center relative ring-8 ring-slate-950/20">
-        
+      <div className="w-[300px] bg-slate-900 border-8 border-slate-700 rounded-[44px] shadow-2xl p-3 flex flex-col items-center relative ring-8 ring-slate-950/20">
+
         {/* Speaker grille & brand */}
         <div className="w-16 h-1.5 bg-slate-700 rounded-full mb-2"></div>
         <div className="text-[10px] uppercase font-mono tracking-widest text-slate-400 mb-2 font-bold">
