@@ -3,6 +3,8 @@ import type { Role, Tier } from "@/lib/constants";
 import { Role as RoleEnum } from "@/lib/constants";
 
 export const authConfig: NextAuthConfig = {
+  trustHost: true,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "saveserve-dev-secret-change-in-production",
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",

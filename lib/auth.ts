@@ -12,6 +12,8 @@ const loginSchema = z.object({
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
+  trustHost: true,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "saveserve-dev-secret-change-in-production",
   providers: [
     Credentials({
       credentials: {
@@ -22,8 +24,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
+        const email = parsed.data.email.toLowerCase().trim();
         const user = await prisma.user.findUnique({
-          where: { email: parsed.data.email.toLowerCase().trim() },
+          where: { email },
         });
         if (!user || !user.password) return null;
 
