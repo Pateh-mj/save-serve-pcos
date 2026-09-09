@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { signIn, getSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Role } from "@/lib/constants";
@@ -13,8 +13,11 @@ const ROLE_HOME: Record<string, string> = {
   [Role.ADMIN]: "/admin/dashboard",
 };
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
@@ -25,22 +28,31 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const res = await signIn("credentials", {
-      email: form.email,
-      password: form.password,
-      redirect: false,
-    });
+    try {
+      const res = await signIn("credentials", {
+        email: form.email.toLowerCase().trim(),
+        password: form.password,
+        redirect: false,
+      });
 
-    if (res?.error) {
-      setError("Invalid email or password.");
+      if (res?.error) {
+        setError("Invalid email or password.");
+        setLoading(false);
+        return;
+      }
+
+      // Fetch fresh session to determine target dashboard
+      const session = await getSession();
+      const role = session?.user?.role ?? Role.PATIENT;
+      const targetUrl = callbackUrl || ROLE_HOME[role] || "/";
+
+      // Full page navigate to guarantee cookie and middleware synchronization
+      window.location.href = targetUrl;
+    } catch (err) {
+      console.error(err);
+      setError("An unexpected error occurred. Please try again.");
       setLoading(false);
-      return;
     }
-
-    // Fetch session to get role for redirect
-    const session = await fetch("/api/auth/session").then((r) => r.json());
-    const role = session?.user?.role ?? Role.PATIENT;
-    router.push(ROLE_HOME[role] ?? "/");
   }
 
   return (
@@ -75,8 +87,8 @@ export default function LoginPage() {
               <label htmlFor="password" className="block text-sm font-medium text-foreground">
                 Password
               </label>
-              <Link href="/forgot-password" className="text-xs text-primary hover:underline">
-                Forgot password?
+              <Link href="/contact" className="text-xs text-primary hover:underline">
+                Need help?
               </Link>
             </div>
             <div className="relative">
@@ -125,8 +137,16 @@ export default function LoginPage() {
       </div>
 
       <p className="mt-6 text-center text-xs text-sidebar-foreground/50">
-        No smartphone? Dial <span className="font-bold text-brand-emerald">*384#</span> to access SaveServe via USSD.
+        No smartphone? Dial <span className="font-bold text-primary">*384#</span> to access SaveServe via USSD.
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-muted-foreground">Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

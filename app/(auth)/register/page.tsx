@@ -10,30 +10,37 @@ const ROLES = [
   {
     value: Role.PATIENT,
     label: "Patient",
-    desc: "I need healthcare services",
+    desc: "I need healthcare services & consultations",
     icon: Users,
   },
   {
     value: Role.PRACTITIONER,
-    label: "Practitioner",
-    desc: "I provide healthcare services",
+    label: "Medical Practitioner",
+    desc: "Nurse, Pharmacist, or Physiotherapist",
     icon: Stethoscope,
   },
   {
     value: Role.NGO,
-    label: "NGO / Organisation",
-    desc: "We fund subsidised care",
+    label: "NGO / Partner Organisation",
+    desc: "Fund community subsidies and health pools",
     icon: Building2,
   },
 ] as const;
 
 const SPECIALTIES = [
-  { value: "NURSE", label: "Nurse" },
-  { value: "PHARMACIST", label: "Pharmacist" },
-  { value: "PHYSIOTHERAPIST", label: "Physiotherapist" },
+  { value: "NURSE", label: "Nurse (Community & Maternal Care)" },
+  { value: "PHARMACIST", label: "Pharmacist (Medication & Dispensing)" },
+  { value: "PHYSIOTHERAPIST", label: "Physiotherapist (Rehab & Mobility)" },
 ];
 
 type RoleValue = (typeof ROLES)[number]["value"];
+
+const ROLE_HOME: Record<string, string> = {
+  [Role.PATIENT]: "/patient/dashboard",
+  [Role.PRACTITIONER]: "/practitioner/dashboard",
+  [Role.NGO]: "/ngo/dashboard",
+  [Role.ADMIN]: "/admin/dashboard",
+};
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -61,32 +68,40 @@ export default function RegisterPage() {
     setLoading(true);
     setError("");
 
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, role }),
-    });
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, role }),
+      });
 
-    if (!res.ok) {
       const data = await res.json();
-      setError(data.error ?? "Registration failed.");
+
+      if (!res.ok) {
+        setError(data.error ?? "Registration failed.");
+        setLoading(false);
+        return;
+      }
+
+      // Auto sign-in after successful registration
+      const signInRes = await signIn("credentials", {
+        email: form.email.toLowerCase().trim(),
+        password: form.password,
+        redirect: false,
+      });
+
+      if (signInRes?.error) {
+        // Fallback to login page if immediate auto-sign-in fails
+        router.push("/login?registered=true");
+        return;
+      }
+
+      window.location.href = ROLE_HOME[role] ?? "/";
+    } catch (err) {
+      console.error(err);
+      setError("An error occurred. Please try again.");
       setLoading(false);
-      return;
     }
-
-    // Auto sign-in after registration
-    await signIn("credentials", {
-      email: form.email,
-      password: form.password,
-      redirect: false,
-    });
-
-    const ROLE_HOME: Record<string, string> = {
-      [Role.PATIENT]: "/patient/dashboard",
-      [Role.PRACTITIONER]: "/practitioner/dashboard",
-      [Role.NGO]: "/ngo/dashboard",
-    };
-    router.push(ROLE_HOME[role] ?? "/");
   }
 
   const inputCls =
@@ -139,7 +154,7 @@ export default function RegisterPage() {
               onClick={() => setStep(2)}
               className="mt-2 w-full py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg text-sm hover:opacity-90 transition"
             >
-              Continue →
+              Continue to Details →
             </button>
           </div>
         )}
@@ -152,13 +167,13 @@ export default function RegisterPage() {
               onClick={() => setStep(1)}
               className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 mb-2"
             >
-              ← Back
+              ← Back to role selection
             </button>
 
             {/* Common fields */}
             <div>
               <label className={labelCls}>Full name</label>
-              <input className={inputCls} required placeholder="Chanda Mwila"
+              <input className={inputCls} required placeholder="e.g. Chanda Mwila"
                 value={form.name} onChange={(e) => set("name", e.target.value)} />
             </div>
             <div>
@@ -173,7 +188,7 @@ export default function RegisterPage() {
             </div>
             <div>
               <label className={labelCls}>Password</label>
-              <input className={inputCls} type="password" required placeholder="At least 6 characters"
+              <input className={inputCls} type="password" required minLength={6} placeholder="At least 6 characters"
                 value={form.password} onChange={(e) => set("password", e.target.value)} />
             </div>
 
@@ -195,7 +210,7 @@ export default function RegisterPage() {
                     value={form.licenseNo} onChange={(e) => set("licenseNo", e.target.value)} />
                 </div>
                 <div>
-                  <label className={labelCls}>Operating Location</label>
+                  <label className={labelCls}>Operating Location / District</label>
                   <input className={inputCls} placeholder="e.g. Lusaka, Chilenje"
                     value={form.location} onChange={(e) => set("location", e.target.value)} />
                 </div>
@@ -223,7 +238,7 @@ export default function RegisterPage() {
               className="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg text-sm hover:opacity-90 disabled:opacity-60 transition"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? "Creating account…" : "Create Account"}
+              {loading ? "Creating account…" : "Complete Registration"}
             </button>
           </form>
         )}

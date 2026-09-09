@@ -2,13 +2,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, PhoneCall } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/patients", label: "Patients" },
   { href: "/practitioners", label: "Practitioners" },
+  { href: "/ussd", label: "USSD *384#", highlight: true },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -17,7 +18,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
+    <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border shadow-sm">
       <div className="container mx-auto px-6 flex items-center justify-between h-16">
 
         {/* Logo */}
@@ -28,18 +29,21 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-1">
-          {NAV_LINKS.map(({ href, label }) => {
+          {NAV_LINKS.map(({ href, label, highlight }) => {
             const active = pathname === href;
             return (
               <Link
                 key={href}
                 href={href}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
                   active
-                    ? "text-primary bg-accent"
-                    : "text-foreground/60 hover:text-foreground hover:bg-secondary"
+                    ? "text-primary bg-accent font-semibold"
+                    : highlight
+                    ? "text-primary bg-primary/10 hover:bg-primary/20 font-semibold"
+                    : "text-foreground/70 hover:text-foreground hover:bg-secondary"
                 }`}
               >
+                {highlight && <PhoneCall className="w-3.5 h-3.5 text-primary" />}
                 {label}
               </Link>
             );
@@ -56,7 +60,7 @@ export default function Navbar() {
           </Link>
           <Link
             href="/register"
-            className="px-4 py-2 text-sm font-semibold bg-primary text-white rounded-lg hover:opacity-90 transition-opacity"
+            className="px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
           >
             Sign Up
           </Link>
@@ -76,7 +80,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-white border-t border-border px-6 py-4 space-y-1">
+        <div className="md:hidden bg-background border-t border-border px-6 py-4 space-y-1">
           {NAV_LINKS.map(({ href, label }) => (
             <Link
               key={href}
@@ -89,11 +93,11 @@ export default function Navbar() {
           ))}
           <div className="pt-3 mt-3 border-t border-border flex flex-col gap-2">
             <Link href="/login" onClick={() => setOpen(false)}
-              className="text-center py-2.5 text-sm text-foreground/70">
+              className="text-center py-2.5 text-sm text-foreground/70 font-medium">
               Sign in
             </Link>
             <Link href="/register" onClick={() => setOpen(false)}
-              className="text-center py-2.5 text-sm font-semibold bg-primary text-white rounded-lg">
+              className="text-center py-2.5 text-sm font-semibold bg-primary text-primary-foreground rounded-lg">
               Sign Up
             </Link>
           </div>
