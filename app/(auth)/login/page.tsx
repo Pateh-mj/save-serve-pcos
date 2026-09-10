@@ -16,7 +16,7 @@ const ROLE_HOME: Record<string, string> = {
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
+  const redirectTo = searchParams.get("redirectTo");
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPw, setShowPw] = useState(false);
@@ -44,7 +44,7 @@ function LoginForm() {
       // Fetch fresh session to determine target dashboard
       const session = await getSession();
       const role = session?.user?.role ?? Role.PATIENT;
-      const targetUrl = callbackUrl || ROLE_HOME[role] || "/";
+      const targetUrl = redirectTo || ROLE_HOME[role] || "/";
 
       // Full page navigate to guarantee cookie and middleware synchronization
       window.location.href = targetUrl;
