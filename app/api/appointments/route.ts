@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Role, AppointmentStatus, Channel } from "@/lib/constants";
 import { calculatePolicyBilling } from "@/lib/policy-guardian";
+import { isSlotAvailable } from "@/lib/availability";
 
 const createSchema = z.object({
   practitionerId: z.string(),
@@ -51,6 +52,14 @@ export async function POST(req: NextRequest) {
       practitionerId: practitioner.id,
       tier: session.user.tier,
     });
+
+    const available = await isSlotAvailable(practitionerId, new Date(scheduledAt));
+    if (!available) {
+      return NextResponse.json(
+        { error: "That slot is no longer available. Please choose another time." },
+        { status: 409 }
+      );
+    }
 
     const appointment = await prisma.appointment.create({
       data: {

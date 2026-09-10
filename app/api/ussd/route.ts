@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Role, Channel, AppointmentStatus } from "@/lib/constants";
 import { calculatePolicyBilling } from "@/lib/policy-guardian";
+import { getAvailableSlots } from "@/lib/availability";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,6 +25,18 @@ export async function POST(req: NextRequest) {
       serviceCode = body.serviceCode || "";
       phoneNumber = body.phoneNumber || "";
       text = body.text || "";
+    }
+
+    const selectedDate = /* derived from a prior menu step, e.g. today or tomorrow */;
+    const slots = await getAvailableSlots(selectedPractitionerId, selectedDate);
+
+    if (slots.length === 0) {
+      response = "END Sorry, no available slots for this practitioner on that day.";
+    } else {
+      const menu = slots
+        .map((s, i) => `${i + 1}. ${s.toLocaleTimeString("en-ZM", { hour: "2-digit", minute: "2-digit" })}`)
+        .join("\n");
+      response = `CON Select a time:\n${menu}`;
     }
 
     phoneNumber = phoneNumber.trim();
