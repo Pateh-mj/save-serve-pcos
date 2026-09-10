@@ -11,29 +11,29 @@ type NavItem = { href: string; label: string; icon: React.ElementType };
 
 const NAV: Record<string, NavItem[]> = {
   PATIENT: [
-    { href: "/patient/dashboard",     label: "Overview",        icon: LayoutDashboard },
-    { href: "/patient/appointments",  label: "Appointments",    icon: CalendarDays },
-    { href: "/patient/records",       label: "Health Records",  icon: FileText },
-    { href: "/patient/billing",       label: "My Billing",      icon: CreditCard },
+    { href: "/patient/dashboard", label: "Overview", icon: LayoutDashboard },
+    { href: "/patient/appointments", label: "Appointments", icon: CalendarDays },
+    { href: "/patient/records", label: "Health Records", icon: FileText },
+    { href: "/patient/billing", label: "My Billing", icon: CreditCard },
   ],
   PRACTITIONER: [
-    { href: "/practitioner/dashboard", label: "Dashboard",   icon: LayoutDashboard },
-    { href: "/practitioner/schedule",  label: "Schedule",    icon: CalendarDays },
-    { href: "/practitioner/patients",  label: "Patients",    icon: Users },
-    { href: "/practitioner/records",   label: "EHR Records", icon: FileText },
+    { href: "/practitioner/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/practitioner/schedule", label: "Schedule", icon: CalendarDays },
+    { href: "/practitioner/patients", label: "Patients", icon: Users },
+    { href: "/practitioner/records", label: "EHR Records", icon: FileText },
   ],
   NGO: [
-    { href: "/ngo/dashboard",        label: "Dashboard",      icon: LayoutDashboard },
-    { href: "/ngo/funding",          label: "Funding",        icon: CreditCard },
-    { href: "/ngo/beneficiaries",    label: "Beneficiaries",  icon: Users },
-    { href: "/ngo/reports",          label: "Reports",        icon: BarChart3 },
+    { href: "/ngo/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/ngo/funding", label: "Funding", icon: CreditCard },
+    { href: "/ngo/beneficiaries", label: "Beneficiaries", icon: Users },
+    { href: "/ngo/reports", label: "Reports", icon: BarChart3 },
   ],
   ADMIN: [
-    { href: "/admin/dashboard",     label: "Dashboard",    icon: LayoutDashboard },
-    { href: "/admin/users",         label: "Users",        icon: Users },
+    { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/admin/users", label: "Users", icon: Users },
     { href: "/admin/practitioners", label: "Practitioners", icon: Stethoscope },
-    { href: "/admin/policies",      label: "Policies",     icon: FileText },
-    { href: "/admin/reports",       label: "Reports",      icon: BarChart3 },
+    { href: "/admin/policies", label: "Policies", icon: FileText },
+    { href: "/admin/reports", label: "Reports", icon: BarChart3 },
   ],
 };
 
@@ -74,11 +74,10 @@ export default function DashboardSidebar({ role, userName, userEmail }: Props) {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                active
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${active
                   ? "bg-accent text-primary font-semibold"
                   : "text-sidebar-foreground hover:bg-secondary hover:text-foreground"
-              }`}
+                }`}
             >
               <Icon className={`w-4 h-4 shrink-0 ${active ? "text-primary" : ""}`} strokeWidth={1.75} />
               {label}
@@ -109,7 +108,7 @@ export default function DashboardSidebar({ role, userName, userEmail }: Props) {
           </div>
         </div>
         <button
-          onClick={() => signOut({ callbackUrl: "/" })}
+          onClick={() => signOut({ redirectTo: "/login" })}
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
         >
           <LogOut className="w-4 h-4" />
