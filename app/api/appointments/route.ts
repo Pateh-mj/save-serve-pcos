@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
       tier: session.user.tier,
     });
 
-    const available = await isSlotAvailable(practitionerId, new Date(scheduledAt));
+    const available = await isSlotAvailable(practitioner.id, new Date(data.scheduledAt));
     if (!available) {
       return NextResponse.json(
         { error: "That slot is no longer available. Please choose another time." },
