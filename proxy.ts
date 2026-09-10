@@ -33,7 +33,7 @@ export const proxy = auth((req) => {
   // Unauthenticated users trying to access protected routes
   if (isProtectedRoute && !user) {
     const loginUrl = new URL("/login", req.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
+    loginUrl.searchParams.set("redirectTo", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
