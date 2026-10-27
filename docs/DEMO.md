@@ -9,9 +9,15 @@ About 12 minutes. Each part names the report objective it proves. All passwords 
    `SMS_ALLOWLIST` = your phone + a second phone (e.g. a friend in the room). Only those receive real SMS.
 3. **Admin → Users → Practitioners:** set Sr. Mutale Banda's phone to the second phone, so urgent bookings alert it.
 4. **Admin → SMS Gateway → Send test SMS** to both phones. Confirm both arrive.
-5. Run the smoke test against the live URL: `BASE_URL=https://<your-app>.vercel.app npm run smoke` (18/18).
-6. Charge both phones; have a mobile hotspot as backup internet.
-7. Open tabs: landing page, `/ussd`, and three logged-in windows (practitioner, admin, NGO) — use separate
+5. Run the smoke test against the live URL: `BASE_URL=https://<your-app>.vercel.app npm run smoke` (19/19).
+   It deletes its own test patient afterwards; `npm run db:clean` removes any leftovers.
+6. **Sample activity (optional):** `npm run db:demo` adds 8 sample patients with eight weeks of visits so the
+   charts, triage queue and NGO ledger have data. Say so if asked: it is generated, not field data. It writes no
+   ratings, SMS or timings, so the Evaluation page stays real. Remove with `npm run db:demo -- --remove`.
+7. **One-click sign-in (optional):** set `NEXT_PUBLIC_DEMO_LOGINS=1` and redeploy; the sign-in page then shows
+   patient, practitioner, partner and admin buttons. Leave it off once the presentation is over.
+8. Charge both phones; have a mobile hotspot as backup internet.
+9. Open tabs: landing page, `/ussd`, and three logged-in windows (practitioner, admin, NGO) — use separate
    browser profiles or private windows so the sessions don't overwrite each other.
 
 ## The demo

@@ -32,7 +32,8 @@ export function BarChart({ data, series, unit = "count", height = 180, title }: 
   const [hover, setHover] = useState<number | null>(null);
   const totals = data.map((d) => d.values.reduce((a, b) => a + b, 0));
   const max = Math.max(1, ...totals);
-  const top = niceCeil(max);
+  // Counts get a whole-number midpoint label (no "0.5 visits")
+  const top = unit === "count" ? Math.max(2, Math.ceil(niceCeil(max) / 2) * 2) : niceCeil(max);
   const peak = totals.indexOf(Math.max(...totals));
 
   return (

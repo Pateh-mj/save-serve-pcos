@@ -25,10 +25,11 @@ export default async function AdminDashboard() {
   if (!session?.user || session.user.role !== Role.ADMIN) redirect("/login");
 
   const since = weeksAgo(8);
-  const [usersByRole, patientsByTier, apptsByStatus, recentAppts, subsidyAgg, fundAgg, report] = await Promise.all([
+  const [usersByRole, patientsByTier, apptsByStatus, apptsByChannel, recentAppts, subsidyAgg, fundAgg, report] = await Promise.all([
     prisma.user.groupBy({ by: ["role"], _count: true }),
     prisma.user.groupBy({ by: ["tier"], where: { role: Role.PATIENT }, _count: true }),
     prisma.appointment.groupBy({ by: ["status"], _count: true }),
+    prisma.appointment.groupBy({ by: ["channel"], _count: true }),
     prisma.appointment.findMany({ where: { createdAt: { gte: since } }, select: { createdAt: true, channel: true } }),
     prisma.billing.aggregate({ where: { status: BillingStatus.SUBSIDIZED }, _sum: { subsidyAmount: true }, _count: true }),
     prisma.nGO.aggregate({ _sum: { fundBalance: true }, _count: true }),
@@ -40,6 +41,7 @@ export default async function AdminDashboard() {
   const role = (r: string) => count(usersByRole, (x) => x.role, r);
   const tier = (t: string) => count(patientsByTier, (x) => x.tier, t);
   const status = (s: string) => count(apptsByStatus, (x) => x.status, s);
+  const channel = (c: string) => count(apptsByChannel, (x) => x.channel, c);
   const totalUsers = usersByRole.reduce((a, r) => a + r._count, 0);
   const totalAppts = apptsByStatus.reduce((a, r) => a + r._count, 0);
   const weeks = weeklyBuckets(recentAppts, (a) => a.createdAt, (a) => [a.channel === "WEB" ? 1 : 0, a.channel === "USSD" ? 1 : 0], 8);
@@ -58,7 +60,7 @@ export default async function AdminDashboard() {
         <StatCard label="Users" value={totalUsers} icon={Users} tone="info" href="/admin/users"
           hint={`${role(Role.PATIENT)} patients · ${role(Role.PRACTITIONER)} clinicians · ${role(Role.NGO)} partners`} />
         <StatCard label="Appointments" value={totalAppts} icon={CalendarDays} tone="brand" href="/admin/appointments"
-          hint={`${report.channels.USSD ?? 0} by USSD · ${report.channels.WEB ?? 0} on the web`} />
+          hint={`${channel("USSD")} by USSD · ${channel("WEB")} on the web`} />
         <StatCard label="Subsidy disbursed" value={zmw(subsidyAgg._sum.subsidyAmount ?? 0)} icon={HeartHandshake} tone="success"
           hint={`${subsidyAgg._count} free visits funded`} />
         <StatCard label="Pool balance" value={zmw(fundAgg._sum.fundBalance ?? 0)} icon={Wallet} tone="premium" href="/admin/policies"
@@ -127,8 +129,8 @@ export default async function AdminDashboard() {
           <SegmentBar
             title="Bookings by channel"
             segments={[
-              { label: "Web", value: report.channels.WEB ?? 0, color: "var(--chart-1)", icon: Globe },
-              { label: "USSD *384#", value: report.channels.USSD ?? 0, color: "var(--chart-2)", icon: Smartphone },
+              { label: "Web", value: channel("WEB"), color: "var(--chart-1)", icon: Globe },
+              { label: "USSD *384#", value: channel("USSD"), color: "var(--chart-2)", icon: Smartphone },
             ]}
           />
           <p className="mt-4 text-xs text-muted-foreground inline-flex items-center gap-1.5">

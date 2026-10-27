@@ -10,6 +10,7 @@
     "postinstall": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:clean": "tsx scripts/clean-test-data.ts",
+    "db:demo": "tsx scripts/demo-history.ts",
     "smoke": "tsx scripts/smoke-test.ts"
   },
   "dependencies": {

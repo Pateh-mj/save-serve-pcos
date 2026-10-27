@@ -22,7 +22,8 @@ export function StatCard({ label, value, icon: Icon, tone = "brand", hint, href 
           <Icon className="w-[18px] h-[18px]" strokeWidth={1.75} />
         </span>
       </div>
-      <p className="mt-2 text-3xl font-bold tracking-tight text-foreground">{value}</p>
+      {/* Long money values step down a size so they stay on one line */}
+      <p className={`mt-2 font-bold tracking-tight text-foreground ${typeof value === "string" && value.length > 11 ? "text-2xl" : "text-3xl"}`}>{value}</p>
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
       {href && (
         <p className="mt-3 text-xs font-semibold text-primary inline-flex items-center gap-1 group-hover:gap-2 transition-all">

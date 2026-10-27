@@ -117,7 +117,10 @@ export default async function PractitionerDashboard() {
         title={session.user.name ?? "Practitioner"}
         description={
           <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span className="capitalize">{practitioner.specialty.toLowerCase()}</span> · {practitioner.location || "Lusaka, Zambia"} ·
+            <span className="capitalize">{practitioner.specialty.toLowerCase()}</span>
+            <span aria-hidden>·</span>
+            <span>{practitioner.location || "Lusaka, Zambia"}</span>
+            <span aria-hidden>·</span>
             {practitioner.isVerified ? (
               <span className="inline-flex items-center gap-1 text-success-fg font-medium">
                 <ShieldCheck className="w-4 h-4" /> Verified · {practitioner.licenseNo}

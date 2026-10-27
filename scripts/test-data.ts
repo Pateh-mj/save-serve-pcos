@@ -8,6 +8,10 @@ interface CleanOptions {
   phones?: string[];
   /** Delete request timings recorded at or after this moment (the test run's own traffic). */
   metricsSince?: Date;
+  /** Also (or instead) remove every user whose email ends with this, e.g. sample-activity patients. */
+  emailSuffix?: string;
+  /** Include smoke-test patients (default true). */
+  smoke?: boolean;
 }
 
 /**
@@ -18,7 +22,13 @@ interface CleanOptions {
  */
 export async function cleanTestData(prisma: PrismaClient, opts: CleanOptions = {}) {
   const users = await prisma.user.findMany({
-    where: { OR: [{ name: SMOKE_NAME }, ...(opts.phones?.length ? [{ phone: { in: opts.phones } }] : [])] },
+    where: {
+      OR: [
+        ...(opts.smoke === false ? [] : [{ name: SMOKE_NAME }]),
+        ...(opts.phones?.length ? [{ phone: { in: opts.phones } }] : []),
+        ...(opts.emailSuffix ? [{ email: { endsWith: opts.emailSuffix } }] : []),
+      ],
+    },
     select: { id: true, phone: true, patient: { select: { billings: { select: { id: true } } } } },
   });
   const userIds = users.map((u) => u.id);

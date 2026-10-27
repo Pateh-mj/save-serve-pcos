@@ -47,6 +47,7 @@ npm install
 cp .env.example .env          # fill in DATABASE_URL, DIRECT_URL and AUTH_SECRET
 npx prisma db push            # create/update tables in Supabase
 npm run db:seed               # demo users, policies, practitioner hours
+npm run db:demo               # optional: 8 sample patients, 8 weeks of visits (remove: -- --remove)
 npm run dev                   # http://localhost:3000
 ```
 
@@ -97,7 +98,8 @@ BASE_URL=http://localhost:3000 npm run smoke
 USSD registration → triaged booking → practitioner confirm → EHR with follow-up → patient views record and
 subsidised bill and rates the visit → admin reclassifies the patient as PREMIUM → premium booking, USSD
 payment and cancellation → dropped-session resume → SMS trail → data-integrity checks. It prints PASS/FAIL
-per step and refuses to run against a server that would send real SMS without an allowlist.
+per step, refuses to run against a server that would send real SMS without an allowlist, and deletes its own
+test data afterwards (`SMOKE_KEEP_DATA=1` keeps it; `npm run db:clean` removes leftovers).
 
 ## Project structure
 

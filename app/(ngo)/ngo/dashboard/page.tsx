@@ -34,7 +34,7 @@ export default async function NGODashboard() {
   const total = (type: string) => byType.find((t) => t.type === type)?._sum.amount ?? 0;
   const topups = total("OPENING") + total("TOPUP");
   const surplus = total("PREMIUM_CREDIT");
-  const spent = -(total("SUBSIDY_DEBIT") + total("SUBSIDY_REFUND"));
+  const spent = Math.max(0, -(total("SUBSIDY_DEBIT") + total("SUBSIDY_REFUND"))); // never shows "-0.00"
   const reconciled = Math.abs(stats.ledgerBalance - ngo.fundBalance) < 0.01;
   const visitsLeft = fee > 0 ? Math.floor(ngo.fundBalance / fee) : 0;
   const months = monthlyBuckets(funded, (b) => b.createdAt, () => [1], 6);
