@@ -9,6 +9,7 @@
     "lint": "eslint",
     "postinstall": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
+    "db:clean": "tsx scripts/clean-test-data.ts",
     "smoke": "tsx scripts/smoke-test.ts"
   },
   "dependencies": {

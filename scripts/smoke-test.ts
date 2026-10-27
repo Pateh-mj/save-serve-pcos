@@ -9,9 +9,15 @@
  *   the patient as PREMIUM → USSD premium booking, payment and cancellation → dropped-session
  *   resume → SMS log → data-integrity checks.
  *
+ * Afterwards it deletes everything it created (scripts/test-data.ts) so the demo database stays
+ * clean; set SMOKE_KEEP_DATA=1 to keep the test patient for inspection.
+ *
  * Safety: aborts if the server sends real SMS without an allowlist, because the random test
  * number could belong to a real person. Override with SMOKE_ALLOW_LIVE_SMS=1.
  */
+
+import { PrismaClient } from "@prisma/client";
+import { cleanTestData } from "./test-data";
 
 const BASE_URL = (process.env.BASE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 const PASSWORD = process.env.SMOKE_PASSWORD ?? "password123";
@@ -27,6 +33,7 @@ const PRACTITIONER_EMAILS: Record<string, string> = {
   "Ms. Grace Kafwimbe": "grace@saveserve.org",
 };
 
+const startedAt = new Date();
 const phone = `+26097${Math.floor(1_000_000 + Math.random() * 9_000_000)}`;
 const diagnosis = `Smoke diagnosis ${Date.now()}`;
 // Book path prefix: 1 Book · 1 Fever · 2 No danger signs · 2 Unwell 1-3 days
@@ -402,8 +409,19 @@ main()
       results.push({ step: "Unexpected error", ok: false, detail: String(err), ms: 0 });
     }
   })
-  .finally(() => {
+  .finally(async () => {
     const failed = results.filter((r) => !r.ok).length;
     console.log(`\n${results.length - failed}/${results.length} steps passed${failed ? " — stopped at first failure" : ""}`);
     process.exitCode = failed ? 1 : 0;
+
+    if (process.env.SMOKE_KEEP_DATA === "1") return;
+    const prisma = new PrismaClient();
+    try {
+      const r = await cleanTestData(prisma, { phones: [phone], metricsSince: startedAt });
+      console.log(`Cleaned up: ${r.users} test user(s), ${r.ledger} ledger entr(ies), ${r.sms} SMS, ${r.sessions} USSD session(s), ${r.metrics} timing(s)`);
+    } catch (err) {
+      console.log(`Cleanup failed — run npm run db:clean (${err instanceof Error ? err.message : err})`);
+    } finally {
+      await prisma.$disconnect();
+    }
   });
