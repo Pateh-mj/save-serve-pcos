@@ -1,4 +1,5 @@
 "use client";
+import { inputCls } from "@/components/app/buttons";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -104,13 +105,11 @@ export default function RegisterPage() {
     }
   }
 
-  const inputCls =
-    "w-full px-3.5 py-2.5 rounded-lg border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition";
   const labelCls = "block text-sm font-medium text-foreground mb-1.5";
 
   return (
     <div className="w-full max-w-lg">
-      <div className="bg-card border border-border rounded-xl shadow-xl p-8">
+      <div>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-foreground">Create your account</h1>
@@ -230,7 +229,7 @@ export default function RegisterPage() {
             )}
 
             {error && (
-              <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
+              <p className="text-sm text-danger-fg bg-danger-soft border border-danger-border px-3 py-2 rounded-lg">
                 {error}
               </p>
             )}

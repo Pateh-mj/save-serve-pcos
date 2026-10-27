@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import UssdPhoneSimulator from "@/components/UssdPhoneSimulator";
-import { PhoneCall, ShieldCheck, Heart, Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
+import { PhoneCall, ShieldCheck, Heart, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = { title: "USSD Access *384#" };

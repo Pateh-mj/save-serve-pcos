@@ -38,7 +38,7 @@ export default function AvailabilityEditor({ initial }: { initial: DayAvailabili
 
     return (
         <div className="bg-card border border-border rounded-xl p-6 shadow-xs h-fit">
-            <h2 className="text-lg font-bold text-foreground mb-4">Weekly Availability</h2>
+            <h2 className="text-base font-semibold text-foreground mb-4">Weekly Availability</h2>
 
             <div className="space-y-3">
                 {days.map((d) => (

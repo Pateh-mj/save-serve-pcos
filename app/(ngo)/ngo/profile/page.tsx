@@ -5,6 +5,8 @@ import AccountSection from "@/components/account/AccountSection";
 import ProfileForm from "@/components/account/ProfileForm";
 import PasswordForm from "@/components/account/PasswordForm";
 
+import { PageHeader } from "@/components/app/PageHeader";
+
 export const metadata = { title: "Organisation" };
 
 export default async function NgoProfilePage() {
@@ -16,10 +18,7 @@ export default async function NgoProfilePage() {
 
   return (
     <div className="max-w-4xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Organisation Profile</h1>
-        <p className="text-sm text-muted-foreground mt-1">{user.email}</p>
-      </div>
+      <PageHeader eyebrow="Funding partner" title="Organisation Profile" description={<>{user.email}</>} />
 
       <AccountSection title="Organisation">
         <ProfileForm

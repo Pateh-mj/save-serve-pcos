@@ -4,15 +4,9 @@ import { formatDateTime } from "@/lib/format";
 import SmsActions from "./SmsActions";
 import { PageHeader } from "@/components/app/PageHeader";
 
-export const metadata = { title: "SMS Gateway" };
+import { StatusBadge } from "@/components/app/StatusBadge";
 
-const STATUS_STYLE: Record<string, string> = {
-  SENT: "bg-info-soft text-info-fg border-info-border",
-  DELIVERED: "bg-success-soft text-success-fg border-success-border",
-  FAILED: "bg-danger-soft text-danger-fg border-danger-border",
-  SKIPPED: "bg-secondary text-muted-foreground border-border",
-  QUEUED: "bg-warning-soft text-warning-fg border-warning-border",
-};
+export const metadata = { title: "SMS Gateway" };
 
 async function loadSmsOverview(days: number) {
   const since = new Date(Date.now() - days * 86_400_000);
@@ -40,7 +34,7 @@ export default async function AdminSmsPage() {
       <div className="grid md:grid-cols-4 gap-4 mb-6">
         <div className={`rounded-xl p-5 border ${live ? "bg-success-soft border-success-border" : "bg-warning-soft border-warning-border"}`}>
           <p className="text-sm font-medium text-muted-foreground mb-1">Provider</p>
-          <p className="text-lg font-bold text-foreground">{live ? "Live (HTTP)" : "Log only"}</p>
+          <p className="text-base font-semibold text-foreground">{live ? "Live (HTTP)" : "Log only"}</p>
           <p className="text-xs text-muted-foreground mt-1">
             {live
               ? config.httpConfigured
@@ -51,21 +45,21 @@ export default async function AdminSmsPage() {
         </div>
         <div className="bg-card border border-border rounded-xl p-5">
           <p className="text-sm font-medium text-muted-foreground mb-1">Credit guard</p>
-          <p className="text-lg font-bold text-foreground">
+          <p className="text-base font-semibold text-foreground">
             {config.allowlist.length > 0 ? `${config.allowlist.length} allowlisted` : "Open"}
           </p>
           <p className="text-xs text-muted-foreground mt-1">Max {config.dailyLimit} SMS / number / day</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-5">
           <p className="text-sm font-medium text-muted-foreground mb-1">Last 30 days</p>
-          <p className="text-lg font-bold text-foreground">{count("SENT") + count("DELIVERED")} sent</p>
+          <p className="text-base font-semibold text-foreground">{count("SENT") + count("DELIVERED")} sent</p>
           <p className="text-xs text-muted-foreground mt-1">
             {count("DELIVERED")} delivered · {count("FAILED")} failed · {count("SKIPPED")} skipped
           </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-5">
           <p className="text-sm font-medium text-muted-foreground mb-1">Credits used</p>
-          <p className="text-lg font-bold text-foreground">{segments._sum.segments ?? 0} segments</p>
+          <p className="text-base font-semibold text-foreground">{segments._sum.segments ?? 0} segments</p>
           <p className="text-xs text-muted-foreground mt-1">Real sends only (160 chars each)</p>
         </div>
       </div>
@@ -74,7 +68,7 @@ export default async function AdminSmsPage() {
         <SmsActions />
       </div>
 
-      <h2 className="text-lg font-bold text-foreground mb-3">Message log</h2>
+      <h2 className="text-base font-semibold text-foreground mb-3">Message log</h2>
       {messages.length === 0 ? (
         <div className="bg-card border border-border rounded-xl p-10 text-center text-sm text-muted-foreground">No SMS yet.</div>
       ) : (
@@ -94,7 +88,7 @@ export default async function AdminSmsPage() {
               </div>
               <div className="flex items-center gap-2 md:justify-end">
                 <span className="text-xs text-muted-foreground">{m.segments} seg · {m.driver}</span>
-                <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${STATUS_STYLE[m.status] ?? ""}`}>{m.status}</span>
+                <StatusBadge kind="sms" value={m.status} />
               </div>
             </div>
           ))}

@@ -7,14 +7,9 @@ import { AppointmentStatus } from "@/lib/constants";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { symptomLabels, TriageLevel } from "@/lib/triage";
 
-export const metadata = { title: "Patient Chart" };
+import { StatusBadge } from "@/components/app/StatusBadge";
 
-const STATUS_STYLE: Record<string, string> = {
-  PENDING: "bg-warning-soft text-warning-fg border-warning-border",
-  CONFIRMED: "bg-info-soft text-info-fg border-info-border",
-  COMPLETED: "bg-success-soft text-success-fg border-success-border",
-  CANCELLED: "bg-danger-soft text-danger-fg border-danger-border",
-};
+export const metadata = { title: "Patient Chart" };
 
 function age(dob: Date | null) {
   if (!dob) return null;
@@ -93,7 +88,7 @@ export default async function PatientChartPage({ params }: { params: Promise<{ i
 
       <div className="grid lg:grid-cols-[2fr_3fr] gap-6">
         <section>
-          <h2 className="text-lg font-bold text-foreground mb-3 flex items-center gap-2">
+          <h2 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
             <CalendarDays className="w-4 h-4 text-primary" /> Visits with you
           </h2>
           <div className="space-y-2">
@@ -101,7 +96,7 @@ export default async function PatientChartPage({ params }: { params: Promise<{ i
               <div key={a.id} className="bg-card border border-border rounded-xl p-4">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-semibold text-foreground">{formatDateTime(a.scheduledAt)}</p>
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${STATUS_STYLE[a.status] ?? ""}`}>{a.status}</span>
+                  <StatusBadge kind="appointment" value={a.status} />
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   {a.channel} ·{" "}
@@ -117,7 +112,7 @@ export default async function PatientChartPage({ params }: { params: Promise<{ i
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground mb-3 flex items-center gap-2">
+          <h2 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
             <FileText className="w-4 h-4 text-primary" /> Clinical record
           </h2>
           {patient.ehrRecords.length === 0 ? (

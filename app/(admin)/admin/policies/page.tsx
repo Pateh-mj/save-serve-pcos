@@ -26,7 +26,7 @@ export default async function AdminPoliciesPage() {
           existing bills keep the terms they were created with." />
 
       <div className="bg-card border border-border rounded-xl p-5 shadow-xs mb-6">
-        <h2 className="font-bold text-foreground mb-3">Base tariff</h2>
+        <h2 className="font-semibold text-foreground mb-3">Base tariff</h2>
         <FeeEditor fee={fee} />
         <p className="text-xs text-muted-foreground mt-3">
           Each tier pays the base fee × its multiplier. FREE (×0) visits are funded from NGO pools; PREMIUM visits above ×1 pay the

@@ -6,6 +6,8 @@ import { Users, Phone, CalendarDays, ChevronRight } from "lucide-react";
 import { AppointmentStatus } from "@/lib/constants";
 import { formatDate, formatDateTime } from "@/lib/format";
 
+import { PageHeader } from "@/components/app/PageHeader";
+
 export const metadata = { title: "Patients" };
 
 export default async function PractitionerPatientsPage() {
@@ -60,12 +62,7 @@ export default async function PractitionerPatientsPage() {
 
   return (
     <div className="max-w-5xl">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">My Patients</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {patients.length} patient{patients.length === 1 ? "" : "s"} booked with you across Web and USSD
-        </p>
-      </div>
+      <PageHeader eyebrow="Patients" title="My Patients" description={<>{patients.length} patient{patients.length === 1 ? "" : "s"} booked with you across Web and USSD</>} />
 
       {patients.length === 0 ? (
         <div className="bg-card border border-border rounded-xl p-12 text-center">

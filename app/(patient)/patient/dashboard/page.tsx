@@ -146,7 +146,7 @@ export default async function PatientDashboard() {
                 <li key={a.id} className="flex items-center gap-4 px-5 py-3.5">
                   <div className="w-12 text-center shrink-0">
                     <p className="text-xs font-semibold uppercase text-muted-foreground">{formatDate(a.scheduledAt, { month: "short" })}</p>
-                    <p className="text-lg font-bold text-foreground leading-none mt-0.5">{formatDate(a.scheduledAt, { day: "numeric" })}</p>
+                    <p className="text-base font-semibold text-foreground leading-none mt-0.5">{formatDate(a.scheduledAt, { day: "numeric" })}</p>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground truncate">{a.practitioner.user.name}</p>

@@ -96,7 +96,7 @@ export default async function BillingPage() {
                     </dl>
                   </div>
                   <div className="flex items-center justify-between md:flex-col md:items-end gap-2 shrink-0">
-                    <p className="text-lg font-bold text-foreground">{zmw(b.status === BillingStatus.SUBSIDIZED || b.status === BillingStatus.WAIVED ? 0 : due(b))}</p>
+                    <p className="text-base font-semibold text-foreground">{zmw(b.status === BillingStatus.SUBSIDIZED || b.status === BillingStatus.WAIVED ? 0 : due(b))}</p>
                     {b.status === BillingStatus.PENDING && <BillingItemActions billingId={b.id} amount={due(b)} />}
                   </div>
                 </li>

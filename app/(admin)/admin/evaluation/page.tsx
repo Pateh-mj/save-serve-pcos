@@ -1,5 +1,6 @@
 import { CheckCircle2, XCircle, Info, Download } from "lucide-react";
 import { getEvaluationReport } from "@/lib/evaluation";
+import { PageHeader } from "@/components/app/PageHeader";
 
 export const metadata = { title: "Evaluation" };
 
@@ -35,14 +36,11 @@ export default async function EvaluationPage() {
 
   return (
     <div className="max-w-6xl">
-      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">System Evaluation</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Response time, synchronisation accuracy and satisfaction over the last {report.days} days, measured from live use.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
+      <PageHeader
+        eyebrow="Objective 4"
+        title="System evaluation"
+        description={<>Response time, synchronisation accuracy and satisfaction over the last {report.days} days, measured from live use.</>}
+        actions={<>
           {[
             { type: "metrics", label: "Timings CSV" },
             { type: "sms", label: "SMS CSV" },
@@ -51,13 +49,13 @@ export default async function EvaluationPage() {
             <a
               key={e.type}
               href={`/api/admin/evaluation/export?type=${e.type}`}
-              className="inline-flex items-center gap-1.5 px-3 py-2 bg-secondary text-foreground text-xs font-semibold rounded-lg hover:bg-muted"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg border border-border bg-card text-foreground text-xs font-semibold hover:bg-secondary"
             >
               <Download className="w-3.5 h-3.5" /> {e.label}
             </a>
           ))}
-        </div>
-      </div>
+        </>}
+      />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {tiles.map((t) => (
@@ -71,7 +69,7 @@ export default async function EvaluationPage() {
 
       {/* Response time */}
       <section className="mb-8">
-        <h2 className="text-lg font-bold text-foreground mb-1">Response time</h2>
+        <h2 className="text-base font-semibold text-foreground mb-1">Response time</h2>
         <p className="text-xs text-muted-foreground mb-3">
           Server-side time per request. USSD gateways typically drop a session if a screen takes longer than a few seconds.
         </p>
@@ -109,7 +107,7 @@ export default async function EvaluationPage() {
       <section className="mb-8">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="text-lg font-bold text-foreground">Synchronisation & financial integrity</h2>
+            <h2 className="text-base font-semibold text-foreground">Synchronisation & financial integrity</h2>
             <p className="text-xs text-muted-foreground">
               Web and USSD write to one database; these checks confirm every record and every kwacha agrees.
             </p>
@@ -147,7 +145,7 @@ export default async function EvaluationPage() {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Satisfaction distribution: single series, so no legend; values in text ink at the bar tips */}
         <section className="bg-card border border-border rounded-xl p-5 shadow-xs">
-          <h2 className="font-bold text-foreground">Ratings by score</h2>
+          <h2 className="font-semibold text-foreground">Ratings by score</h2>
           <p className="text-xs text-muted-foreground mb-4">
             {satisfaction.byChannel.map((c) => `${c.channel}: ${c.count ? c.average.toFixed(2) : "—"} (${c.count})`).join(" · ")}
           </p>
@@ -176,7 +174,7 @@ export default async function EvaluationPage() {
 
         {/* Channel usage & SMS outcomes as plain figures */}
         <section className="bg-card border border-border rounded-xl p-5 shadow-xs">
-          <h2 className="font-bold text-foreground mb-4">Channel usage</h2>
+          <h2 className="font-semibold text-foreground mb-4">Channel usage</h2>
           <dl className="space-y-2 text-sm">
             {[
               ["Web bookings", channels.WEB ?? 0],

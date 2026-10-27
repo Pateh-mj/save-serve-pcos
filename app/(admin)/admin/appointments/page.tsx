@@ -6,25 +6,16 @@ import { TriageLevel } from "@/lib/triage";
 import { formatDateTime } from "@/lib/format";
 import CancelAppointmentButton from "@/app/(patient)/patient/appointments/CancelAppointmentButton";
 
+import { PageHeader } from "@/components/app/PageHeader";
+
+import { StatusBadge } from "@/components/app/StatusBadge";
+
 export const metadata = { title: "Appointments" };
 
 const FILTERS = {
   status: Object.values(AppointmentStatus) as string[],
   channel: Object.values(Channel) as string[],
   triage: Object.values(TriageLevel) as string[],
-};
-
-const STATUS_STYLE: Record<string, string> = {
-  PENDING: "bg-warning-soft text-warning-fg border-warning-border",
-  CONFIRMED: "bg-info-soft text-info-fg border-info-border",
-  COMPLETED: "bg-success-soft text-success-fg border-success-border",
-  CANCELLED: "bg-danger-soft text-danger-fg border-danger-border",
-};
-
-const TRIAGE_STYLE: Record<string, string> = {
-  EMERGENCY: "text-danger-fg font-bold",
-  URGENT: "text-warning-fg font-semibold",
-  ROUTINE: "text-muted-foreground",
 };
 
 type Search = { status?: string; channel?: string; triage?: string };
@@ -65,12 +56,7 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
 
   return (
     <div className="max-w-6xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Appointments</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Every booking from the web and USSD channels. Showing {appointments.length} of {total}.
-        </p>
-      </div>
+      <PageHeader eyebrow="Administration" title="Appointments" description={<>Every booking from the web and USSD channels. Showing {appointments.length} of {total}.</>} />
 
       <div className="space-y-2 mb-6">
         {(Object.keys(FILTERS) as (keyof Search)[]).map((key) => (
@@ -122,10 +108,10 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
                       <p className="text-xs text-muted-foreground">{a.patient.user.phone ?? ""}</p>
                     </td>
                     <td className="px-3 py-2.5 text-muted-foreground">{a.practitioner.user.name}</td>
-                    <td className="px-3 py-2.5 text-muted-foreground">{a.channel}</td>
-                    <td className={`px-3 py-2.5 text-xs ${TRIAGE_STYLE[a.triageLevel] ?? ""}`}>{a.triageLevel}</td>
+                    <td className="px-3 py-2.5"><StatusBadge kind="channel" value={a.channel} /></td>
+                    <td className="px-3 py-2.5"><StatusBadge kind="triage" value={a.triageLevel} /></td>
                     <td className="px-3 py-2.5">
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${STATUS_STYLE[a.status] ?? ""}`}>{a.status}</span>
+                      <StatusBadge kind="appointment" value={a.status} />
                     </td>
                     <td className="px-3 py-2.5 text-right whitespace-nowrap">
                       {a.billing ? (

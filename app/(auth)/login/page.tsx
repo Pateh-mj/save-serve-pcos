@@ -1,9 +1,10 @@
 "use client";
 import { useState, Suspense } from "react";
 import { signIn, getSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Smartphone } from "lucide-react";
+import { btnPrimary, inputCls } from "@/components/app/buttons";
 import { Role } from "@/lib/constants";
 
 const ROLE_HOME: Record<string, string> = {
@@ -13,8 +14,17 @@ const ROLE_HOME: Record<string, string> = {
   [Role.ADMIN]: "/admin/dashboard",
 };
 
+// One-click sign-in for presentations: set NEXT_PUBLIC_DEMO_LOGINS=1 (seeded accounts, prisma/seed.ts)
+const DEMO = process.env.NEXT_PUBLIC_DEMO_LOGINS === "1";
+const DEMO_PASSWORD = "password123";
+const DEMO_ACCOUNTS = [
+  { role: "Patient", who: "Mwila Chanda · free tier", email: "free@saveserve.org" },
+  { role: "Practitioner", who: "Sr. Mutale Banda · nurse", email: "mutale@saveserve.org" },
+  { role: "Funding partner", who: "Zambia Health Foundation", email: "ngo@saveserve.org" },
+  { role: "Administrator", who: "System administrator", email: "admin@saveserve.org" },
+];
+
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo");
 
@@ -25,13 +35,17 @@ function LoginForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    await login(form.email, form.password);
+  }
+
+  async function login(email: string, password: string) {
     setLoading(true);
     setError("");
 
     try {
       const res = await signIn("credentials", {
-        email: form.email.toLowerCase().trim(),
-        password: form.password,
+        email: email.toLowerCase().trim(),
+        password,
         redirect: false,
       });
 
@@ -56,8 +70,8 @@ function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-md">
-      <div className="bg-card border border-border rounded-xl shadow-xl p-8">
+    <div className="w-full max-w-sm">
+      <div>
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -77,7 +91,7 @@ function LoginForm() {
               required
               value={form.email}
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+              className={inputCls}
               placeholder="you@example.com"
             />
           </div>
@@ -99,12 +113,13 @@ function LoginForm() {
                 required
                 value={form.password}
                 onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-                className="w-full px-3.5 py-2.5 pr-10 rounded-lg border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+                className={`${inputCls} pr-10`}
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPw((s) => !s)}
+                aria-label={showPw ? "Hide password" : "Show password"}
                 className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
               >
                 {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -113,7 +128,7 @@ function LoginForm() {
           </div>
 
           {error && (
-            <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
+            <p role="alert" className="text-sm text-danger-fg bg-danger-soft border border-danger-border px-3 py-2 rounded-lg">
               {error}
             </p>
           )}
@@ -121,7 +136,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-primary text-primary-foreground font-semibold rounded-lg text-sm hover:opacity-90 disabled:opacity-60 transition"
+            className={`${btnPrimary} w-full`}
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             {loading ? "Signing in…" : "Sign in"}
@@ -136,8 +151,28 @@ function LoginForm() {
         </p>
       </div>
 
-      <p className="mt-6 text-center text-xs text-sidebar-foreground/50">
-        No smartphone? Dial <span className="font-bold text-primary">*384#</span> to access SaveServe via USSD.
+      {DEMO && (
+        <div className="mt-8 rounded-xl border border-dashed border-border p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">Demo accounts · one click</p>
+          <div className="grid grid-cols-2 gap-2">
+            {DEMO_ACCOUNTS.map((a) => (
+              <button
+                key={a.email}
+                type="button"
+                disabled={loading}
+                onClick={() => login(a.email, DEMO_PASSWORD)}
+                className="text-left rounded-lg border border-border bg-card px-3 py-2 hover:border-primary/40 hover:bg-accent/50 transition disabled:opacity-60"
+              >
+                <span className="block text-sm font-semibold text-foreground">{a.role}</span>
+                <span className="block text-xs text-muted-foreground truncate">{a.who}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <p className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
+        <Smartphone className="w-3.5 h-3.5" /> No smartphone? Dial <span className="font-bold text-foreground">*384#</span> to use SaveServe by USSD.
       </p>
     </div>
   );

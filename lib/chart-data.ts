@@ -53,3 +53,8 @@ export function monthlyBuckets<T>(items: T[], date: (t: T) => Date, values: (t: 
     values: Array.from({ length: width }, (_, i) => sums.get(k)![i] ?? 0),
   }));
 }
+
+/** Start of the window covered by weeklyBuckets(…, weeks). */
+export function weeksAgo(weeks: number) {
+  return new Date(Date.now() - weeks * 7 * DAY);
+}

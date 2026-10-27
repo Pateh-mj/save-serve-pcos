@@ -53,7 +53,7 @@ export default async function SchedulePage() {
                 <AvailabilityEditor initial={initialAvailability} />
 
                 <div>
-                    <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                    <h2 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
                         <CalendarClock className="w-4 h-4 text-primary" /> Upcoming Agenda
                     </h2>
 

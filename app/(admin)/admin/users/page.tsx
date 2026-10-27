@@ -5,6 +5,8 @@ import { formatDate } from "@/lib/format";
 import UserControls from "./UserControls";
 import { PageHeader } from "@/components/app/PageHeader";
 
+import { StatusBadge } from "@/components/app/StatusBadge";
+
 export const metadata = { title: "Users & Tiers" };
 
 const ROLE_TABS = [
@@ -13,12 +15,6 @@ const ROLE_TABS = [
   { role: Role.NGO, label: "NGOs" },
   { role: Role.ADMIN, label: "Admins" },
 ];
-
-const TIER_STYLE: Record<string, string> = {
-  FREE: "bg-success-soft text-success-fg border-success-border",
-  BASIC: "bg-secondary text-foreground border-border",
-  PREMIUM: "bg-premium-soft text-premium-fg border-premium-border",
-};
 
 export default async function AdminUsersPage({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
   const { role: roleParam } = await searchParams;
@@ -63,7 +59,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-semibold text-foreground text-sm">{u.ngo?.name ?? u.name ?? "Unnamed"}</p>
                   {u.role === Role.PATIENT && (
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${TIER_STYLE[u.tier] ?? ""}`}>{u.tier}</span>
+                    <StatusBadge kind="tier" value={u.tier} />
                   )}
                   {u.practitioner && (
                     <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-secondary text-foreground">
