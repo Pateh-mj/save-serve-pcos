@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { CalendarClock, Phone } from "lucide-react";
 import { AppointmentStatus } from "@/lib/constants";
 import AvailabilityEditor from "./AvailabilityEditor";
+import { clinicDateKey, formatDate, formatTime } from "@/lib/format";
 
 export default async function SchedulePage() {
     const session = await auth();
@@ -26,7 +27,7 @@ export default async function SchedulePage() {
     // Group upcoming appointments by day
     const grouped = new Map<string, typeof practitioner.appointments>();
     for (const a of practitioner.appointments) {
-        const key = new Date(a.scheduledAt).toDateString();
+        const key = clinicDateKey(a.scheduledAt);
         if (!grouped.has(key)) grouped.set(key, []);
         grouped.get(key)!.push(a);
     }
@@ -67,7 +68,7 @@ export default async function SchedulePage() {
                             {Array.from(grouped.entries()).map(([day, appts]) => (
                                 <div key={day}>
                                     <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
-                                        {new Date(day).toLocaleDateString("en-ZM", { weekday: "long", month: "short", day: "numeric" })}
+                                        {formatDate(appts[0].scheduledAt, { weekday: "long", month: "short", day: "numeric" })}
                                     </p>
                                     <div className="space-y-2">
                                         {appts.map((a) => (
@@ -75,7 +76,7 @@ export default async function SchedulePage() {
                                                 <div>
                                                     <p className="font-semibold text-foreground text-sm">{a.patient.user.name}</p>
                                                     <p className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
-                                                        {new Date(a.scheduledAt).toLocaleTimeString("en-ZM", { hour: "2-digit", minute: "2-digit" })}
+                                                        {formatTime(a.scheduledAt)}
                                                         {a.patient.user.phone && (
                                                             <span className="inline-flex items-center gap-1 text-primary">
                                                                 <Phone className="w-3 h-3" /> {a.patient.user.phone}

@@ -84,6 +84,7 @@ model Patient {
   appointments Appointment[]
   ehrRecords   EHRRecord[]
   billings     Billing[]
+  feedback     Feedback[]
 }
 
 // ─── Practitioner ─────────────────────────────────────────────────────────────
@@ -108,36 +109,45 @@ model Practitioner {
 // ─── Appointment ──────────────────────────────────────────────────────────────
 // status:  PENDING | CONFIRMED | COMPLETED | CANCELLED
 // channel: WEB | USSD
+// triageLevel: ROUTINE | URGENT | EMERGENCY (see lib/triage.ts)
 
 model Appointment {
-  id             String   @id @default(cuid())
+  id             String    @id @default(cuid())
   patientId      String
   practitionerId String
   scheduledAt    DateTime
-  status         String   @default("PENDING")
-  channel        String   @default("WEB")
+  status         String    @default("PENDING")
+  channel        String    @default("WEB")
   notes          String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  triageLevel    String    @default("ROUTINE")
+  triageScore    Int       @default(0)
+  symptoms       String    @default("") // comma-separated symptom codes
+  reminderSentAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   patient      Patient      @relation(fields: [patientId], references: [id], onDelete: Cascade)
   practitioner Practitioner @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
   billing      Billing?
   ehrRecord    EHRRecord?
+  feedback     Feedback?
+  smsMessages  SmsMessage[]
 }
 
 // ─── EHR ──────────────────────────────────────────────────────────────────────
 
 model EHRRecord {
-  id             String   @id @default(cuid())
-  patientId      String
-  practitionerId String
-  appointmentId  String?  @unique
-  visitDate      DateTime @default(now())
-  diagnosis      String?
-  prescription   String?
-  notes          String?
-  createdAt      DateTime @default(now())
+  id                     String    @id @default(cuid())
+  patientId              String
+  practitionerId         String
+  appointmentId          String?   @unique
+  visitDate              DateTime  @default(now())
+  diagnosis              String?
+  prescription           String?
+  notes                  String?
+  followUpDate           DateTime?
+  followUpReminderSentAt DateTime?
+  createdAt              DateTime  @default(now())
 
   patient      Patient      @relation(fields: [patientId], references: [id], onDelete: Cascade)
   practitioner Practitioner @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
@@ -159,11 +169,15 @@ model Billing {
   subsidyAmount    Float?
   status           String   @default("PENDING")
   policyId         String?
+  // NGO pool that funded this visit (FREE tier) or receives its surplus (PREMIUM tier)
+  ngoId            String?
   createdAt        DateTime @default(now())
 
-  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
-  patient     Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  policy      Policy?     @relation(fields: [policyId], references: [id])
+  appointment      Appointment       @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  patient          Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  policy           Policy?           @relation(fields: [policyId], references: [id])
+  ngo              NGO?              @relation(fields: [ngoId], references: [id])
+  fundTransactions FundTransaction[]
 }
 
 model Policy {
@@ -187,21 +201,108 @@ model NGO {
   fundBalance Float    @default(0)
   createdAt   DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  billings         Billing[]
+  fundTransactions FundTransaction[]
+}
+
+// ─── NGO fund ledger ──────────────────────────────────────────────────────────
+// Every movement of pool money, so fundBalance can be reconciled (lib/ledger.ts).
+// type:   OPENING | TOPUP | SUBSIDY_DEBIT | SUBSIDY_REFUND | PREMIUM_CREDIT
+// amount: signed — positive credits the pool, negative debits it
+
+model FundTransaction {
+  id        String   @id @default(cuid())
+  ngoId     String
+  type      String
+  amount    Float
+  billingId String?
+  note      String?
+  createdAt DateTime @default(now())
+
+  ngo     NGO      @relation(fields: [ngoId], references: [id], onDelete: Cascade)
+  billing Billing? @relation(fields: [billingId], references: [id], onDelete: SetNull)
+
+  @@index([ngoId, createdAt])
 }
 
 // ─── USSD Session ─────────────────────────────────────────────────────────────
+// state: the effective menu path; an incomplete booking path can be resumed on redial
 
 model USSDSession {
-  id        String   @id @default(cuid())
-  sessionId String   @unique
-  phone     String
-  state     String   @default("MAIN_MENU")
-  data      String   @default("{}")
-  expiresAt DateTime
-  createdAt DateTime @default(now())
+  id             String   @id @default(cuid())
+  sessionId      String   @unique
+  phone          String
+  state          String   @default("MAIN_MENU")
+  data           String   @default("{}")
+  completed      Boolean  @default(false)
+  expiresAt      DateTime
+  lastActivityAt DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  @@index([phone, lastActivityAt])
 }
 
+// ─── SMS ──────────────────────────────────────────────────────────────────────
+// status: QUEUED | SENT | DELIVERED | FAILED | SKIPPED
+
+model SmsMessage {
+  id                String   @id @default(cuid())
+  to                String
+  body              String
+  purpose           String
+  status            String   @default("QUEUED")
+  driver            String
+  providerMessageId String?
+  error             String?
+  segments          Int      @default(1)
+  appointmentId     String?
+  userId            String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([to, createdAt])
+  @@index([providerMessageId])
+}
+
+// ─── Patient satisfaction ─────────────────────────────────────────────────────
+
+model Feedback {
+  id            String   @id @default(cuid())
+  appointmentId String   @unique
+  patientId     String
+  rating        Int // 1–5
+  comment       String?
+  channel       String // WEB | USSD
+  createdAt     DateTime @default(now())
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  patient     Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+}
+
+// ─── Admin-editable settings (e.g. consultationFee) ──────────────────────────
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Evaluation instrumentation (objective 4: response time) ─────────────────
+
+model RequestMetric {
+  id         String   @id @default(cuid())
+  channel    String // USSD | WEB | SMS
+  action     String
+  durationMs Int
+  ok         Boolean
+  createdAt  DateTime @default(now())
+
+  @@index([channel, createdAt])
+}
 
 model Availability {
   id             String       @id @default(cuid())

@@ -1,71 +1,58 @@
 import Navbar from "@/components/Navbar";
+import UssdSimulatorModal from "@/components/UssdSimulatorModal";
 import Link from "next/link";
 import {
-  PhoneCall, Globe, ShieldCheck, Stethoscope, FileText,
-  CheckCircle2, ArrowRight, Wifi, WifiOff, AlertTriangle,
-  TrendingUp, Heart, ChevronRight, Users, LayoutDashboard,
+  PhoneCall, Globe, ShieldCheck, Stethoscope, FileText, MessageSquare,
+  CheckCircle2, ArrowRight, Wifi, WifiOff, AlertTriangle, Activity,
+  TrendingUp, Heart, ChevronRight, Users, Database, HandCoins,
 } from "lucide-react";
+import {
+  GUIDING_PRINCIPLES, PROBLEMS, PROJECT_LINE, RESEARCH, THEORIES, USSD_PROTOTYPE_NOTE,
+} from "@/lib/research";
 
-const problems = [
-  {
-    icon: WifiOff,
-    title: "Internet-First Systems Exclude Low-Income Patients",
-    body: "Most hospital management platforms require smartphones and stable internet — leaving rural and low-income patients in Zambia locked out of scheduling and basic health services.",
-    color: "text-red-500 bg-red-50",
-  },
-  {
-    icon: AlertTriangle,
-    title: "Billing Models Ignore Socioeconomic Reality",
-    body: "Traditional flat-rate hospital billing does not account for income disparity. Manual fee-waiver processes are error-prone and slow, creating inequity at the point of service.",
-    color: "text-amber-500 bg-amber-50",
-  },
-  {
-    icon: FileText,
-    title: "Doctors Buried in Administrative Compliance",
-    body: "Medical officers spend critical consultation time on manual policy-checking and billing administration — leading to burnout and reduced patient face-time.",
-    color: "text-blue-500 bg-blue-50",
-  },
-];
+const PROBLEM_ICONS = [WifiOff, FileText, AlertTriangle];
+const PROBLEM_COLORS = ["text-red-500 bg-red-50", "text-blue-500 bg-blue-50", "text-amber-500 bg-amber-50"];
 
 const features = [
   {
     icon: PhoneCall,
     title: "USSD + PWA Dual Channel",
-    body: "Patients book hospital appointments from any feature phone via *384# — no internet, no smartphone needed. Web users get a full Progressive Web App.",
+    body: "Patients book from any feature phone over ordinary GSM — no internet or data bundle needed. Smartphone users and staff get an installable Progressive Web App.",
+  },
+  {
+    icon: Activity,
+    title: "Symptom-Based Triage",
+    body: "Patients describe their symptoms when booking, on web or USSD. Danger signs trigger emergency advice, and the practitioner's queue puts the most urgent patients first.",
   },
   {
     icon: ShieldCheck,
     title: "Policy Guardian Engine",
-    body: "Real-time automated billing compliance. The Policy Guardian enforces the hospital's tiered billing rules and subsidy eligibility for every patient interaction.",
+    body: "Automated middleware that evaluates each patient's tier and applies billing policies and cross-subsidization rules in real time, for every booking on every channel.",
   },
   {
     icon: TrendingUp,
-    title: "Robin Hood Subsidization",
-    body: "Premium-tier patient fees generate a surplus that funds subsidised care for community-tier patients within the same hospital — equity built into the billing logic.",
+    title: "Robin Hood Cross-Subsidization",
+    body: "Premium-tier revenue above the standard tariff funds subsidised visits for community-tier patients. Every movement of the fund is recorded in an auditable ledger.",
   },
   {
-    icon: FileText,
-    title: "Cloud EHR Synchronisation",
-    body: "USSD-originated appointments create offline stubs that sync to the centralised Electronic Health Record when connectivity is restored. No visit is ever lost.",
+    icon: Database,
+    title: "Real-Time Synchronisation",
+    body: "USSD and web write to one central database as each interaction happens — one patient record, one appointment list, one billing history, whichever channel was used.",
   },
   {
-    icon: LayoutDashboard,
-    title: "Medical Officer Command Centre",
-    body: "A high-fidelity web dashboard gives medical officers full control over schedules, patient records, consultation logs, and billing oversight in real time.",
-  },
-  {
-    icon: Stethoscope,
-    title: "Single Source of Truth",
-    body: "Both USSD and web channels write to the same centralised database — one patient record, one billing history, regardless of how the patient accessed the hospital.",
+    icon: MessageSquare,
+    title: "SMS Notifications",
+    body: "Booking confirmations, cancellations, completed-visit notices, payment receipts and reminders reach any phone by SMS.",
   },
 ];
 
+// Mirrors the real USSD menus (lib/ussd.ts)
 const ussdSteps = [
-  { step: "1", screen: "WELCOME TO PCOS\n──────────────\nTO ACCESS SERVICES:\n\n1. Register\n2. Book Appointment\n3. My Appointments\n4. Health Tips\n\n[OK]     [BACK]" },
-  { step: "2", screen: "SELECT SERVICE:\n──────────────\n1. General Consultation\n2. Pharmacy\n3. Physiotherapy\n4. Follow-up Visit\n\n[SELECT]  [BACK]" },
-  { step: "3", screen: "SELECT DOCTOR:\n──────────────\n1. Dr. Banda (10:00 AM)\n2. Dr. Phiri (11:00 AM)\n3. Dr. Mwanza (1:00 PM)\n\n[SELECT]  [BACK]" },
-  { step: "4", screen: "CONFIRM BOOKING:\n──────────────\nDoctor: Dr. Banda\nDate: Today 10:00 AM\nService: Consultation\nSubsidy Applied\nTotal: ZMW 0\n\n1-CONFIRM  2-CANCEL" },
-  { step: "5", screen: "BOOKING CONFIRMED!\n──────────────\nYour appointment\nhas been booked.\n\nExpect SMS\nconfirmation\nshortly.\n\n[OK]" },
+  { step: "1", screen: "SaveServe *384#\n1. Book a visit\n2. My appointments\n3. Health records\n4. Bills & payment\n5. Rate last visit\n6. Health tips &\n   emergency" },
+  { step: "2", screen: "Main problem?\n1. Fever\n2. Cough/cold\n3. Diarrhoea/vomiting\n4. Pain/headache\n5. Pregnancy\n6. Injury/wound\n7. Skin/rash\n8. Medicine/other" },
+  { step: "3", screen: "Choose a practitioner:\n1. Sr. Mutale Banda\n2. Sr. Natasha Tembo" },
+  { step: "4", screen: "Confirm visit:\nSr. Mutale Banda\nFri, 30 Oct 10:00\nFee: ZMW 0.00\n(100% NGO subsidy)\nPriority: ROUTINE\n1. Confirm\n2. Cancel" },
+  { step: "5", screen: "Booked! Ref 7K2Q9M.\nSr. Mutale Banda,\nFri, 30 Oct 10:00.\nAn SMS confirmation\nwill follow." },
 ];
 
 export default function Home() {
@@ -84,36 +71,37 @@ export default function Home() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent border border-primary/20 text-xs font-semibold text-primary mb-6">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              BSc ICT Final Year Project · Information and Communication University (ICU)
+              {PROJECT_LINE}
             </div>
-            <h1 className="text-2xl md:text-6xl font-extrabold text-foreground leading-tight mb-6">
-              <span className="text-primary">PCOS:</span> Hospital Management for{" "}
+            <h1 className="text-3xl md:text-6xl font-extrabold text-foreground leading-tight mb-6">
+              <span className="text-primary">PCOS:</span> Healthcare Access for{" "}
               <span className="relative">Every Patient<span className="absolute -bottom-1 left-0 right-0 h-1 bg-primary/30 rounded-full" /></span>
             </h1>
-            <p className="text-lg text-muted-foreground text-justify leading-relaxed mb-4 max-w-lg">
-              A hybrid USSD-Web hospital management system that connects patients with their hospital&apos;s medical officers — regardless of internet access or income level.
+            <p className="text-lg text-muted-foreground leading-relaxed mb-4 max-w-lg">
+              A multi-channel Patient-Centric Orchestration System that connects patients with their clinic&apos;s healthcare
+              practitioners — through a web app or a USSD menu on any feature phone — regardless of internet access or income.
             </p>
-            <p className="text-sm text-muted-foreground text-justify mb-10 max-w-lg">
-              Powered by the <strong className="text-foreground">Robin Hood Subsidization Model</strong> — premium-tier patient billing funds subsidised care for community-tier patients within the same hospital.
+            <p className="text-sm text-muted-foreground mb-10 max-w-lg">
+              The <strong className="text-foreground">Policy Guardian</strong> applies the{" "}
+              <strong className="text-foreground">Robin Hood</strong> cross-subsidization model automatically: premium-tier
+              revenue funds subsidised care for community-tier patients.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-lg shadow-primary/25">
                 Register as a Patient <ArrowRight className="w-4 h-4" />
               </Link>
-              <a href="#ussd" className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-border text-foreground font-semibold rounded-lg hover:bg-secondary transition-colors">
-                <PhoneCall className="w-4 h-4 text-primary" /> Access via USSD *384#
-              </a>
+              <UssdSimulatorModal />
             </div>
           </div>
 
           <div className="relative hidden md:flex flex-col items-center gap-4">
             <div className="w-full max-w-xl bg-white border border-border rounded-lg shadow-xl p-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Two Channels. One Hospital System.</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Two Channels. One System.</p>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col items-center p-4 rounded-lg bg-accent border border-primary/20 text-center">
                   <Globe className="w-8 h-8 text-primary mb-2" strokeWidth={1.5} />
                   <p className="text-sm font-bold text-foreground">Web PWA</p>
-                  <p className="text-xs text-muted-foreground mt-1">Smartphone patients &amp; doctors</p>
+                  <p className="text-xs text-muted-foreground mt-1">Smartphone patients &amp; healthcare staff</p>
                 </div>
                 <div className="flex flex-col items-center p-4 rounded-lg bg-secondary border border-border text-center">
                   <PhoneCall className="w-8 h-8 text-primary mb-2" strokeWidth={1.5} />
@@ -123,12 +111,12 @@ export default function Home() {
               </div>
               <div className="mt-4 pt-4 border-t border-border flex items-center justify-center gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="w-4 h-4 text-primary" />
-                Shared EHR · Policy Guardian · Robin Hood Billing
+                Central records · Policy Guardian · Robin Hood billing
               </div>
             </div>
             <div className="flex gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1"><Wifi className="w-4 h-4 text-primary" /> Web access</span>
-              <span className="flex items-center gap-1"><WifiOff className="w-4 h-4 text-primary" /> Offline via USSD</span>
+              <span className="flex items-center gap-1"><WifiOff className="w-4 h-4 text-primary" /> No internet needed on USSD</span>
             </div>
           </div>
         </div>
@@ -140,7 +128,7 @@ export default function Home() {
           <Heart className="w-5 h-5 text-white/70" />
           <span className="font-bold text-lg">The Robin Hood Model</span>
           <span className="text-white/60">—</span>
-          <span className="text-white/80 text-sm max-w-xl">Premium-tier patient billing funds subsidised community-tier care within the same hospital. Equity as software logic, not manual administration.</span>
+          <span className="text-white/80 text-sm max-w-xl">Premium-tier revenue funds subsidised community-tier care. Equity as software logic, not manual administration.</span>
         </div>
       </section>
 
@@ -149,21 +137,26 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Problem Statement</p>
-            <h2 className="text-2xl font-extrabold text-foreground">The Hospital Management Gap</h2>
+            <h2 className="text-2xl font-extrabold text-foreground">The Access and Equity Gap</h2>
             <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-              Current hospital management systems fail a large portion of patients through architectural design choices that assume universal internet access and equal income.
+              In a fair healthcare system, every patient should be able to book an appointment, see a practitioner and be treated on time —
+              whatever their income, the phone they own, or where they live. That is not what is happening in Zambia today.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {problems.map((p) => (
-              <div key={p.title} className="bg-white border border-border rounded-lg p-7 shadow-sm hover:shadow-md transition-shadow">
-                <div className={`w-11 h-11 rounded-lg flex items-center justify-center mb-5 ${p.color}`}>
-                  <p.icon className="w-5 h-5" strokeWidth={1.75} />
+            {PROBLEMS.map((p, i) => {
+              const Icon = PROBLEM_ICONS[i];
+              return (
+                <div key={p.title} className="bg-white border border-border rounded-lg p-7 shadow-sm hover:shadow-md transition-shadow">
+                  <div className={`w-11 h-11 rounded-lg flex items-center justify-center mb-5 ${PROBLEM_COLORS[i]}`}>
+                    <Icon className="w-5 h-5" strokeWidth={1.75} />
+                  </div>
+                  <h3 className="font-bold text-foreground mb-3 leading-snug">{p.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{p.body}</p>
+                  <p className="text-xs text-muted-foreground/80 mt-3 italic">({p.citation})</p>
                 </div>
-                <h3 className="font-bold text-foreground mb-3 leading-snug">{p.title}</h3>
-                <p className="text-sm text-muted-foreground text-justify leading-relaxed">{p.body}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -174,26 +167,34 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">The Solution</p>
-              <h2 className="text-2xl font-extrabold text-foreground leading-tight mb-6">One Hospital System.<br />Two Access Channels.</h2>
-              <p className="text-muted-foreground text-justify leading-relaxed mb-6">
-                PCOS bridges the digital divide by providing the same hospital management capabilities through a full Progressive Web App <strong className="text-foreground">and</strong> a USSD gateway reachable on any mobile network — no internet required.
+              <h2 className="text-2xl font-extrabold text-foreground leading-tight mb-6">One System.<br />Two Access Channels.</h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                PCOS integrates a low-bandwidth USSD gateway with a feature-rich web platform, connected by the automated Policy Guardian
+                middleware — real-time synchronisation between feature phones and central patient records, with cross-subsidization
+                enforced automatically.
               </p>
               <ul className="space-y-3 mb-8">
-                {["100% patient reach regardless of device or connectivity", "Policy Guardian automates hospital billing compliance in real time", "USSD transactions sync to cloud EHR on reconnection", "Robin Hood billing funds community-tier care from premium revenue", "Medical officers access a full web Command Centre dashboard"].map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-foreground text-justify">
+                {[
+                  "Reaches patients on any GSM phone — smartphone or feature phone",
+                  "Policy Guardian enforces billing and cross-subsidy rules in real time",
+                  "USSD interactions are written to the central record as they happen",
+                  "Symptom-based triage puts the most urgent patients first",
+                  "Practitioners and administrators work from a web dashboard",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-foreground">
                     <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />{item}
                   </li>
                 ))}
               </ul>
               <Link href="/about" className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:gap-2 transition-all">
-                Read the research proposal <ChevronRight className="w-4 h-4" />
+                Read about the research <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
             <div className="space-y-4">
               {[
-                { icon: Globe, label: "Web PWA — Patients & Doctors", badge: "Online", badgeCls: "bg-primary/10 text-primary", desc: "Full appointment booking, EHR records, billing management, and the Medical Officer Command Centre — optimised for low-data connections." },
-                { icon: PhoneCall, label: "USSD Channel (*384#)", badge: "Offline-first", badgeCls: "bg-secondary text-muted-foreground", desc: "Menu-driven appointment booking via any mobile network. Confirmations via SMS. Zero internet requirement for patients." },
-                { icon: ShieldCheck, label: "Policy Guardian + Shared EHR", badge: "Both channels", badgeCls: "bg-primary/10 text-primary", desc: "Both channels write to one centralised EHR. The Policy Guardian enforces hospital billing policy for every transaction." },
+                { icon: Globe, label: "Web PWA — Patients & Staff", badge: "Installable", badgeCls: "bg-primary/10 text-primary", desc: "Booking with triage, health records and billing for patients; the practitioner command centre and administration for staff." },
+                { icon: PhoneCall, label: "USSD Channel (*384#)", badge: "No internet needed", badgeCls: "bg-secondary text-muted-foreground", desc: "Menu-driven booking, records, bills and payment over ordinary GSM, with SMS confirmations." },
+                { icon: ShieldCheck, label: "Policy Guardian + Central Database", badge: "Both channels", badgeCls: "bg-primary/10 text-primary", desc: "Both channels write to one central database, and the Policy Guardian applies the same billing policy to every transaction." },
               ].map((item) => (
                 <div key={item.label} className="bg-white border border-border rounded-lg p-6 shadow-sm">
                   <div className="flex items-center gap-3 mb-3">
@@ -201,7 +202,7 @@ export default function Home() {
                     <span className="font-semibold text-foreground text-sm">{item.label}</span>
                     <span className={`ml-auto text-xs px-2 py-0.5 rounded-full font-medium ${item.badgeCls}`}>{item.badge}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground text-justify">{item.desc}</p>
+                  <p className="text-xs text-muted-foreground">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -214,7 +215,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">System Features</p>
-            <h2 className="text-2xl font-extrabold text-foreground">Built for Every Layer of the Hospital</h2>
+            <h2 className="text-2xl font-extrabold text-foreground">Built Around the Patient Journey</h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f) => (
@@ -222,8 +223,8 @@ export default function Home() {
                 <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center mb-5">
                   <f.icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
                 </div>
-                <h3 className="font-bold text-foreground text-justify mb-2">{f.title}</h3>
-                <p className="text-sm text-muted-foreground text-justify leading-relaxed">{f.body}</p>
+                <h3 className="font-bold text-foreground mb-2">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.body}</p>
               </div>
             ))}
           </div>
@@ -239,16 +240,23 @@ export default function Home() {
                 <Heart className="w-6 h-6 text-primary" strokeWidth={1.5} />
               </div>
               <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Robin Hood Subsidization Model</p>
-              <h2 className="text-2xl font-extrabold text-foreground mb-5">Equity as Hard-Coded Hospital Logic</h2>
-              <p className="text-muted-foreground text-justify leading-relaxed mb-5">
-                Traditional hospitals handle fee waivers manually — a process prone to error and delay. PCOS encodes the hospital&apos;s equity policy directly into the Policy Guardian engine.
+              <h2 className="text-2xl font-extrabold text-foreground mb-5">Equity Built Into the Software</h2>
+              <p className="text-muted-foreground leading-relaxed mb-5">
+                Facilities usually handle fee waivers by hand — a process prone to error and delay. PCOS embeds the equity policy
+                directly in the Policy Guardian, so it is applied consistently at every point of service.
               </p>
-              <p className="text-muted-foreground text-justify leading-relaxed mb-6">
-                Premium-tier patient fees generate a surplus that the Policy Guardian automatically redirects to fund community-tier consultations within the same hospital. No manual intervention. No administrative delay.
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                When a premium-tier patient pays, the amount above the standard tariff is credited to the community health equity fund.
+                The Policy Guardian draws on that fund to cover visits for free-tier patients — no manual intervention.
               </p>
               <ul className="space-y-2">
-                {["Surplus from premium billing automatically funds community care", "Policy Guardian calculates subsidy eligibility at booking time", "Full audit log of every redistribution event", "Hospital administrators monitor equity metrics in real time"].map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-foreground text-justify">
+                {[
+                  "Premium surplus funds community-tier care",
+                  "Subsidy eligibility calculated at booking time",
+                  "Every fund movement recorded in an auditable ledger",
+                  "Administrators monitor equity metrics in real time",
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-sm text-foreground">
                     <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />{f}
                   </li>
                 ))}
@@ -257,10 +265,10 @@ export default function Home() {
             <div className="space-y-4">
               <h3 className="font-bold text-foreground text-xl mb-4">How the Policy Guardian Processes a Booking</h3>
               {[
-                { n: "1", title: "Patient books via web or USSD", desc: "Request arrives at the Policy Guardian regardless of access channel." },
-                { n: "2", title: "Tier classification evaluated", desc: "Policy Guardian checks the patient's registered tier: Premium or Community." },
-                { n: "3", title: "Billing calculated automatically", desc: "Premium patients pay full rate. Community patients receive subsidy — funded from accumulated premium surplus." },
-                { n: "4", title: "Appointment confirmed + EHR updated", desc: "Booking confirmed, SMS sent, event logged to the centralised EHR." },
+                { n: "1", title: "Patient books via web or USSD", desc: "The request reaches the Policy Guardian, whichever channel it came from." },
+                { n: "2", title: "Tier classification evaluated", desc: "Free (community), Basic (standard) or Premium — classified by administrators." },
+                { n: "3", title: "Billing calculated automatically", desc: "Free-tier visits are funded from the equity fund; Premium pays above the standard tariff, and the surplus refills the fund." },
+                { n: "4", title: "Appointment confirmed + record updated", desc: "Booking saved to the central record and an SMS confirmation sent." },
               ].map((item) => (
                 <div key={item.n} className="flex gap-4 items-start bg-white border border-border rounded-lg p-5 shadow-sm">
                   <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">{item.n}</div>
@@ -282,8 +290,10 @@ export default function Home() {
             <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">USSD Channel</p>
             <h2 className="text-2xl font-extrabold text-white">No Internet? Dial *384#</h2>
             <p className="mt-4 text-white/60 max-w-xl mx-auto">
-              Any patient on any mobile network can book a hospital appointment in under 2 minutes — using only a basic feature phone.
+              A patient with a basic feature phone can describe their symptoms, book a practitioner and see the fee before confirming —
+              in a few short menus.
             </p>
+            <p className="mt-2 text-white/40 text-xs max-w-xl mx-auto">{USSD_PROTOTYPE_NOTE}</p>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             {ussdSteps.map((s, i) => (
@@ -291,7 +301,7 @@ export default function Home() {
                 <div className="flex flex-col items-center">
                   <div className="w-60 bg-amber-950/90 border-2 border-amber-700 rounded-lg p-4 shadow-xl">
                     <div className="bg-amber-400/20 rounded-lg p-2 mb-3">
-                      <div className="text-center text-[10px] text-amber-400 font-bold">PCOS HOSPITAL</div>
+                      <div className="text-center text-[10px] text-amber-400 font-bold">USSD *384#</div>
                     </div>
                     <pre className="text-[11px] text-amber-300 font-mono leading-relaxed whitespace-pre-wrap">{s.screen}</pre>
                   </div>
@@ -309,12 +319,42 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">System Users</p>
-            <h2 className="text-2xl font-extrabold text-foreground">Built for Both Sides of the Hospital</h2>
+            <h2 className="text-2xl font-extrabold text-foreground">Built for Patients and Healthcare Staff</h2>
           </div>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
-              { icon: Users, label: "Patients", color: "bg-blue-50 text-blue-600", points: ["Book via web or dial *384# — no internet needed", "Access health records and visit history", "Community-tier patients receive automatic subsidies", "SMS appointment confirmations on any phone", "Transparent billing — know costs before confirming"], href: "/patients", cta: "For Patients" },
-              { icon: Stethoscope, label: "Medical Officers", color: "bg-green-50 text-primary", points: ["Full web Command Centre dashboard", "Manage patient schedule and availability", "Complete EHR records after every consultation", "Policy Guardian handles billing automatically", "Monitor community and premium patient metrics"], href: "/login", cta: "Staff Login" },
+              {
+                icon: Users, label: "Patients", color: "bg-blue-50 text-blue-600",
+                points: [
+                  "Book on the web or by USSD — no internet needed on USSD",
+                  "Symptom triage when booking",
+                  "Health records and visit history",
+                  "Automatic subsidies for community-tier patients",
+                  "See the fee before confirming; SMS confirmations",
+                ],
+                href: "/patients", cta: "For Patients",
+              },
+              {
+                icon: Stethoscope, label: "Healthcare Staff", color: "bg-green-50 text-primary",
+                points: [
+                  "Practitioner command centre with a triage-ordered queue",
+                  "Weekly availability and schedule",
+                  "Diagnoses, prescriptions and follow-ups in the EHR",
+                  "Administrators classify tiers and set billing policy",
+                  "Evaluation: response times, sync checks, satisfaction",
+                ],
+                href: "/login", cta: "Staff Login",
+              },
+              {
+                icon: HandCoins, label: "Funding Partners", color: "bg-violet-50 text-violet-600",
+                points: [
+                  "Top up the community health equity fund",
+                  "See every subsidised visit the fund paid for",
+                  "Full ledger that reconciles to the kwacha",
+                  "Monthly impact report",
+                ],
+                href: "/ngos", cta: "For Partners",
+              },
             ].map((item) => (
               <div key={item.label} className="bg-white border border-border rounded-lg p-8 flex flex-col shadow-sm hover:shadow-md transition-shadow">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-5 ${item.color}`}>
@@ -337,38 +377,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Theoretical Foundation */}
+      {/* Theoretical Foundation (report §2.3.3 and §1.12.1) */}
       <section className="py-12 bg-accent/30">
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="text-center mb-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Theoretical Foundation</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Theoretical Framework</p>
             <h2 className="text-2xl font-extrabold text-foreground">Grounded in Established Research</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-5">
-            {[
-              { title: "Digital Divide Theory", body: "PCOS applies a Medium-Agnostic Design so the Policy Guardian serves a smartphone user via the web and a feature-phone user via USSD with equal clinical integrity." },
-              { title: "Socio-Technical Systems Theory", body: "PCOS acts as the bridge between social policy (equity) and technical execution (automated subsidization), aligning with the workflows of a functioning hospital." },
-              { title: "Health Equity Theory (Farantos et al., 2025)", body: "The Robin Hood Model implements a closed-loop cross-subsidization — transforming an economic theory into hard-coded hospital billing logic." },
-              { title: "Information Systems Continuity Theory", body: "USSD functions as a Resilience Layer independent of data networks, ensuring the Policy Guardian remains accessible during internet downtime." },
-            ].map((item) => (
-              <div key={item.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
-                <div className="flex items-start gap-2 mb-3">
+            {THEORIES.map((t) => (
+              <div key={t.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
+                <div className="flex items-start gap-2 mb-1">
                   <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                  <h3 className="font-bold text-foreground text-sm">{item.title}</h3>
+                  <h3 className="font-bold text-foreground text-sm">{t.title}</h3>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed text-justify">{item.body}</p>
+                <p className="text-xs text-muted-foreground mb-3 ml-6">{t.citation}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-3">{t.body}</p>
+                <p className="text-sm text-foreground leading-relaxed"><strong>In PCOS:</strong> {t.inPcos}</p>
               </div>
             ))}
           </div>
+          <p className="text-xs text-muted-foreground text-center mt-6 max-w-3xl mx-auto">
+            Guided by {GUIDING_PRINCIPLES.title.toLowerCase()} ({GUIDING_PRINCIPLES.citation}): {GUIDING_PRINCIPLES.body}
+          </p>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-12 bg-primary">
         <div className="container mx-auto px-6 text-center text-white">
-          <h2 className="text-2xl font-extrabold mb-4">Access Your Hospital. Any Phone. Anywhere.</h2>
+          <h2 className="text-2xl font-extrabold mb-4">Healthcare Access on Any Phone</h2>
           <p className="text-lg text-white/80 mb-10 max-w-xl mx-auto">
-            Register online with a smartphone, or simply dial *384# from any mobile phone — the system meets you where you are.
+            Register online with a smartphone, or use the USSD menu from a basic phone — the system meets patients where they are.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/register" className="px-8 py-3.5 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 transition-colors">Register as a Patient</Link>
@@ -384,15 +424,16 @@ export default function Home() {
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-primary font-extrabold text-xl">PCOS</span>
-                <span className="text-white/40 font-light text-sm">SaveServe</span>
+                <span className="text-white/40 font-light text-sm">{RESEARCH.prototypeName}</span>
               </div>
-              <p className="text-sm text-white/50 leading-relaxed text-justify max-w-xs">
-                Patient-Centric Orchestration System for Healthcare Resource Equity Using Robin Hood Subsidization and Multi-Channel Access. Final Year BSc ICT Project — Department of ICT, School of Engineering, Information and Communication University (ICU).
+              <p className="text-sm text-white/50 leading-relaxed max-w-xs">
+                {RESEARCH.title}. A final year project for the degree of {RESEARCH.degree} — {RESEARCH.school},{" "}
+                {RESEARCH.university} ({RESEARCH.universityShort}).
               </p>
-              <p className="text-xs text-white/30 mt-3">By Patson Tembo · 2026</p>
+              <p className="text-xs text-white/30 mt-3">By {RESEARCH.author} · Advisor: {RESEARCH.advisor} · {RESEARCH.year}</p>
             </div>
             {[
-              { heading: "System", links: [{ label: "For Patients", href: "/patients" }, { label: "Medical Officer Login", href: "/login" }, { label: "USSD Access (*384#)", href: "#ussd" }, { label: "Register", href: "/register" }] },
+              { heading: "System", links: [{ label: "For Patients", href: "/patients" }, { label: "For Funding Partners", href: "/ngos" }, { label: "USSD Simulator", href: "/ussd" }, { label: "Register", href: "/register" }] },
               { heading: "Project", links: [{ label: "About PCOS", href: "/about" }, { label: "Contact", href: "/contact" }, { label: "Sign In", href: "/login" }] },
             ].map((col) => (
               <div key={col.heading}>
@@ -406,8 +447,8 @@ export default function Home() {
             ))}
           </div>
           <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-white/30">
-            <p>© 2026 Patson Tembo · Information and Communication University (ICU) · BSc ICT Final Year Project</p>
-            <p>tembopatson5@gmail.com</p>
+            <p>© {RESEARCH.year} {RESEARCH.author} · {RESEARCH.university} ({RESEARCH.universityShort}) · {RESEARCH.location}</p>
+            <p>{RESEARCH.email}</p>
           </div>
         </div>
       </footer>

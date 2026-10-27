@@ -117,20 +117,57 @@ async function main() {
     console.log(`  ✓ ${p.name}`);
   }
 
-  // ─── Demo patient ─────────────────────────────────────────────────────────
-  if (!(await prisma.user.findUnique({ where: { email: "demo@saveserve.org" } }))) {
+  // ─── Practitioner availability ──────────────────────────────────────────────
+  // Mon–Fri 08:00–17:00, Sat 09:00–13:00, Sun off. update: {} keeps any edits made in the app.
+  const weeklyHours: Record<number, { startTime: string; endTime: string; isActive: boolean }> = {
+    0: { startTime: "09:00", endTime: "13:00", isActive: false },
+    1: { startTime: "08:00", endTime: "17:00", isActive: true },
+    2: { startTime: "08:00", endTime: "17:00", isActive: true },
+    3: { startTime: "08:00", endTime: "17:00", isActive: true },
+    4: { startTime: "08:00", endTime: "17:00", isActive: true },
+    5: { startTime: "08:00", endTime: "17:00", isActive: true },
+    6: { startTime: "09:00", endTime: "13:00", isActive: true },
+  };
+
+  for (const prac of await prisma.practitioner.findMany({ select: { id: true } })) {
+    for (const [day, hours] of Object.entries(weeklyHours)) {
+      const dayOfWeek = Number(day);
+      await prisma.availability.upsert({
+        where: { practitionerId_dayOfWeek: { practitionerId: prac.id, dayOfWeek } },
+        update: {},
+        create: { practitionerId: prac.id, dayOfWeek, ...hours },
+      });
+    }
+  }
+  console.log("  ✓ Practitioner availability");
+
+  // ─── Demo patients (one per tier) ──────────────────────────────────────────
+  const patients = [
+    { name: "Demo Patient", email: "demo@saveserve.org", phone: "+260971000001", tier: "BASIC" },
+    { name: "Mwila Chanda (Free tier)", email: "free@saveserve.org", phone: "+260971000002", tier: "FREE" },
+    { name: "Bwalya Mumba (Premium tier)", email: "premium@saveserve.org", phone: "+260971000003", tier: "PREMIUM" },
+  ];
+
+  for (const p of patients) {
+    if (await prisma.user.findUnique({ where: { email: p.email } })) continue;
+    await prisma.user.create({
+      data: { ...p, password, role: "PATIENT", patient: { create: {} } },
+    });
+    console.log(`  ✓ ${p.name}`);
+  }
+
+  // ─── Demo admin ───────────────────────────────────────────────────────────
+  if (!(await prisma.user.findUnique({ where: { email: "admin@saveserve.org" } }))) {
     await prisma.user.create({
       data: {
-        name: "Demo Patient",
-        email: "demo@saveserve.org",
-        phone: "+260971000001",
+        name: "System Administrator",
+        email: "admin@saveserve.org",
         password,
-        role: "PATIENT",
+        role: "ADMIN",
         tier: "BASIC",
-        patient: { create: {} },
       },
     });
-    console.log("  ✓ Demo Patient");
+    console.log("  ✓ System Administrator");
   }
 
   // ─── Demo NGO ─────────────────────────────────────────────────────────────
@@ -146,6 +183,17 @@ async function main() {
       },
     });
     console.log("  ✓ Zambia Health Foundation (NGO)");
+  }
+
+  // ─── Fund ledger opening balances ──────────────────────────────────────────
+  // Pools that predate the ledger get one OPENING entry so they reconcile from here on.
+  const ngos = await prisma.nGO.findMany({ include: { _count: { select: { fundTransactions: true } } } });
+  for (const ngo of ngos) {
+    if (ngo._count.fundTransactions > 0 || ngo.fundBalance === 0) continue;
+    await prisma.fundTransaction.create({
+      data: { ngoId: ngo.id, type: "OPENING", amount: ngo.fundBalance, note: "Opening balance (pre-ledger)" },
+    });
+    console.log(`  ✓ Ledger opening balance for ${ngo.name}: ZMW ${ngo.fundBalance.toFixed(2)}`);
   }
 
   console.log("\n✅ Seed complete.");

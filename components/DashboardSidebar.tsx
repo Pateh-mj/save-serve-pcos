@@ -3,8 +3,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
-  LayoutDashboard, CalendarDays, FileText, CreditCard,
-  Users, Stethoscope, Building2, BarChart3, Settings, LogOut,
+  LayoutDashboard, CalendarDays, FileText, CreditCard, Users, LogOut,
+  SlidersHorizontal, MessageSquare, BarChart3, CalendarPlus, UserCircle,
+  Wallet, HeartHandshake, ClipboardList,
 } from "lucide-react";
 
 type NavItem = { href: string; label: string; icon: React.ElementType };
@@ -12,30 +13,43 @@ type NavItem = { href: string; label: string; icon: React.ElementType };
 const NAV: Record<string, NavItem[]> = {
   PATIENT: [
     { href: "/patient/dashboard", label: "Overview", icon: LayoutDashboard },
+    { href: "/patient/appointments/new", label: "Book a Visit", icon: CalendarPlus },
     { href: "/patient/appointments", label: "Appointments", icon: CalendarDays },
     { href: "/patient/records", label: "Health Records", icon: FileText },
     { href: "/patient/billing", label: "My Billing", icon: CreditCard },
+    { href: "/patient/profile", label: "My Profile", icon: UserCircle },
   ],
   PRACTITIONER: [
-    { href: "/practitioner/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/practitioner/dashboard", label: "Triage Queue", icon: LayoutDashboard },
     { href: "/practitioner/schedule", label: "Schedule", icon: CalendarDays },
     { href: "/practitioner/patients", label: "Patients", icon: Users },
     { href: "/practitioner/records", label: "EHR Records", icon: FileText },
+    { href: "/practitioner/profile", label: "My Profile", icon: UserCircle },
   ],
   NGO: [
     { href: "/ngo/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/ngo/funding", label: "Funding", icon: CreditCard },
-    { href: "/ngo/beneficiaries", label: "Beneficiaries", icon: Users },
-    { href: "/ngo/reports", label: "Reports", icon: BarChart3 },
+    { href: "/ngo/funding", label: "Funding & Ledger", icon: Wallet },
+    { href: "/ngo/beneficiaries", label: "Beneficiaries", icon: HeartHandshake },
+    { href: "/ngo/impact", label: "Impact Report", icon: BarChart3 },
+    { href: "/ngo/profile", label: "Organisation", icon: UserCircle },
   ],
   ADMIN: [
     { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/admin/users", label: "Users", icon: Users },
-    { href: "/admin/practitioners", label: "Practitioners", icon: Stethoscope },
-    { href: "/admin/policies", label: "Policies", icon: FileText },
-    { href: "/admin/reports", label: "Reports", icon: BarChart3 },
+    { href: "/admin/appointments", label: "Appointments", icon: ClipboardList },
+    { href: "/admin/users", label: "Users & Tiers", icon: Users },
+    { href: "/admin/policies", label: "Policy Guardian", icon: SlidersHorizontal },
+    { href: "/admin/sms", label: "SMS Gateway", icon: MessageSquare },
+    { href: "/admin/evaluation", label: "Evaluation", icon: BarChart3 },
+    { href: "/admin/account", label: "My Account", icon: UserCircle },
   ],
 };
+
+/** The single nav item for the current page: the longest href the path starts with. */
+function activeHref(items: NavItem[], pathname: string) {
+  return items
+    .filter(({ href }) => pathname === href || pathname.startsWith(href + "/"))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+}
 
 const ROLE_LABEL: Record<string, string> = {
   PATIENT: "Patient", PRACTITIONER: "Practitioner", NGO: "NGO", ADMIN: "Admin",
@@ -50,6 +64,7 @@ interface Props {
 export default function DashboardSidebar({ role, userName, userEmail }: Props) {
   const pathname = usePathname();
   const items = NAV[role] ?? NAV.PATIENT;
+  const current = activeHref(items, pathname);
 
   return (
     <aside className="fixed inset-y-0 left-0 w-64 bg-white border-r border-border flex flex-col z-40">
@@ -69,7 +84,7 @@ export default function DashboardSidebar({ role, userName, userEmail }: Props) {
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-0.5">
         {items.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href || pathname.startsWith(href + "/");
+          const active = href === current;
           return (
             <Link
               key={href}
@@ -84,16 +99,6 @@ export default function DashboardSidebar({ role, userName, userEmail }: Props) {
             </Link>
           );
         })}
-
-        <div className="pt-3 border-t border-border mt-3">
-          <Link
-            href="/settings"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-secondary hover:text-foreground transition-colors"
-          >
-            <Settings className="w-4 h-4" strokeWidth={1.75} />
-            Settings
-          </Link>
-        </div>
       </nav>
 
       {/* User */}

@@ -24,10 +24,12 @@ export const proxy = auth((req) => {
   const user = req.auth?.user;
   const userRole = user?.role;
 
-  const isPatientRoute = pathname.startsWith("/patient");
-  const isPractitionerRoute = pathname.startsWith("/practitioner");
-  const isNgoRoute = pathname.startsWith("/ngo");
-  const isAdminRoute = pathname.startsWith("/admin");
+  // Match whole path segments: "/patient/…" is protected, the public "/patients" page is not
+  const under = (prefix: string) => pathname === prefix || pathname.startsWith(prefix + "/");
+  const isPatientRoute = under("/patient");
+  const isPractitionerRoute = under("/practitioner");
+  const isNgoRoute = under("/ngo");
+  const isAdminRoute = under("/admin");
   const isProtectedRoute = isPatientRoute || isPractitionerRoute || isNgoRoute || isAdminRoute;
 
   // Unauthenticated users trying to access protected routes

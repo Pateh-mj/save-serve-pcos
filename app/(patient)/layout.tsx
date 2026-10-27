@@ -1,10 +1,12 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import DashboardSidebar from "@/components/DashboardSidebar";
+import { Role } from "@/lib/constants";
 
 export default async function PatientLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  if (!session) redirect("/login");
+  if (!session?.user) redirect("/login");
+  if (session.user.role !== Role.PATIENT) redirect("/login");
 
   return (
     <div className="min-h-screen bg-background flex">

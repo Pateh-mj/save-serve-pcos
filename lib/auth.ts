@@ -4,16 +4,22 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { authConfig } from "@/auth.config";
+import type { Role } from "@/lib/constants";
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
 
+/** Server-side role gate for route handlers: the session if the user has one of `roles`, else null. */
+export async function sessionWithRole(...roles: Role[]) {
+  const session = await auth();
+  if (!session?.user || !roles.includes(session.user.role)) return null;
+  return session;
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  trustHost: true,
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "saveserve-dev-secret-change-in-production",
   providers: [
     Credentials({
       credentials: {

@@ -31,7 +31,16 @@ export async function GET(req: NextRequest) {
   }
 
   if (role === Role.ADMIN || role === Role.NGO) {
+    // An NGO only sees billings its own pool funded or received surplus from
+    let where: { ngoId?: string } = {};
+    if (role === Role.NGO) {
+      const ngo = await prisma.nGO.findUnique({ where: { userId } });
+      if (!ngo) return NextResponse.json([]);
+      where = { ngoId: ngo.id };
+    }
+
     const billings = await prisma.billing.findMany({
+      where,
       include: {
         patient: { include: { user: true } },
         appointment: {

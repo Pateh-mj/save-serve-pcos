@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAvailableSlots } from "@/lib/availability";
+import { formatTime } from "@/lib/format";
 
 export async function GET(
     req: Request,
@@ -8,17 +9,17 @@ export async function GET(
     const { id } = await params;
 
     const { searchParams } = new URL(req.url);
-    const dateParam = searchParams.get("date"); // "YYYY-MM-DD"
+    const dateParam = searchParams.get("date"); // "YYYY-MM-DD" in clinic time
     if (!dateParam) return NextResponse.json({ error: "date query param required" }, { status: 400 });
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+        return NextResponse.json({ error: "Invalid date, expected YYYY-MM-DD" }, { status: 400 });
+    }
 
-    const date = new Date(dateParam);
-    if (isNaN(date.getTime())) return NextResponse.json({ error: "Invalid date" }, { status: 400 });
-
-    const slots = await getAvailableSlots(id, date);
+    const slots = await getAvailableSlots(id, dateParam);
     return NextResponse.json({
         slots: slots.map((s) => ({
             iso: s.toISOString(),
-            label: s.toLocaleTimeString("en-ZM", { hour: "2-digit", minute: "2-digit" }),
+            label: formatTime(s),
         })),
     });
 }

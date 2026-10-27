@@ -214,6 +214,9 @@ export default function RegisterPage() {
                   <input className={inputCls} placeholder="e.g. Lusaka, Chilenje"
                     value={form.location} onChange={(e) => set("location", e.target.value)} />
                 </div>
+                <p className="text-xs text-muted-foreground bg-secondary rounded-lg px-3 py-2">
+                  An administrator verifies your licence before patients can book you.
+                </p>
               </>
             )}
 

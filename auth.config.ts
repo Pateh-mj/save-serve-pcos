@@ -4,7 +4,12 @@ import { Role as RoleEnum } from "@/lib/constants";
 
 export const authConfig: NextAuthConfig = {
   trustHost: true,
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "saveserve-dev-secret-change-in-production",
+  // The dev fallback is never used in production: a missing secret there must fail loudly,
+  // not sign sessions with a public string anyone could use to forge an admin JWT.
+  secret:
+    process.env.AUTH_SECRET ||
+    process.env.NEXTAUTH_SECRET ||
+    (process.env.NODE_ENV !== "production" ? "saveserve-dev-secret-change-in-production" : undefined),
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",

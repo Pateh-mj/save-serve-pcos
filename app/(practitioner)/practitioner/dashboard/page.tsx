@@ -1,9 +1,17 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { CalendarDays, Users, Clock, CheckCircle2, Stethoscope, Phone, ShieldCheck } from "lucide-react";
+import { CalendarDays, Clock, CheckCircle2, Stethoscope, Phone, ShieldCheck, AlertTriangle } from "lucide-react";
 import { AppointmentStatus } from "@/lib/constants";
 import PractitionerAppointmentActions from "./PractitionerAppointmentActions";
+import { clinicDateKey, formatDateTime } from "@/lib/format";
+import { TRIAGE_PRIORITY, TriageLevel, symptomLabels } from "@/lib/triage";
+
+const TRIAGE_BADGE: Record<string, string> = {
+  [TriageLevel.EMERGENCY]: "bg-red-600 text-white border-red-600",
+  [TriageLevel.URGENT]: "bg-amber-100 text-amber-800 border-amber-300",
+  [TriageLevel.ROUTINE]: "bg-secondary text-muted-foreground border-border",
+};
 
 export default async function PractitionerDashboard() {
   const session = await auth();
@@ -26,27 +34,32 @@ export default async function PractitionerDashboard() {
 
   if (!practitioner) redirect("/login");
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const todayAppts = practitioner.appointments.filter((a) => {
-    const d = new Date(a.scheduledAt);
-    d.setHours(0, 0, 0, 0);
-    return d.getTime() === today.getTime();
-  });
+  const today = clinicDateKey();
+  const todayAppts = practitioner.appointments.filter((a) => clinicDateKey(a.scheduledAt) === today);
 
   const pendingOrUpcoming = practitioner.appointments.filter(
     (a) => a.status === AppointmentStatus.PENDING || a.status === AppointmentStatus.CONFIRMED
   );
 
   const completed = practitioner.appointments.filter((a) => a.status === AppointmentStatus.COMPLETED);
-  const totalUniquePatients = new Set(practitioner.appointments.map((a) => a.patientId)).size;
+  const flagged = pendingOrUpcoming.filter((a) => a.triageLevel !== TriageLevel.ROUTINE);
+
+  // Triage queue: active visits by priority (emergency first), then time; history after
+  const queue = [...pendingOrUpcoming].sort(
+    (a, b) =>
+      (TRIAGE_PRIORITY[a.triageLevel] ?? 2) - (TRIAGE_PRIORITY[b.triageLevel] ?? 2) ||
+      a.scheduledAt.getTime() - b.scheduledAt.getTime()
+  );
+  const history = practitioner.appointments
+    .filter((a) => !pendingOrUpcoming.includes(a))
+    .sort((a, b) => b.scheduledAt.getTime() - a.scheduledAt.getTime());
+  const ordered = [...queue, ...history];
 
   const stats = [
     { label: "Today's Schedule", value: todayAppts.length, icon: CalendarDays, color: "text-primary" },
-    { label: "Pending / Upcoming", value: pendingOrUpcoming.length, icon: Clock, color: "text-amber-600" },
+    { label: "Active Queue", value: pendingOrUpcoming.length, icon: Clock, color: "text-amber-600" },
+    { label: "Urgent / Emergency", value: flagged.length, icon: AlertTriangle, color: "text-red-600" },
     { label: "Completed Consultations", value: completed.length, icon: CheckCircle2, color: "text-emerald-600" },
-    { label: "Total Patients Served", value: totalUniquePatients, icon: Users, color: "text-blue-600" },
   ];
 
   return (
@@ -101,8 +114,15 @@ export default async function PractitionerDashboard() {
         </div>
       ) : (
         <div className="space-y-4">
-          {practitioner.appointments.map((a) => (
-            <div key={a.id} className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+          {ordered.map((a) => (
+            <div
+              key={a.id}
+              className={`bg-card border rounded-2xl p-6 shadow-sm ${
+                a.triageLevel === TriageLevel.EMERGENCY && pendingOrUpcoming.includes(a)
+                  ? "border-red-300 ring-1 ring-red-200"
+                  : "border-border"
+              }`}
+            >
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg shrink-0">
@@ -125,10 +145,19 @@ export default async function PractitionerDashboard() {
                       }`}>
                         {a.status}
                       </span>
+                      <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${TRIAGE_BADGE[a.triageLevel] ?? ""}`}>
+                        {a.triageLevel}
+                      </span>
                     </div>
 
+                    {a.symptoms && (
+                      <p className="text-xs text-foreground/80 mt-1">
+                        <span className="font-semibold">Symptoms:</span> {symptomLabels(a.symptoms).join(", ")}
+                      </p>
+                    )}
+
                     <p className="text-xs text-muted-foreground mt-1">
-                      Scheduled: <span className="font-semibold text-foreground">{new Date(a.scheduledAt).toLocaleDateString("en-ZM", {
+                      Scheduled: <span className="font-semibold text-foreground">{formatDateTime(a.scheduledAt, {
                         weekday: "short", month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit",
                       })}</span>
                       {a.patient.user.phone && (

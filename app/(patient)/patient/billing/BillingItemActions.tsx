@@ -21,7 +21,8 @@ export default function BillingItemActions({ billingId, amount }: { billingId: s
         setPaid(true);
         router.refresh();
       } else {
-        alert("Payment processing failed.");
+        const data = await res.json().catch(() => ({}));
+        alert(data.error ?? "Payment processing failed.");
       }
     } catch (e) {
       console.error(e);

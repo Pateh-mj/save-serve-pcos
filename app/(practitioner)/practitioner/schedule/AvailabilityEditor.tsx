@@ -11,15 +11,17 @@ export default function AvailabilityEditor({ initial }: { initial: DayAvailabili
     const [days, setDays] = useState<DayAvailability[]>(initial);
     const [isPending, startTransition] = useTransition();
     const [saved, setSaved] = useState(false);
+    const [error, setError] = useState("");
 
     function update(dayOfWeek: number, patch: Partial<DayAvailability>) {
         setSaved(false);
+        setError("");
         setDays((prev) => prev.map((d) => (d.dayOfWeek === dayOfWeek ? { ...d, ...patch } : d)));
     }
 
     function save() {
         startTransition(async () => {
-            const res = await fetch("/api/practitioner/availability", {
+            const res = await fetch("/api/practitioners/availability", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ days }),
@@ -27,6 +29,9 @@ export default function AvailabilityEditor({ initial }: { initial: DayAvailabili
             if (res.ok) {
                 setSaved(true);
                 setTimeout(() => setSaved(false), 2500);
+            } else {
+                const data = await res.json().catch(() => ({}));
+                setError(data.error ?? "Could not save availability.");
             }
         });
     }
@@ -66,6 +71,10 @@ export default function AvailabilityEditor({ initial }: { initial: DayAvailabili
                     </div>
                 ))}
             </div>
+
+            {error && (
+                <p className="mt-4 text-xs text-destructive bg-destructive/10 px-3 py-2 rounded-lg">{error}</p>
+            )}
 
             <button
                 onClick={save}

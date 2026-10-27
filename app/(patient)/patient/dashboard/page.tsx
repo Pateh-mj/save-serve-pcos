@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { clinicHour, formatDate, formatTime } from "@/lib/format";
 import {
   CalendarDays,
   FileText,
@@ -51,7 +52,7 @@ export default async function PatientDashboard() {
   ];
 
   const firstName = session.user.name?.split(" ")[0] ?? "there";
-  const hour = new Date().getHours();
+  const hour = clinicHour();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
@@ -98,7 +99,7 @@ export default async function PatientDashboard() {
             <span className="font-semibold text-sm">Book Appointment</span>
           </Link>
           <Link
-            href="/practitioners"
+            href="/patient/appointments/new"
             className="flex items-center gap-3 p-4 bg-card border border-border rounded-xl hover:shadow-md transition text-foreground"
           >
             <FileText className="w-5 h-5 text-primary" strokeWidth={1.5} />
@@ -143,13 +144,9 @@ export default async function PatientDashboard() {
                     </p>
                     <p className="text-xs text-muted-foreground capitalize">
                       {appt.practitioner.specialty.toLowerCase()} ·{" "}
-                      {new Date(appt.scheduledAt).toLocaleDateString("en-ZM", {
-                        weekday: "short", month: "short", day: "numeric",
-                      })}{" "}
+                      {formatDate(appt.scheduledAt, { weekday: "short", month: "short", day: "numeric" })}{" "}
                       at{" "}
-                      {new Date(appt.scheduledAt).toLocaleTimeString("en-ZM", {
-                        hour: "2-digit", minute: "2-digit",
-                      })}
+                      {formatTime(appt.scheduledAt)}
                     </p>
                   </div>
                   <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${s.cls}`}>

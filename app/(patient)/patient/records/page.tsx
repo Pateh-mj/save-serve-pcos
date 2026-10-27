@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { FileText, Plus } from "lucide-react";
+import { formatDate } from "@/lib/format";
 
 export default async function RecordsPage() {
   const session = await auth();
@@ -45,7 +46,7 @@ export default async function RecordsPage() {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <p className="font-semibold text-foreground text-sm">{r.practitioner.user.name}</p>
-                  <p className="text-xs text-muted-foreground">{new Date(r.createdAt).toLocaleDateString("en-ZM", { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</p>
+                  <p className="text-xs text-muted-foreground">{formatDate(r.createdAt, { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</p>
                 </div>
                 <span className="text-xs bg-accent text-primary px-2.5 py-1 rounded-full font-semibold">
                   Visit

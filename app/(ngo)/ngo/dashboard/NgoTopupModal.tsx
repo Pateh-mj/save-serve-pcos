@@ -26,7 +26,8 @@ export default function NgoTopupModal() {
         setOpen(false);
         router.refresh();
       } else {
-        alert("Top-up failed.");
+        const data = await res.json().catch(() => ({}));
+        alert(data.error ?? "Top-up failed.");
       }
     } catch (err) {
       console.error(err);

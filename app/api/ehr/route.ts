@@ -3,6 +3,7 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Role, AppointmentStatus } from "@/lib/constants";
+import { notifyLater, notifyStatusChange } from "@/lib/notifications";
 
 const createEhrSchema = z.object({
   patientId: z.string(),
@@ -10,7 +11,22 @@ const createEhrSchema = z.object({
   diagnosis: z.string().min(2, "Diagnosis is required"),
   prescription: z.string().optional(),
   notes: z.string().optional(),
+  // "YYYY-MM-DD" (clinic calendar); drives the follow-up SMS reminder
+  followUpDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Follow-up date must be YYYY-MM-DD")
+    .optional()
+    .or(z.literal("")),
 });
+
+/** A practitioner may only read/write records for patients they have a (non-cancelled) appointment with. */
+async function hasCareRelationship(practitionerId: string, patientId: string) {
+  const appt = await prisma.appointment.findFirst({
+    where: { practitionerId, patientId, status: { not: AppointmentStatus.CANCELLED } },
+    select: { id: true },
+  });
+  return appt !== null;
+}
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -41,29 +57,67 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Patient not found" }, { status: 404 });
     }
 
-    const record = await prisma.eHRRecord.create({
-      data: {
-        patientId: data.patientId,
-        practitionerId: practitioner.id,
-        appointmentId: data.appointmentId || null,
-        diagnosis: data.diagnosis,
-        prescription: data.prescription,
-        notes: data.notes,
-      },
-      include: {
-        practitioner: { include: { user: true } },
-        patient: { include: { user: true } },
-      },
-    });
-
-    // If linked to an appointment, mark it completed
+    let markCompleted = false;
     if (data.appointmentId) {
-      await prisma.appointment.update({
+      const appt = await prisma.appointment.findUnique({
         where: { id: data.appointmentId },
-        data: { status: AppointmentStatus.COMPLETED },
-      }).catch((e) => console.warn("Could not mark appointment completed:", e));
+        include: { ehrRecord: { select: { id: true } } },
+      });
+      if (!appt || appt.practitionerId !== practitioner.id || appt.patientId !== patient.id) {
+        return NextResponse.json({ error: "Appointment not found for this practitioner and patient" }, { status: 404 });
+      }
+      if (appt.ehrRecord) {
+        return NextResponse.json({ error: "An EHR record already exists for this appointment" }, { status: 409 });
+      }
+      if (appt.status !== AppointmentStatus.CONFIRMED && appt.status !== AppointmentStatus.COMPLETED) {
+        return NextResponse.json(
+          { error: `Cannot record a consultation for a ${appt.status} appointment` },
+          { status: 409 }
+        );
+      }
+      markCompleted = appt.status === AppointmentStatus.CONFIRMED;
+    } else if (!(await hasCareRelationship(practitioner.id, patient.id))) {
+      return NextResponse.json({ error: "You have no appointment with this patient" }, { status: 403 });
     }
 
+    // Follow-up at 09:00 clinic time (UTC+2) on the chosen day; must be in the future
+    const followUpDate = data.followUpDate ? new Date(`${data.followUpDate}T09:00:00+02:00`) : null;
+    if (followUpDate && (isNaN(followUpDate.getTime()) || followUpDate.getTime() < Date.now())) {
+      return NextResponse.json({ error: "Follow-up date must be in the future" }, { status: 400 });
+    }
+
+    const record = await prisma.$transaction(async (tx) => {
+      const created = await tx.eHRRecord.create({
+        data: {
+          patientId: data.patientId,
+          practitionerId: practitioner.id,
+          appointmentId: data.appointmentId || null,
+          diagnosis: data.diagnosis,
+          prescription: data.prescription,
+          notes: data.notes,
+          followUpDate,
+        },
+        include: {
+          practitioner: { include: { user: true } },
+          patient: { include: { user: true } },
+        },
+      });
+
+      // Recording the consultation completes a confirmed appointment
+      if (markCompleted) {
+        await tx.appointment.update({
+          where: { id: data.appointmentId },
+          data: { status: AppointmentStatus.COMPLETED },
+        });
+      }
+
+      return created;
+    });
+
+    if (markCompleted && data.appointmentId) {
+      const appointmentId = data.appointmentId;
+      notifyLater(() => notifyStatusChange(appointmentId));
+    }
     return NextResponse.json(record, { status: 201 });
   } catch (err) {
     if (err instanceof z.ZodError) {
@@ -105,6 +159,10 @@ export async function GET(req: NextRequest) {
 
     const whereClause: { practitionerId?: string; patientId?: string } = {};
     if (patientIdQuery) {
+      // Full patient history is only visible to practitioners treating that patient
+      if (!(await hasCareRelationship(practitioner.id, patientIdQuery))) {
+        return NextResponse.json({ error: "You have no appointment with this patient" }, { status: 403 });
+      }
       whereClause.patientId = patientIdQuery;
     } else {
       whereClause.practitionerId = practitioner.id;

@@ -3,9 +3,11 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Role } from "@/lib/constants";
+import { getNgoSubsidyStats } from "@/lib/ngo";
+import { moveFunds } from "@/lib/ledger";
 
 const topupSchema = z.object({
-  amount: z.number().positive("Amount must be greater than zero"),
+  amount: z.number().positive("Amount must be greater than zero").max(1_000_000, "Maximum top-up is ZMW 1,000,000"),
 });
 
 export async function GET(req: NextRequest) {
@@ -25,33 +27,22 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  const subsidizedBillings = await prisma.billing.findMany({
-    where: { subsidyApplied: true },
-    include: {
-      patient: { include: { user: true } },
-      appointment: { include: { practitioner: { include: { user: true } } } },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 20,
-  });
+  if (!ngo) {
+    return NextResponse.json({ error: "NGO profile not found" }, { status: 404 });
+  }
 
-  const totalSubsidizedCount = await prisma.billing.count({
-    where: { subsidyApplied: true },
-  });
-
-  const totalSubsidizedAmount = await prisma.billing.aggregate({
-    where: { subsidyApplied: true },
-    _sum: { amount: true },
-  });
+  const stats = await getNgoSubsidyStats(ngo.id, 20);
 
   return NextResponse.json({
     ngo,
     metrics: {
-      fundBalance: ngo?.fundBalance ?? 0,
-      totalSubsidizedVisits: totalSubsidizedCount,
-      totalSubsidizedValueZMW: totalSubsidizedAmount._sum.amount ?? 0,
+      fundBalance: ngo.fundBalance,
+      totalSubsidizedVisits: stats.subsidizedVisits,
+      totalSubsidizedValueZMW: stats.subsidizedValue,
+      premiumContributions: stats.premiumContributions,
+      premiumContributionValueZMW: stats.premiumContributionValue,
     },
-    recentSubsidizedPatients: subsidizedBillings,
+    recentSubsidizedPatients: stats.recentSubsidized,
   });
 }
 
@@ -73,11 +64,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "NGO profile not found" }, { status: 404 });
     }
 
-    const updated = await prisma.nGO.update({
-      where: { id: ngo.id },
-      data: {
-        fundBalance: { increment: data.amount },
-      },
+    const updated = await prisma.$transaction(async (tx) => {
+      await moveFunds(tx, { ngoId: ngo.id, type: "TOPUP", amount: data.amount, note: "Pool top-up" });
+      return tx.nGO.findUniqueOrThrow({ where: { id: ngo.id } });
     });
 
     return NextResponse.json({

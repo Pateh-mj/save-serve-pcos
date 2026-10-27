@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Phone, PhoneOff, RotateCcw, Send, Signal, BatteryMedium, WifiOff } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Phone, PhoneOff, RotateCcw, Signal, BatteryMedium, WifiOff } from "lucide-react";
+import { normalizeZambianPhone } from "@/lib/phone";
 
 interface Props {
   initialPhone?: string;
@@ -16,6 +17,10 @@ export default function UssdPhoneSimulator({ initialPhone = "+260971000001", onA
   const [loading, setLoading] = useState(false);
   const [sessionType, setSessionType] = useState<"IDLE" | "CON" | "END">("IDLE");
   const [history, setHistory] = useState<Array<{ text: string; response: string }>>([]);
+  // One id per call, like a real gateway: hanging up mid-booking leaves the session
+  // unfinished on the server, so redialling offers to resume it.
+  const sessionIdRef = useRef("");
+  const [customPhone, setCustomPhone] = useState("");
 
   async function sendUssd(currentPath: string) {
     setLoading(true);
@@ -24,7 +29,7 @@ export default function UssdPhoneSimulator({ initialPhone = "+260971000001", onA
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sessionId: `SIM-${Date.now()}`,
+          sessionId: sessionIdRef.current,
           serviceCode: "*384#",
           phoneNumber: phoneNumber.trim(),
           text: currentPath,
@@ -41,7 +46,8 @@ export default function UssdPhoneSimulator({ initialPhone = "+260971000001", onA
 
       if (isEnd) {
         setSessionActive(false);
-        if (content.includes("SUCCESS") && onAppointmentBooked) {
+        sessionIdRef.current = "";
+        if (/^Booked!/i.test(content) && onAppointmentBooked) {
           onAppointmentBooked();
         }
       } else if (isCon) {
@@ -64,6 +70,7 @@ export default function UssdPhoneSimulator({ initialPhone = "+260971000001", onA
     if (inputVal.trim() === "*384#" || !sessionActive) {
       setTextAccumulator("");
       setSessionActive(true);
+      sessionIdRef.current = `SIM-${phoneNumber.replace(/\D/g, "")}-${Date.now()}`;
       sendUssd("");
     } else {
       handleSend();
@@ -86,12 +93,47 @@ export default function UssdPhoneSimulator({ initialPhone = "+260971000001", onA
   }
 
   function handleReset() {
+    // Hang up without telling the server — exactly what a dropped network does
+    sessionIdRef.current = "";
     setSessionActive(false);
     setSessionType("IDLE");
     setTextAccumulator("");
     setInputVal("");
     setScreenText("Dial *384# to launch SaveServe USSD Gateway");
   }
+
+  function applyCustomNumber() {
+    const normalized = normalizeZambianPhone(customPhone);
+    if (!normalized) {
+      alert("Enter a Zambian mobile number, e.g. 0971234567");
+      return;
+    }
+    setPhoneNumber(normalized);
+    setCustomPhone("");
+    handleReset();
+  }
+
+  // Physical keyboard: type replies (e.g. your name at registration), Enter sends
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (sessionActive) handleSend();
+        else handleDial();
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        setInputVal((prev) => prev.slice(0, -1));
+      } else if (e.key.length === 1 && /[\w #*+.'-]/.test(e.key)) {
+        e.preventDefault();
+        setInputVal((prev) => (prev + e.key).slice(0, 60));
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
 
   return (
     <div className="flex flex-col items-center select-none">
@@ -220,12 +262,37 @@ export default function UssdPhoneSimulator({ initialPhone = "+260971000001", onA
             Demo Patient
           </button>
           <button
+            onClick={() => { setPhoneNumber("+260971000002"); handleReset(); }}
+            className="flex-1 py-1.5 bg-secondary hover:bg-muted text-foreground rounded-lg font-medium text-[11px] transition"
+          >
+            Free Tier
+          </button>
+          <button
             onClick={() => { setPhoneNumber(`+26097${Math.floor(1000000 + Math.random() * 9000000)}`); handleReset(); }}
             className="flex-1 py-1.5 bg-secondary hover:bg-muted text-foreground rounded-lg font-medium text-[11px] transition"
           >
             New Number
           </button>
         </div>
+
+        <div className="flex items-center gap-1.5">
+          <input
+            value={customPhone}
+            onChange={(e) => setCustomPhone(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && applyCustomNumber()}
+            placeholder="Your number, e.g. 0971234567"
+            className="flex-1 min-w-0 px-2 py-1.5 rounded-lg border border-input bg-background text-[11px]"
+          />
+          <button
+            onClick={applyCustomNumber}
+            className="px-3 py-1.5 bg-primary text-primary-foreground rounded-lg font-semibold text-[11px]"
+          >
+            Use
+          </button>
+        </div>
+        <p className="text-[10px] text-muted-foreground leading-snug">
+          Type replies on your keyboard (Enter sends). &ldquo;End&rdquo; hangs up like a dropped network: redial to resume an unfinished booking.
+        </p>
       </div>
     </div>
   );

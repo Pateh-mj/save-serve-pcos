@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, X, FileText, Loader2, Stethoscope } from "lucide-react";
 import { AppointmentStatus } from "@/lib/constants";
+import { clinicDateKey } from "@/lib/format";
 
 interface Props {
   appointment: {
@@ -27,8 +28,12 @@ export default function PractitionerAppointmentActions({ appointment }: Props) {
   const [diagnosis, setDiagnosis] = useState("");
   const [prescription, setPrescription] = useState("");
   const [notes, setNotes] = useState("");
+  const [followUpDate, setFollowUpDate] = useState("");
 
   async function updateStatus(newStatus: string) {
+    if (newStatus === AppointmentStatus.CANCELLED && !confirm("Cancel this appointment? Any unpaid bill will be waived.")) {
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/appointments", {
@@ -43,7 +48,8 @@ export default function PractitionerAppointmentActions({ appointment }: Props) {
       if (res.ok) {
         router.refresh();
       } else {
-        alert("Failed to update status.");
+        const data = await res.json().catch(() => ({}));
+        alert(data.error ?? "Failed to update status.");
       }
     } catch (e) {
       console.error(e);
@@ -71,6 +77,7 @@ export default function PractitionerAppointmentActions({ appointment }: Props) {
           diagnosis,
           prescription,
           notes,
+          followUpDate,
         }),
       });
 
@@ -113,13 +120,22 @@ export default function PractitionerAppointmentActions({ appointment }: Props) {
         )}
 
         {appointment.status === AppointmentStatus.CONFIRMED && (
-          <button
-            onClick={() => setShowEhrModal(true)}
-            disabled={loading}
-            className="px-3.5 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-xl hover:bg-emerald-700 disabled:opacity-60 flex items-center gap-1.5 transition shadow-sm"
-          >
-            <FileText className="w-3.5 h-3.5" /> Complete Consultation & EHR
-          </button>
+          <>
+            <button
+              onClick={() => setShowEhrModal(true)}
+              disabled={loading}
+              className="px-3.5 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-xl hover:bg-emerald-700 disabled:opacity-60 flex items-center gap-1.5 transition shadow-sm"
+            >
+              <FileText className="w-3.5 h-3.5" /> Complete Consultation & EHR
+            </button>
+            <button
+              onClick={() => updateStatus(AppointmentStatus.CANCELLED)}
+              disabled={loading}
+              className="px-3 py-2 bg-destructive/10 text-destructive text-xs font-semibold rounded-xl hover:bg-destructive/20 disabled:opacity-60 flex items-center gap-1 transition"
+            >
+              <X className="w-3.5 h-3.5" /> Cancel
+            </button>
+          </>
         )}
 
         {appointment.status === AppointmentStatus.COMPLETED && !appointment.ehrRecord && (
@@ -192,6 +208,19 @@ export default function PractitionerAppointmentActions({ appointment }: Props) {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="e.g. Patient advised to return for follow-up if symptoms persist after 3 days."
+                  className="w-full px-3 py-2 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring transition"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
+                  Follow-up date <span className="font-normal normal-case text-muted-foreground">(optional, patient gets an SMS reminder)</span>
+                </label>
+                <input
+                  type="date"
+                  min={clinicDateKey()}
+                  value={followUpDate}
+                  onChange={(e) => setFollowUpDate(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring transition"
                 />
               </div>

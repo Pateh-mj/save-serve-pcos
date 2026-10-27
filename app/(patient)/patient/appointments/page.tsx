@@ -4,6 +4,10 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { CalendarDays, Plus, Clock } from "lucide-react";
 import { AppointmentStatus } from "@/lib/constants";
+import CancelAppointmentButton from "./CancelAppointmentButton";
+import RateVisit from "./RateVisit";
+import { formatDateTime } from "@/lib/format";
+import { TriageLevel } from "@/lib/triage";
 
 const STATUS_STYLE: Record<string, string> = {
   [AppointmentStatus.PENDING]:   "bg-amber-50 text-amber-700 border border-amber-200",
@@ -21,7 +25,7 @@ export default async function AppointmentsPage() {
     include: {
       appointments: {
         orderBy: { scheduledAt: "desc" },
-        include: { practitioner: { include: { user: true } } },
+        include: { practitioner: { include: { user: true } }, feedback: { select: { rating: true } } },
       },
     },
   });
@@ -64,13 +68,21 @@ export default async function AppointmentsPage() {
                   <p className="font-semibold text-foreground text-sm">{a.practitioner.user.name}</p>
                   <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                     <Clock className="w-3 h-3" />
-                    {new Date(a.scheduledAt).toLocaleDateString("en-ZM", { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                    {formatDateTime(a.scheduledAt)}
                   </div>
                   {a.notes && <p className="text-xs text-muted-foreground mt-1 truncate">{a.notes}</p>}
                 </div>
+                {a.triageLevel !== TriageLevel.ROUTINE && (
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${
+                    a.triageLevel === TriageLevel.EMERGENCY ? "bg-red-50 text-red-700 border-red-200" : "bg-amber-50 text-amber-700 border-amber-200"
+                  }`}>
+                    {a.triageLevel}
+                  </span>
+                )}
                 <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${STATUS_STYLE[a.status] ?? ""}`}>
                   {a.status}
                 </span>
+                <CancelAppointmentButton appointmentId={a.id} />
               </div>
             ))}
           </div>
@@ -89,9 +101,12 @@ export default async function AppointmentsPage() {
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-foreground text-sm">{a.practitioner.user.name}</p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(a.scheduledAt).toLocaleDateString("en-ZM", { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                    {formatDateTime(a.scheduledAt)}
                   </p>
                 </div>
+                {a.status === AppointmentStatus.COMPLETED && (
+                  <RateVisit appointmentId={a.id} existing={a.feedback?.rating} />
+                )}
                 <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${STATUS_STYLE[a.status] ?? ""}`}>
                   {a.status}
                 </span>

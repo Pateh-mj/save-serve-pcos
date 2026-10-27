@@ -1,43 +1,48 @@
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import { CheckCircle2, Heart, ShieldCheck, Globe, PhoneCall, Stethoscope } from "lucide-react";
+import { CheckCircle2, Heart, ShieldCheck, Globe, PhoneCall, ArrowDown, Users, Stethoscope, Code2 } from "lucide-react";
+import {
+  ABSTRACT, DSR_STEPS, EXISTING_SYSTEMS, GENERAL_OBJECTIVE, GUIDING_PRINCIPLES, PROBLEMS,
+  RESEARCH, RESEARCH_QUESTIONS, SIGNIFICANCE, SPECIFIC_OBJECTIVES, THEORIES,
+} from "@/lib/research";
 
 export const metadata = { title: "About PCOS — SaveServe" };
+
+const SIGNIFICANCE_ICONS = [Users, Stethoscope, Code2];
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{children}</p>;
+}
 
 export default function AboutPage() {
   return (
     <div className="bg-background font-sans">
       <Navbar />
 
-      {/* Hero */}
+      {/* Title page */}
+      <section className="py-12 bg-white border-b border-border">
+        <div className="container mx-auto px-6 max-w-4xl text-center">
+          <SectionLabel>About This Project</SectionLabel>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground leading-snug mb-5">{RESEARCH.title}</h1>
+          <p className="text-sm text-muted-foreground">
+            {RESEARCH.author} · Advisor: {RESEARCH.advisor}
+            <br />
+            {RESEARCH.degree} · {RESEARCH.school}, {RESEARCH.university} ({RESEARCH.universityShort}) · {RESEARCH.location}, {RESEARCH.year}
+          </p>
+          <p className="text-xs text-muted-foreground mt-4">
+            {RESEARCH.prototypeName} is the working name of the PCOS prototype demonstrated on this website.
+          </p>
+        </div>
+      </section>
 
       {/* Abstract */}
       <section className="py-12">
-
-        <div className="container mx-auto px-6 max-w-3xl text-center">
-          {/* Subheading */}
-          <p className="text-s font-semibold uppercase tracking-widest text-primary mb-2">
-            About This Project
-          </p>
-          {/* Main headline */}
-          <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4">
-            Patient-Centric Orchestration System
-          </h1>
-
-        </div>
-
         <div className="container mx-auto px-6 max-w-4xl">
-          <div className="bg-white border border-border rounded-lg p-8 shadow-sm mb-10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">Abstract</p>
-            <p className="text-muted-foreground leading-relaxed mb-4 text-justify">
-              As healthcare systems globally shift toward digital-first models, a growing digital and economic divide threatens to leave vulnerable populations behind. This research proposes the development of a Patient-Centric Orchestration System (PCOS) that bridges the gap between high-end private consultation and subsidized community care.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mb-4 text-justify">
-              The system leverages a "Robin Hood" Economic Model, where premium-tier patient billing funds the infrastructure for low-resource users within the same hospital. The project addresses physical accessibility through a medium-agnostic architecture, integrating Offline-First synchronization for remote areas and USSD/SMS gateways for non-smartphone users.
-            </p>
-            <p className="text-muted-foreground leading-relaxed text-justify">
-              By implementing an automated Hospital Policy Engine, the system ensures that clinical standards and hospital interests are maintained across all socioeconomic tiers. The result is a scalable, financially sustainable hospital management framework that transforms operational efficiency into social equity.
-            </p>
+          <div className="bg-white border border-border rounded-lg p-8 shadow-sm">
+            <SectionLabel>Abstract</SectionLabel>
+            {ABSTRACT.map((p, i) => (
+              <p key={i} className={`text-muted-foreground leading-relaxed ${i < ABSTRACT.length - 1 ? "mb-4" : ""}`}>{p}</p>
+            ))}
           </div>
         </div>
       </section>
@@ -46,24 +51,29 @@ export default function AboutPage() {
       <section className="py-16 bg-secondary">
         <div className="container mx-auto px-6 max-w-5xl grid md:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Background</p>
+            <SectionLabel>Background</SectionLabel>
             <h2 className="text-3xl font-extrabold text-foreground mb-5">A Zambian Healthcare Problem</h2>
-            <p className="text-muted-foreground leading-relaxed mb-4 text-justify">
-              In the Zambian context, the disparity in healthcare access is pronounced due to the geographical and economic divide between urban centers and rural communities. Urban hospitals increasingly adopt digital management tools, yet rural patients rely on basic feature phones and face limited internet connectivity — rendering most modern web-based healthcare solutions inaccessible.
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              In the Zambian context, the disparity in healthcare access is pronounced due to the geographical and economic divide between
+              urban centres and rural communities. Urban hospitals increasingly adopt digital management tools, while rural patients rely on
+              basic feature phones and face limited internet connectivity, rendering most modern web-based healthcare solutions inaccessible.
             </p>
-            <p className="text-muted-foreground leading-relaxed mb-4 text-justify">
-              Local healthcare providers struggle with manual administrative processes to manage fee waivers or subsidies for low-income patients, leading to inefficiencies and errors in resource distribution. There is a notable absence of a unified system that bridges the gap between high-fidelity web interfaces for medical staff and low-bandwidth access for rural patients.
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              Local healthcare providers struggle with manual administrative processes to manage fee waivers or subsidies for low-income
+              patients, leading to inefficiencies and errors in resource distribution. There is no unified system that bridges high-fidelity web
+              interfaces for medical staff and low-bandwidth access for rural citizens.
             </p>
-            <p className="text-muted-foreground leading-relaxed text-justify">
-              This research proposes PCOS to act as a digital mediator between these two worlds — allowing a doctor in a city hospital to use a rich web dashboard while a patient in a remote village interacts with the same system using a simple text-based USSD menu.
+            <p className="text-muted-foreground leading-relaxed">
+              PCOS acts as a digital mediator between these two worlds: a doctor in a city hospital uses a rich web dashboard while a patient in
+              a remote village interacts with the same system through a simple text-based menu.
             </p>
           </div>
           <div className="space-y-4">
             {[
-              { icon: Globe, label: "Web PWA for connected users", desc: "Full-featured hospital management interface optimised for low-bandwidth connections." },
-              { icon: PhoneCall, label: "USSD *384# for feature phones", desc: "Zero internet required. Works on any mobile network across Zambia." },
-              { icon: ShieldCheck, label: "Policy Guardian automation", desc: "Automated billing compliance and subsidy calculation at every patient interaction." },
-              { icon: Heart, label: "Robin Hood Subsidization Model", desc: "Premium-tier patient billing funds community-tier care within the same hospital." },
+              { icon: Globe, label: "Progressive Web App", desc: "For healthcare staff and smartphone users: clinical records, schedules and administrative settings." },
+              { icon: PhoneCall, label: "USSD gateway", desc: "For feature-phone users: register, book and access services without internet access." },
+              { icon: ShieldCheck, label: "Policy Guardian", desc: "Middleware that evaluates user tiers, enforces billing rules and manages cross-subsidization." },
+              { icon: Heart, label: "Robin Hood model", desc: "Revenue from premium-tier services offsets the cost of free or discounted care for low-income users." },
             ].map((item) => (
               <div key={item.label} className="flex items-start gap-4 p-4 bg-white rounded-lg border border-border">
                 <div className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center shrink-0">
@@ -71,8 +81,25 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <p className="font-semibold text-foreground text-sm">{item.label}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5 text-justify">{item.desc}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Problem statement */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <SectionLabel>Problem Statement</SectionLabel>
+          <h2 className="text-3xl font-extrabold text-foreground mb-8">Access Barriers and Financial Strain</h2>
+          <div className="grid md:grid-cols-3 gap-5">
+            {PROBLEMS.map((p) => (
+              <div key={p.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
+                <h3 className="font-bold text-foreground text-sm mb-2">{p.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{p.body}</p>
+                <p className="text-xs text-muted-foreground/80 mt-3 italic">({p.citation})</p>
               </div>
             ))}
           </div>
@@ -80,56 +107,208 @@ export default function AboutPage() {
       </section>
 
       {/* Motivation */}
-      <section className="py-16 bg-background">
+      <section className="py-16 bg-secondary">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="bg-white border border-border rounded-lg p-8 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">Motivation</p>
-            <p className="text-muted-foreground leading-relaxed mb-4 text-justify">
-              Having always desired to pursue the medical profession, building systems that aid healthcare services has been a long-time goal since engaging in Information Technology. This study is driven by the interesting technology behind Unstructured Supplementary Service Data (USSD) and how it can provide premium health service access even when one is unable to own a smartphone or is in a place of low internet connectivity — particularly for the Zambian community.
+            <SectionLabel>Motivation</SectionLabel>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              While digital healthcare is moving forward fast, a huge number of people in Zambia are being left behind: modern healthcare web
+              apps usually require a smartphone and reliable internet access. USSD is still the most reliable and accessible way for ordinary
+              citizens to use digital services — it works on basic feature phones and needs no data bundles — yet most health-related USSD tools
+              are basic, standalone utilities rather than real-time extensions of a proper healthcare system.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              At the same time, facilities struggle with financial sustainability, and fee-for-service models often prevent lower-income patients
+              from getting timely care. PCOS combines low-bandwidth USSD sessions with a modern web portal and an automated Policy Guardian to
+              show how thoughtfully designed software can make quality healthcare more accessible, fair and sustainable.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Objectives */}
-      <section className="py-16 bg-secondary">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Research Objectives</p>
-          <h2 className="text-3xl font-extrabold text-foreground mb-8">What This System Achieves</h2>
-          <div className="grid md:grid-cols-3 gap-5">
-            {[
-              { n: "1", title: "Multi-Channel Interface", desc: "Develop a USSD + PWA interface that ensures 100% patient reach regardless of internet availability." },
-              { n: "2", title: "Policy Guardian Engine", desc: "Implement a real-time Policy Guardian that automates tiered billing logic and enforces medical-business protocol compliance for all hospital interactions." },
-              { n: "3", title: "EHR Synchronisation", desc: "Evaluate the system's efficiency in synchronising offline USSD transactions with a centralised cloud-based Electronic Health Record (EHR)." },
-            ].map((item) => (
-              <div key={item.n} className="bg-white border border-border rounded-lg p-6 shadow-sm">
-                <div className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm mb-4">{item.n}</div>
-                <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+      {/* Objectives & research questions */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <SectionLabel>Objectives</SectionLabel>
+          <h2 className="text-3xl font-extrabold text-foreground mb-4">What the Study Sets Out to Do</h2>
+          <div className="bg-accent/40 border border-primary/20 rounded-lg p-5 mb-6">
+            <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1">General objective</p>
+            <p className="text-sm text-foreground leading-relaxed">{GENERAL_OBJECTIVE}</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-5 mb-12">
+            {SPECIFIC_OBJECTIVES.map((o, i) => (
+              <div key={i} className="bg-white border border-border rounded-lg p-5 shadow-sm flex gap-4">
+                <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shrink-0">{i + 1}</div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{o}</p>
               </div>
             ))}
+          </div>
+
+          <SectionLabel>Research Questions</SectionLabel>
+          <ol className="space-y-3">
+            {RESEARCH_QUESTIONS.map((q, i) => (
+              <li key={i} className="flex gap-3 text-sm text-foreground bg-white border border-border rounded-lg p-4">
+                <span className="font-bold text-primary shrink-0">RQ{i + 1}</span>
+                <span className="leading-relaxed">{q}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* Scope & delimitations */}
+      <section className="py-16 bg-secondary">
+        <div className="container mx-auto px-6 max-w-5xl grid md:grid-cols-2 gap-8">
+          <div>
+            <SectionLabel>Scope</SectionLabel>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              {[
+                ["Functional", "Patient registration, appointment scheduling, symptom-based triage and tier-based billing, through a PWA, a USSD interface and the Policy Guardian middleware."],
+                ["Technical", "Real-time data synchronisation between the USSD gateway and the central database, using modern web technologies and RESTful APIs."],
+                ["Target users", "Healthcare administrators and staff who manage patient records and policy settings, and patients using smartphones or basic feature phones."],
+                ["Context", "Community healthcare delivery in Zambia, using simulated and field-tested scenarios representative of local clinic workflows and network conditions."],
+              ].map(([k, v]) => (
+                <li key={k} className="bg-white border border-border rounded-lg p-4">
+                  <span className="font-semibold text-foreground">{k}: </span>{v}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <SectionLabel>Delimitations</SectionLabel>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              {[
+                "Prioritises registration, booking, basic symptom triage and tier-based billing; complex surgical scheduling, intensive-care tracking and radiology imaging are excluded.",
+                "Designed around urban and semi-urban community clinic workflows in Zambia, not nationwide tertiary referral hospitals.",
+                "Financial transactions are modelled around the automated subsidization logic rather than integrated with every banking and mobile-money provider.",
+              ].map((d) => (
+                <li key={d} className="bg-white border border-border rounded-lg p-4">{d}</li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
       {/* Theoretical framework */}
       <section className="py-16 bg-background">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Theoretical Framework</p>
-          <h2 className="text-3xl font-extrabold text-foreground mb-8">The Research Foundation</h2>
+        <div className="container mx-auto px-6 max-w-5xl">
+          <SectionLabel>Theoretical Framework</SectionLabel>
+          <h2 className="text-3xl font-extrabold text-foreground mb-3">Two Complementary Theories</h2>
+          <p className="text-sm text-muted-foreground mb-8 max-w-3xl">
+            Financial sustainability comes from the cross-subsidization principles of the Robin Hood Business Model; technology acceptance
+            and usability come from the user-centred principles of the Diffusion of Innovations theory.
+          </p>
           <div className="grid md:grid-cols-2 gap-5">
-            {[
-              { title: "Digital Divide Theory", body: "PCOS applies a Medium-Agnostic Design ensuring the Policy Guardian serves a smartphone user via React and a feature-phone user via USSD with equal clinical integrity." },
-              { title: "Socio-Technical Systems Theory", body: "PCOS bridges social policy (the need for equity) and technical execution (automated subsidization), aligning with the workflows of a functioning hospital." },
-              { title: "Health Equity Theory (Farantos et al., 2025)", body: "The Robin Hood Model implements closed-loop cross-subsidization — transforming an economic theory into hard-coded hospital billing logic." },
-              { title: "Information Systems Continuity Theory", body: "USSD functions as a Resilience Layer independent of data networks, ensuring the Policy Guardian remains accessible during internet downtime." },
-            ].map((item) => (
-              <div key={item.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
-                <div className="flex items-start gap-2 mb-3">
+            {THEORIES.map((t) => (
+              <div key={t.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
+                <div className="flex items-start gap-2 mb-1">
                   <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                  <h3 className="font-bold text-foreground text-sm">{item.title}</h3>
+                  <h3 className="font-bold text-foreground text-sm">{t.title}</h3>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed text-justify">{item.body}</p>
+                <p className="text-xs text-muted-foreground mb-3 ml-6">{t.citation}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-3">{t.body}</p>
+                <p className="text-sm text-foreground leading-relaxed"><strong>In PCOS:</strong> {t.inPcos}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground mt-5">
+            Guiding principles: {GUIDING_PRINCIPLES.title} ({GUIDING_PRINCIPLES.citation}) — {GUIDING_PRINCIPLES.body}
+          </p>
+        </div>
+      </section>
+
+      {/* Conceptual framework (report Figure 1) */}
+      <section className="py-16 bg-secondary">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <SectionLabel>Conceptual Framework</SectionLabel>
+          <h2 className="text-3xl font-extrabold text-foreground mb-8">Inputs, Orchestration, Output</h2>
+          <div className="space-y-3 text-center">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Inputs</p>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="font-bold text-blue-900 text-sm">Feature phone users</p>
+                <p className="text-xs text-blue-800">Dial the USSD short code</p>
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="font-bold text-blue-900 text-sm">Smartphone &amp; admin users</p>
+                <p className="text-xs text-blue-800">Log in to the web app (PWA)</p>
+              </div>
+            </div>
+            <ArrowDown className="w-5 h-5 text-muted-foreground mx-auto" />
+            <div className="border-2 border-dashed border-border rounded-xl p-4 bg-white">
+              <p className="font-bold text-foreground text-sm">PCOS orchestration core</p>
+              <p className="text-xs text-muted-foreground mb-3">Policy Guardian applies tier and subsidy rules in real time</p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                  <p className="font-bold text-emerald-900 text-sm">USSD gateway</p>
+                  <p className="text-xs text-emerald-800">Session &amp; data sync</p>
+                </div>
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                  <p className="font-bold text-emerald-900 text-sm">Policy Guardian</p>
+                  <p className="text-xs text-emerald-800">Tier &amp; subsidy rules</p>
+                </div>
+              </div>
+            </div>
+            <ArrowDown className="w-5 h-5 text-muted-foreground mx-auto" />
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Output</p>
+            <div className="bg-violet-50 border border-violet-200 rounded-lg p-4 max-w-md mx-auto">
+              <p className="font-bold text-violet-900 text-sm">Equitable healthcare access</p>
+              <p className="text-xs text-violet-800">Unified records, appointments, billing</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Existing systems (report Table 1) */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <SectionLabel>Review of Existing Systems</SectionLabel>
+          <h2 className="text-3xl font-extrabold text-foreground mb-8">Where Existing Platforms Fall Short</h2>
+          <div className="bg-white border border-border rounded-lg overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                  <th className="px-4 py-3 font-semibold">System</th>
+                  <th className="px-4 py-3 font-semibold">Main features</th>
+                  <th className="px-4 py-3 font-semibold">Strengths</th>
+                  <th className="px-4 py-3 font-semibold">Limitations</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border align-top">
+                {EXISTING_SYSTEMS.map((s) => (
+                  <tr key={s.name}>
+                    <td className="px-4 py-3 font-semibold text-foreground">{s.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{s.features}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{s.strengths}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{s.limitations}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-sm text-muted-foreground mt-5 leading-relaxed">
+            <strong className="text-foreground">Research gap:</strong> no documented system bridges low-bandwidth USSD feature-phone interfaces
+            with advanced web dashboards under an automated policy engine executing a sustainable cross-subsidization model. PCOS addresses that gap.
+          </p>
+        </div>
+      </section>
+
+      {/* Methodology */}
+      <section className="py-16 bg-secondary">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <SectionLabel>Methodology</SectionLabel>
+          <h2 className="text-3xl font-extrabold text-foreground mb-3">Design Science Research</h2>
+          <p className="text-sm text-muted-foreground mb-6 max-w-3xl">
+            The study follows the Design Science Research paradigm (Hevner et al., 2004): it creates a working IT artefact — the PCOS
+            prototype — and evaluates how well it solves the identified problem, through an iterative prototyping lifecycle.
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            {DSR_STEPS.map((s, i) => (
+              <div key={s} className="flex items-center gap-2">
+                <span className="px-3 py-2 rounded-lg bg-white border border-border text-sm font-semibold text-foreground">
+                  {i + 1}. {s}
+                </span>
+                {i < DSR_STEPS.length - 1 && <span className="text-muted-foreground">→</span>}
               </div>
             ))}
           </div>
@@ -137,60 +316,41 @@ export default function AboutPage() {
       </section>
 
       {/* Significance */}
-      <section className="py-16 bg-secondary">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Significance</p>
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <SectionLabel>Significance</SectionLabel>
           <h2 className="text-3xl font-extrabold text-foreground mb-8">Who Benefits</h2>
-          <div className="grid md:grid-cols-2 gap-5">
-            {[
-              { icon: Stethoscope, title: "Hospitals and Healthcare Providers", body: "A practical framework for integrating USSD-based systems into existing healthcare infrastructures — improving patient intake, consultation scheduling, and follow-up care while lowering operational costs." },
-              { icon: Globe, title: "Patients and Communities", body: "Equitable access to healthcare services for individuals in rural or low-income settings. Patients can access appointment bookings and health information through simple mobile phones, bridging the digital divide." },
-              { icon: ShieldCheck, title: "Computer Science and ICT Research", body: "Demonstrates how USSD technology can encode complex healthcare policies, subsidies, and workflows into a modern software architecture. A contribution to the growing body of knowledge on mHealth solutions in Africa." },
-              { icon: Heart, title: "Zambian Community", body: "Improved health outcomes and reduced barriers to essential medical services, particularly for the 60%+ of Zambia's population in rural or peri-urban areas with limited internet access." },
-            ].map((item) => (
-              <div key={item.title} className="bg-white border border-border rounded-lg p-6 shadow-sm flex gap-4">
-                <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shrink-0">
-                  <item.icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
-                </div>
-                <div>
+          <div className="grid md:grid-cols-3 gap-5">
+            {SIGNIFICANCE.map((item, i) => {
+              const Icon = SIGNIFICANCE_ICONS[i];
+              return (
+                <div key={item.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
+                  </div>
                   <h3 className="font-bold text-foreground text-sm mb-2">{item.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed text-justify">{item.body}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{item.body}</p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-14 bg-primary text-white text-center px-4">
-        <h2 className="text-2xl font-extrabold mb-3">Explore the System</h2>
+        <h2 className="text-2xl font-extrabold mb-3">Explore the Prototype</h2>
         <p className="text-white/70 mb-6 text-sm max-w-md mx-auto">
-          Register as a patient to try the web channel, or dial *384# to test the USSD gateway.
+          Register as a patient to try the web channel, or open the USSD simulator to try *384#.
         </p>
-        {/* Buttons container: stack on mobile, row on larger screens */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          {/* Register Button */}
-          <Link
-            href="/register"
-            className="flex items-center gap-3 px-6 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 transition w-full sm:w-auto justify-center"
-          >
-            {/* Icon inside button */}
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
+          <Link href="/register" className="px-6 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 transition w-full sm:w-auto">
             Register as a Patient
           </Link>
-          {/* Contact Button */}
-          <Link
-            href="/contact"
-            className="flex items-center gap-3 px-6 py-3 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition w-full sm:w-auto justify-center"
-          >
-            {/* Icon inside button */}
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={2} fill="none" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
-            </svg>
+          <Link href="/ussd" className="px-6 py-3 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition w-full sm:w-auto">
+            Open the USSD Simulator
+          </Link>
+          <Link href="/contact" className="px-6 py-3 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition w-full sm:w-auto">
             Contact the Researcher
           </Link>
         </div>

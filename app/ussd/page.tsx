@@ -19,7 +19,7 @@ export default function UssdSimulatorPage() {
               Live USSD Gateway Simulator
             </h1>
             <p className="mt-3 text-muted-foreground text-base md:text-lg">
-              Experience medium-agnostic healthcare access. Dial <span className="font-bold text-primary">*384#</span> on the feature-phone simulator below to book consultations, verify Robin Hood subsidies, or register offline.
+              Experience medium-agnostic healthcare access. Dial <span className="font-bold text-primary">*384#</span> on the feature-phone simulator below to register, book with symptom triage, and see the Robin Hood subsidy applied — no internet needed on the patient&apos;s side. The simulator speaks the same Africa&apos;s Talking protocol a live short code would use.
             </p>
           </div>
 
@@ -57,7 +57,7 @@ export default function UssdSimulatorPage() {
                     <div>
                       <p className="font-bold text-foreground">Book Consultation (Option 1)</p>
                       <p className="text-muted-foreground text-xs mt-0.5">
-                        Press <code>1</code> and click <strong>Send</strong> → Select Specialty (e.g. <code>1</code> Nurse) → Choose Practitioner (<code>1</code>) → Pick Time Slot.
+                        Press <code>1</code> → main problem → danger signs (<code>2</code> No, or <code>1</code> to see the emergency path) → how long unwell → service → practitioner → day → time.
                       </p>
                     </div>
                   </div>
@@ -69,7 +69,7 @@ export default function UssdSimulatorPage() {
                     <div>
                       <p className="font-bold text-foreground">Policy Guardian Subsidy Verification</p>
                       <p className="text-muted-foreground text-xs mt-0.5">
-                        Notice how the system calculates <strong>ZMW 0.00</strong> with 100% NGO Subsidy for Free-tier users before final confirmation.
+                        The confirmation screen shows your triage priority and the fee calculated for your tier. Switch the SIM to <strong>Free Tier</strong> (<code>+260971000002</code>) to see <strong>ZMW 0.00</strong> with a 100% NGO subsidy.
                       </p>
                     </div>
                   </div>
@@ -81,7 +81,20 @@ export default function UssdSimulatorPage() {
                     <div>
                       <p className="font-bold text-foreground">Verify in Command Centre</p>
                       <p className="text-muted-foreground text-xs mt-0.5">
-                        Log in as medical practitioner (<code>nurse.banda@saveserve.org</code> / <code>password123</code>) or patient (<code>demo@saveserve.org</code>) to see the appointment synced to the cloud EHR in real time!
+                        Log in as medical practitioner (<code>mutale@saveserve.org</code> / <code>password123</code>) or patient (<code>demo@saveserve.org</code>) to see the appointment synced to the cloud EHR in real time!
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3.5 rounded-lg bg-secondary/70">
+                    <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold shrink-0 mt-0.5">
+                      5
+                    </span>
+                    <div>
+                      <p className="font-bold text-foreground">Dropped-session recovery</p>
+                      <p className="text-muted-foreground text-xs mt-0.5">
+                        Press <strong>End</strong> halfway through a booking, then dial again: the gateway offers to continue where you left off.
+                        Options <code>2</code>, <code>4</code> and <code>5</code> let you cancel a visit, pay a bill and rate a visit from the same phone.
                       </p>
                     </div>
                   </div>
@@ -93,20 +106,22 @@ export default function UssdSimulatorPage() {
                 <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
                   <div className="flex items-center gap-2 mb-2 text-primary">
                     <ShieldCheck className="w-4 h-4" />
-                    <h3 className="font-bold text-sm text-foreground">Medium-Agnostic Design</h3>
+                    <h3 className="font-bold text-sm text-foreground">Diffusion of Innovations</h3>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Digital Divide Theory: Ensures equal clinical workflows whether the patient accesses via USSD on a 2G feature phone or a modern Web browser.
+                    Rogers (1962): compatible, simple tools are adopted faster. The USSD gateway fits the phones patients already own, while
+                    staff use the full web dashboard — one system, two access channels.
                   </p>
                 </div>
 
                 <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
                   <div className="flex items-center gap-2 mb-2 text-primary">
                     <Heart className="w-4 h-4" />
-                    <h3 className="font-bold text-sm text-foreground">Robin Hood Subsidy</h3>
+                    <h3 className="font-bold text-sm text-foreground">Robin Hood Business Model</h3>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Closed-loop economic engine: Premium subscribers fund the community pool that guarantees zero-cost care for low-income patients.
+                    Prahalad &amp; Hart (2002): premium-tier revenue funds the community health equity fund, which the Policy Guardian uses to
+                    cover free-tier visits.
                   </p>
                 </div>
               </div>
@@ -117,7 +132,7 @@ export default function UssdSimulatorPage() {
                   href="/login"
                   className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground text-xs font-semibold rounded-lg hover:opacity-90 transition"
                 >
-                  Medical Officer Dashboard <ArrowRight className="w-3.5 h-3.5" />
+                  Practitioner Login <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
                 <Link
                   href="/patients"

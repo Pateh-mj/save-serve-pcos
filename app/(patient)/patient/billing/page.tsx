@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CreditCard, CheckCircle2, Clock, ShieldCheck, Heart } from "lucide-react";
 import { BillingStatus } from "@/lib/constants";
 import BillingItemActions from "./BillingItemActions";
+import { formatDate } from "@/lib/format";
 
 const STATUS_STYLE: Record<string, { cls: string; label: string; icon: typeof CheckCircle2 }> = {
   [BillingStatus.PAID]:       { cls: "bg-emerald-50 text-emerald-700 border border-emerald-200", label: "Paid", icon: CheckCircle2 },
@@ -105,7 +106,7 @@ export default async function BillingPage() {
                       {b.appointment?.practitioner?.user?.name ?? "Medical Consultation"}
                     </p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      {new Date(b.createdAt).toLocaleDateString("en-ZM", { year: "numeric", month: "short", day: "numeric" })} · Tier: {b.tier}
+                      {formatDate(b.createdAt)} · Tier: {b.tier}
                     </p>
                     {b.subsidyApplied && (
                       <p className="text-xs text-primary mt-1 font-medium flex items-center gap-1">
