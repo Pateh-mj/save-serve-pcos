@@ -10,7 +10,7 @@ export default function NGOsPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="bg-white border-b border-border py-20">
+      <section className="bg-card border-b border-border py-20">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">For NGOs &amp; Funding Partners</p>
           <h1 className="text-3xl md:text-5xl font-extrabold text-foreground mb-6">
@@ -30,7 +30,7 @@ export default function NGOsPage() {
       <section className="py-20">
         <div className="container mx-auto px-6 max-w-5xl grid md:grid-cols-2 gap-16 items-center">
           <div>
-            <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center mb-5">
+            <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center mb-5">
               <Heart className="w-6 h-6 text-primary" strokeWidth={1.5} />
             </div>
             <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">The Robin Hood Model</p>
@@ -44,7 +44,7 @@ export default function NGOsPage() {
               Kenya&apos;s M-TIBA — so free care continues while premium volumes grow.
             </p>
           </div>
-          <div className="bg-white border border-border rounded-2xl p-8 shadow-sm space-y-5">
+          <div className="bg-card border border-border rounded-xl p-8 shadow-sm space-y-5">
             <h3 className="font-bold text-foreground text-lg mb-2">How the Fund Works</h3>
             {[
               { from: "Premium patient", action: "Pays above the standard tariff", to: "Surplus credited to the fund" },
@@ -78,7 +78,7 @@ export default function NGOsPage() {
               { icon: BarChart3, title: "Impact Report", desc: "Month by month: visits funded, subsidy value, premium surplus received and top-ups." },
               { icon: BookOpen, title: "Transparent Rules", desc: "Subsidies follow the published Policy Guardian rules set by the clinic's administrators, applied the same way on web and USSD." },
             ].map((item) => (
-              <div key={item.title} className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+              <div key={item.title} className="bg-card border border-border rounded-xl p-6 shadow-sm">
                 <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4">
                   <item.icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
                 </div>
@@ -97,7 +97,7 @@ export default function NGOsPage() {
           Register your organisation, top up the community health equity fund, and follow the care it pays for.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/register" className="px-7 py-3 bg-white text-primary font-semibold rounded-xl">Register Organisation</Link>
+          <Link href="/register" className="px-7 py-3 bg-card text-primary font-semibold rounded-xl">Register Organisation</Link>
           <Link href="/contact" className="px-7 py-3 border border-white/30 text-white font-semibold rounded-xl hover:bg-white/10">Contact the Researcher <ArrowRight className="w-4 h-4 inline ml-1" /></Link>
         </div>
       </section>

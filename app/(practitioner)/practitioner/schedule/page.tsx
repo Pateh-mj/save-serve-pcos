@@ -5,6 +5,7 @@ import { CalendarClock, Phone } from "lucide-react";
 import { AppointmentStatus } from "@/lib/constants";
 import AvailabilityEditor from "./AvailabilityEditor";
 import { clinicDateKey, formatDate, formatTime } from "@/lib/format";
+import { PageHeader } from "@/components/app/PageHeader";
 
 export const metadata = { title: "Schedule" };
 
@@ -46,12 +47,7 @@ export default async function SchedulePage() {
 
     return (
         <div className="max-w-6xl">
-            <div className="mb-8">
-                <h1 className="text-2xl font-extrabold text-foreground">Schedule</h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                    Manage your weekly availability and view upcoming appointments
-                </p>
-            </div>
+            <PageHeader title="Schedule" description="Manage your weekly availability and view upcoming appointments" />
 
             <div className="grid lg:grid-cols-[1fr_1.4fr] gap-6">
                 <AvailabilityEditor initial={initialAvailability} />
@@ -62,7 +58,7 @@ export default async function SchedulePage() {
                     </h2>
 
                     {grouped.size === 0 ? (
-                        <div className="bg-card border border-border rounded-2xl p-8 text-center">
+                        <div className="bg-card border border-border rounded-xl p-8 text-center">
                             <p className="text-sm text-muted-foreground">No upcoming appointments.</p>
                         </div>
                     ) : (

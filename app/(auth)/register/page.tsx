@@ -110,10 +110,10 @@ export default function RegisterPage() {
 
   return (
     <div className="w-full max-w-lg">
-      <div className="bg-card border border-border rounded-2xl shadow-xl p-8">
+      <div className="bg-card border border-border rounded-xl shadow-xl p-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-extrabold text-foreground">Create your account</h1>
+          <h1 className="text-2xl font-bold text-foreground">Create your account</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Join SaveServe — accessible healthcare for everyone.
           </p>

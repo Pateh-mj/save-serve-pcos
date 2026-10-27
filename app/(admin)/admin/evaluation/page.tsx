@@ -37,7 +37,7 @@ export default async function EvaluationPage() {
     <div className="max-w-6xl">
       <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-foreground">System Evaluation</h1>
+          <h1 className="text-2xl font-bold text-foreground">System Evaluation</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Response time, synchronisation accuracy and satisfaction over the last {report.days} days, measured from live use.
           </p>
@@ -61,9 +61,9 @@ export default async function EvaluationPage() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {tiles.map((t) => (
-          <div key={t.label} className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+          <div key={t.label} className="bg-card border border-border rounded-xl p-5 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">{t.label}</p>
-            <p className="text-2xl font-extrabold text-foreground tabular-nums">{t.value}</p>
+            <p className="text-2xl font-bold text-foreground tabular-nums">{t.value}</p>
             <p className="text-xs text-muted-foreground mt-1">{t.sub}</p>
           </div>
         ))}
@@ -75,7 +75,7 @@ export default async function EvaluationPage() {
         <p className="text-xs text-muted-foreground mb-3">
           Server-side time per request. USSD gateways typically drop a session if a screen takes longer than a few seconds.
         </p>
-        <div className="bg-card border border-border rounded-2xl overflow-x-auto">
+        <div className="bg-card border border-border rounded-xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-muted-foreground border-b border-border">
@@ -123,7 +123,7 @@ export default async function EvaluationPage() {
             {failing === 0 ? "All checks pass" : `${failing} check(s) failing`}
           </span>
         </div>
-        <div className="bg-card border border-border rounded-2xl divide-y divide-border">
+        <div className="bg-card border border-border rounded-xl divide-y divide-border">
           {checks.map((c) => {
             const state = c.passed ? "pass" : c.informational ? "info" : "fail";
             return (
@@ -146,7 +146,7 @@ export default async function EvaluationPage() {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Satisfaction distribution: single series, so no legend; values in text ink at the bar tips */}
-        <section className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+        <section className="bg-card border border-border rounded-xl p-5 shadow-sm">
           <h2 className="font-bold text-foreground">Ratings by score</h2>
           <p className="text-xs text-muted-foreground mb-4">
             {satisfaction.byChannel.map((c) => `${c.channel}: ${c.count ? c.average.toFixed(2) : "—"} (${c.count})`).join(" · ")}
@@ -175,7 +175,7 @@ export default async function EvaluationPage() {
         </section>
 
         {/* Channel usage & SMS outcomes as plain figures */}
-        <section className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+        <section className="bg-card border border-border rounded-xl p-5 shadow-sm">
           <h2 className="font-bold text-foreground mb-4">Channel usage</h2>
           <dl className="space-y-2 text-sm">
             {[

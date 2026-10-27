@@ -66,7 +66,7 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
   return (
     <div className="max-w-6xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-foreground">Appointments</h1>
+        <h1 className="text-2xl font-bold text-foreground">Appointments</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Every booking from the web and USSD channels. Showing {appointments.length} of {total}.
         </p>
@@ -95,9 +95,9 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
       </div>
 
       {appointments.length === 0 ? (
-        <div className="bg-card border border-border rounded-2xl p-10 text-center text-sm text-muted-foreground">No appointments match these filters.</div>
+        <div className="bg-card border border-border rounded-xl p-10 text-center text-sm text-muted-foreground">No appointments match these filters.</div>
       ) : (
-        <div className="bg-card border border-border rounded-2xl overflow-x-auto">
+        <div className="bg-card border border-border rounded-xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-muted-foreground border-b border-border">
@@ -125,7 +125,7 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
                     <td className="px-3 py-2.5 text-muted-foreground">{a.channel}</td>
                     <td className={`px-3 py-2.5 text-xs ${TRIAGE_STYLE[a.triageLevel] ?? ""}`}>{a.triageLevel}</td>
                     <td className="px-3 py-2.5">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${STATUS_STYLE[a.status] ?? ""}`}>{a.status}</span>
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${STATUS_STYLE[a.status] ?? ""}`}>{a.status}</span>
                     </td>
                     <td className="px-3 py-2.5 text-right whitespace-nowrap">
                       {a.billing ? (
@@ -133,7 +133,7 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
                           <p className="font-semibold text-foreground tabular-nums">
                             ZMW {(a.billing.discountedAmount ?? a.billing.amount).toFixed(2)}
                           </p>
-                          <p className="text-[11px] text-muted-foreground">{a.billing.status}</p>
+                          <p className="text-xs text-muted-foreground">{a.billing.status}</p>
                         </>
                       ) : (
                         <span className="text-xs text-danger">missing</span>

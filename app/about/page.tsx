@@ -20,7 +20,7 @@ export default function AboutPage() {
       <Navbar />
 
       {/* Title page */}
-      <section className="py-12 bg-white border-b border-border">
+      <section className="py-12 bg-card border-b border-border">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <SectionLabel>About This Project</SectionLabel>
           <h1 className="text-2xl md:text-3xl font-extrabold text-foreground leading-snug mb-5">{RESEARCH.title}</h1>
@@ -38,7 +38,7 @@ export default function AboutPage() {
       {/* Abstract */}
       <section className="py-12">
         <div className="container mx-auto px-6 max-w-4xl">
-          <div className="bg-white border border-border rounded-lg p-8 shadow-sm">
+          <div className="bg-card border border-border rounded-lg p-8 shadow-sm">
             <SectionLabel>Abstract</SectionLabel>
             {ABSTRACT.map((p, i) => (
               <p key={i} className={`text-muted-foreground leading-relaxed ${i < ABSTRACT.length - 1 ? "mb-4" : ""}`}>{p}</p>
@@ -75,7 +75,7 @@ export default function AboutPage() {
               { icon: ShieldCheck, label: "Policy Guardian", desc: "Middleware that evaluates user tiers, enforces billing rules and manages cross-subsidization." },
               { icon: Heart, label: "Robin Hood model", desc: "Revenue from premium-tier services offsets the cost of free or discounted care for low-income users." },
             ].map((item) => (
-              <div key={item.label} className="flex items-start gap-4 p-4 bg-white rounded-lg border border-border">
+              <div key={item.label} className="flex items-start gap-4 p-4 bg-card rounded-lg border border-border">
                 <div className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center shrink-0">
                   <item.icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
                 </div>
@@ -96,7 +96,7 @@ export default function AboutPage() {
           <h2 className="text-3xl font-extrabold text-foreground mb-8">Access Barriers and Financial Strain</h2>
           <div className="grid md:grid-cols-3 gap-5">
             {PROBLEMS.map((p) => (
-              <div key={p.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
+              <div key={p.title} className="bg-card border border-border rounded-lg p-6 shadow-sm">
                 <h3 className="font-bold text-foreground text-sm mb-2">{p.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{p.body}</p>
                 <p className="text-xs text-muted-foreground/80 mt-3 italic">({p.citation})</p>
@@ -109,7 +109,7 @@ export default function AboutPage() {
       {/* Motivation */}
       <section className="py-16 bg-secondary">
         <div className="container mx-auto px-6 max-w-4xl">
-          <div className="bg-white border border-border rounded-lg p-8 shadow-sm">
+          <div className="bg-card border border-border rounded-lg p-8 shadow-sm">
             <SectionLabel>Motivation</SectionLabel>
             <p className="text-muted-foreground leading-relaxed mb-4">
               While digital healthcare is moving forward fast, a huge number of people in Zambia are being left behind: modern healthcare web
@@ -137,7 +137,7 @@ export default function AboutPage() {
           </div>
           <div className="grid md:grid-cols-2 gap-5 mb-12">
             {SPECIFIC_OBJECTIVES.map((o, i) => (
-              <div key={i} className="bg-white border border-border rounded-lg p-5 shadow-sm flex gap-4">
+              <div key={i} className="bg-card border border-border rounded-lg p-5 shadow-sm flex gap-4">
                 <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shrink-0">{i + 1}</div>
                 <p className="text-sm text-muted-foreground leading-relaxed">{o}</p>
               </div>
@@ -147,7 +147,7 @@ export default function AboutPage() {
           <SectionLabel>Research Questions</SectionLabel>
           <ol className="space-y-3">
             {RESEARCH_QUESTIONS.map((q, i) => (
-              <li key={i} className="flex gap-3 text-sm text-foreground bg-white border border-border rounded-lg p-4">
+              <li key={i} className="flex gap-3 text-sm text-foreground bg-card border border-border rounded-lg p-4">
                 <span className="font-bold text-primary shrink-0">RQ{i + 1}</span>
                 <span className="leading-relaxed">{q}</span>
               </li>
@@ -168,7 +168,7 @@ export default function AboutPage() {
                 ["Target users", "Healthcare administrators and staff who manage patient records and policy settings, and patients using smartphones or basic feature phones."],
                 ["Context", "Community healthcare delivery in Zambia, using simulated and field-tested scenarios representative of local clinic workflows and network conditions."],
               ].map(([k, v]) => (
-                <li key={k} className="bg-white border border-border rounded-lg p-4">
+                <li key={k} className="bg-card border border-border rounded-lg p-4">
                   <span className="font-semibold text-foreground">{k}: </span>{v}
                 </li>
               ))}
@@ -182,7 +182,7 @@ export default function AboutPage() {
                 "Designed around urban and semi-urban community clinic workflows in Zambia, not nationwide tertiary referral hospitals.",
                 "Financial transactions are modelled around the automated subsidization logic rather than integrated with every banking and mobile-money provider.",
               ].map((d) => (
-                <li key={d} className="bg-white border border-border rounded-lg p-4">{d}</li>
+                <li key={d} className="bg-card border border-border rounded-lg p-4">{d}</li>
               ))}
             </ul>
           </div>
@@ -200,7 +200,7 @@ export default function AboutPage() {
           </p>
           <div className="grid md:grid-cols-2 gap-5">
             {THEORIES.map((t) => (
-              <div key={t.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
+              <div key={t.title} className="bg-card border border-border rounded-lg p-6 shadow-sm">
                 <div className="flex items-start gap-2 mb-1">
                   <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                   <h3 className="font-bold text-foreground text-sm">{t.title}</h3>
@@ -235,7 +235,7 @@ export default function AboutPage() {
               </div>
             </div>
             <ArrowDown className="w-5 h-5 text-muted-foreground mx-auto" />
-            <div className="border-2 border-dashed border-border rounded-xl p-4 bg-white">
+            <div className="border-2 border-dashed border-border rounded-xl p-4 bg-card">
               <p className="font-bold text-foreground text-sm">PCOS orchestration core</p>
               <p className="text-xs text-muted-foreground mb-3">Policy Guardian applies tier and subsidy rules in real time</p>
               <div className="grid sm:grid-cols-2 gap-3">
@@ -264,7 +264,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-6 max-w-5xl">
           <SectionLabel>Review of Existing Systems</SectionLabel>
           <h2 className="text-3xl font-extrabold text-foreground mb-8">Where Existing Platforms Fall Short</h2>
-          <div className="bg-white border border-border rounded-lg overflow-x-auto">
+          <div className="bg-card border border-border rounded-lg overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground border-b border-border">
@@ -305,7 +305,7 @@ export default function AboutPage() {
           <div className="flex flex-wrap items-center gap-2">
             {DSR_STEPS.map((s, i) => (
               <div key={s} className="flex items-center gap-2">
-                <span className="px-3 py-2 rounded-lg bg-white border border-border text-sm font-semibold text-foreground">
+                <span className="px-3 py-2 rounded-lg bg-card border border-border text-sm font-semibold text-foreground">
                   {i + 1}. {s}
                 </span>
                 {i < DSR_STEPS.length - 1 && <span className="text-muted-foreground">→</span>}
@@ -324,7 +324,7 @@ export default function AboutPage() {
             {SIGNIFICANCE.map((item, i) => {
               const Icon = SIGNIFICANCE_ICONS[i];
               return (
-                <div key={item.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
+                <div key={item.title} className="bg-card border border-border rounded-lg p-6 shadow-sm">
                   <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4">
                     <Icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
                   </div>
@@ -344,7 +344,7 @@ export default function AboutPage() {
           Register as a patient to try the web channel, or open the USSD simulator to try *384#.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link href="/register" className="px-6 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 transition w-full sm:w-auto">
+          <Link href="/register" className="px-6 py-3 bg-card text-primary font-semibold rounded-lg hover:bg-white/90 transition w-full sm:w-auto">
             Register as a Patient
           </Link>
           <Link href="/ussd" className="px-6 py-3 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition w-full sm:w-auto">

@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/components/app/Toaster";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Loader2, CreditCard, X } from "lucide-react";
@@ -27,11 +28,11 @@ export default function NgoTopupModal() {
         router.refresh();
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.error ?? "Top-up failed.");
+        toast.error(data.error ?? "Top-up failed.");
       }
     } catch (err) {
       console.error(err);
-      alert("Error processing top-up.");
+      toast.error("Error processing top-up.");
     } finally {
       setLoading(false);
     }
@@ -48,7 +49,7 @@ export default function NgoTopupModal() {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-card border border-border w-full max-w-md rounded-2xl shadow-2xl p-6 relative">
+          <div className="bg-card border border-border w-full max-w-md rounded-xl shadow-2xl p-6 relative">
             <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
               <div className="flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-primary" />

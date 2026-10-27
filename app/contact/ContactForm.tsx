@@ -4,7 +4,7 @@ import { Send } from "lucide-react";
 import { RESEARCH } from "@/lib/research";
 
 const inputCls =
-  "w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-white text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30";
+  "w-full px-4 py-2.5 border border-border rounded-lg text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30";
 
 // Opens the visitor's email app with the message pre-filled (no server mail relay in the prototype).
 export default function ContactForm() {

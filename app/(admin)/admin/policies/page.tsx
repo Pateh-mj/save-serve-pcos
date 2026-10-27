@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getConsultationFee } from "@/lib/settings";
 import { FeeEditor, PolicyEditor } from "./PolicyEditor";
+import { PageHeader } from "@/components/app/PageHeader";
 
 export const metadata = { title: "Policy Guardian" };
 
@@ -21,15 +22,10 @@ export default async function AdminPoliciesPage() {
 
   return (
     <div className="max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-2xl font-extrabold text-foreground">Policy Guardian Settings</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          The rules the Policy Guardian applies to every booking, on both Web and USSD. Changes take effect on the next booking;
-          existing bills keep the terms they were created with.
-        </p>
-      </div>
+      <PageHeader title="Policy Guardian Settings" description="The rules the Policy Guardian applies to every booking, on both Web and USSD. Changes take effect on the next booking;
+          existing bills keep the terms they were created with." />
 
-      <div className="bg-card border border-border rounded-2xl p-5 shadow-sm mb-6">
+      <div className="bg-card border border-border rounded-xl p-5 shadow-sm mb-6">
         <h2 className="font-bold text-foreground mb-3">Base tariff</h2>
         <FeeEditor fee={fee} />
         <p className="text-xs text-muted-foreground mt-3">

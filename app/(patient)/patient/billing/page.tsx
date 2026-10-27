@@ -2,18 +2,24 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { CreditCard, CheckCircle2, Clock, ShieldCheck, Heart } from "lucide-react";
+import { CreditCard, Wallet, HeartHandshake, BadgeCheck, Info } from "lucide-react";
 import { BillingStatus } from "@/lib/constants";
 import BillingItemActions from "./BillingItemActions";
 import { formatDate } from "@/lib/format";
+import { PageHeader } from "@/components/app/PageHeader";
+import { StatCard } from "@/components/app/StatCard";
+import { StatusBadge } from "@/components/app/StatusBadge";
+import { Panel, EmptyState } from "@/components/app/Panel";
+import { btnPrimary } from "@/components/app/buttons";
 
 export const metadata = { title: "My Billing" };
 
-const STATUS_STYLE: Record<string, { cls: string; label: string; icon: typeof CheckCircle2 }> = {
-  [BillingStatus.PAID]:       { cls: "bg-success-soft text-success-fg border border-success-border", label: "Paid", icon: CheckCircle2 },
-  [BillingStatus.SUBSIDIZED]: { cls: "bg-success-soft text-success-fg border border-success-border", label: "100% Subsidised", icon: ShieldCheck },
-  [BillingStatus.PENDING]:    { cls: "bg-warning-soft text-warning-fg border border-warning-border", label: "Pending Payment", icon: Clock },
-  [BillingStatus.WAIVED]:     { cls: "bg-info-soft text-info-fg border border-info-border", label: "Fee Waived", icon: CheckCircle2 },
+const zmw = (n: number) => `ZMW ${n.toFixed(2)}`;
+
+const TIER_NOTE: Record<string, string> = {
+  FREE: "Your visits are paid for by partner NGOs through the Robin Hood subsidy pool.",
+  BASIC: "You pay the standard consultation fee.",
+  PREMIUM: "Your fee includes a contribution that funds free care for others.",
 };
 
 export default async function BillingPage() {
@@ -26,115 +32,79 @@ export default async function BillingPage() {
       user: true,
       billings: {
         orderBy: { createdAt: "desc" },
-        include: {
-          appointment: { include: { practitioner: { include: { user: true } } } },
-          policy: true,
-        },
+        include: { appointment: { include: { practitioner: { include: { user: true } } } } },
       },
     },
   });
-
   if (!patient) redirect("/login");
 
-  const totalPaid = patient.billings
-    .filter((b) => b.status === BillingStatus.PAID)
-    .reduce((sum, b) => sum + (b.discountedAmount ?? b.amount), 0);
-
-  const totalSubsidized = patient.billings
-    .filter((b) => b.status === BillingStatus.SUBSIDIZED || b.subsidyApplied)
-    .reduce((sum, b) => sum + (b.subsidyAmount ?? b.amount), 0);
-
-  const totalPending = patient.billings
-    .filter((b) => b.status === BillingStatus.PENDING)
-    .reduce((sum, b) => sum + (b.discountedAmount ?? b.amount), 0);
+  const due = (b: { discountedAmount: number | null; amount: number }) => b.discountedAmount ?? b.amount;
+  const sum = (status: string) => patient.billings.filter((b) => b.status === status).reduce((s, b) => s + due(b), 0);
+  const totalSubsidised = patient.billings.reduce((s, b) => s + (b.subsidyApplied ? b.subsidyAmount ?? b.amount : 0), 0);
+  const pending = patient.billings.filter((b) => b.status === BillingStatus.PENDING);
 
   return (
     <div className="max-w-4xl">
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-extrabold text-foreground">My Billing & Subsidies</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Policy Guardian automatic healthcare tier: <span className="font-semibold text-primary">{patient.user.tier} TIER</span>
-          </p>
-        </div>
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary text-xs font-semibold text-foreground">
-          <Heart className="w-3.5 h-3.5 text-primary" /> Robin Hood Subsidy Active
-        </div>
+      <PageHeader
+        eyebrow="Billing"
+        title="Bills & subsidies"
+        description={
+          <span className="inline-flex flex-wrap items-center gap-2">
+            Set automatically by the Policy Guardian for your plan: <StatusBadge kind="tier" value={patient.user.tier} />
+          </span>
+        }
+      />
+
+      <div className="grid gap-4 sm:grid-cols-3 mb-6">
+        <StatCard label="To pay" value={zmw(sum(BillingStatus.PENDING))} icon={Wallet} tone={pending.length ? "warning" : "neutral"} hint={`${pending.length} unpaid bill${pending.length === 1 ? "" : "s"}`} />
+        <StatCard label="Subsidies received" value={zmw(totalSubsidised)} icon={HeartHandshake} tone="brand" hint="Covered by partner NGOs" />
+        <StatCard label="Paid so far" value={zmw(sum(BillingStatus.PAID))} icon={BadgeCheck} tone="success" hint="Mobile money and cash" />
       </div>
 
-      {/* Summary cards */}
-      <div className="grid sm:grid-cols-3 gap-4 mb-10">
-        <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Pending Payment</p>
-          <p className="text-3xl font-extrabold text-warning">ZMW {totalPending.toFixed(2)}</p>
-          <p className="text-xs text-muted-foreground mt-1">Outstanding patient share</p>
-        </div>
-        <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">NGO Subsidies Received</p>
-          <p className="text-3xl font-extrabold text-primary">ZMW {totalSubsidized.toFixed(2)}</p>
-          <p className="text-xs text-muted-foreground mt-1">Cross-subsidised care</p>
-        </div>
-        <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Total Paid</p>
-          <p className="text-3xl font-extrabold text-foreground">ZMW {totalPaid.toFixed(2)}</p>
-          <p className="text-xs text-muted-foreground mt-1">Settled consultations</p>
-        </div>
+      <div className="flex gap-3 rounded-xl border border-border bg-card px-5 py-4 mb-6 text-sm shadow-xs">
+        <Info className="w-5 h-5 text-primary shrink-0" />
+        <p className="text-muted-foreground">
+          <strong className="text-foreground">How your bill is set.</strong> {TIER_NOTE[patient.user.tier] ?? TIER_NOTE.BASIC}
+        </p>
       </div>
 
-      {patient.billings.length === 0 ? (
-        <div className="text-center py-20 bg-card rounded-2xl border border-border">
-          <CreditCard className="w-10 h-10 text-muted-foreground mx-auto mb-4" strokeWidth={1} />
-          <p className="font-semibold text-foreground">No billing records yet</p>
-          <p className="text-sm text-muted-foreground mt-1 mb-6">Billing is calculated automatically when you book appointments.</p>
-          <Link href="/patient/appointments/new" className="px-5 py-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-lg hover:opacity-90">
-            Book an Appointment
-          </Link>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {patient.billings.map((b) => {
-            const st = STATUS_STYLE[b.status] ?? STATUS_STYLE[BillingStatus.PENDING];
-            const Icon = st.icon;
-            const payableAmount = b.discountedAmount ?? b.amount;
-
-            return (
-              <div key={b.id} className="bg-card border border-border rounded-xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center shrink-0 mt-0.5">
-                    <CreditCard className="w-6 h-6 text-primary" strokeWidth={1.5} />
-                  </div>
+      <Panel title="Bill history" flush>
+        {patient.billings.length === 0 ? (
+          <EmptyState icon={CreditCard} title="No bills yet" action={<Link href="/patient/appointments/new" className={btnPrimary}>Book a visit</Link>}>
+            A bill is created automatically when you book.
+          </EmptyState>
+        ) : (
+          <ul className="divide-y divide-border">
+            {patient.billings.map((b) => {
+              const subsidy = b.subsidyApplied ? b.subsidyAmount ?? b.amount : 0;
+              const surplus = Math.max(0, due(b) - b.amount);
+              return (
+                <li key={b.id} className="px-5 py-4 flex flex-col md:flex-row md:items-center gap-4">
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-foreground text-sm">
-                      {b.appointment?.practitioner?.user?.name ?? "Medical Consultation"}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-semibold text-foreground">{b.appointment?.practitioner?.user?.name ?? "Consultation"}</p>
+                      <StatusBadge kind="billing" value={b.status} />
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      Visit on {formatDate(b.appointment?.scheduledAt ?? b.createdAt, { day: "numeric", month: "short", year: "numeric" })} · {b.tier.toLowerCase()} plan
                     </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {formatDate(b.createdAt)} · Tier: {b.tier}
-                    </p>
-                    {b.subsidyApplied && (
-                      <p className="text-xs text-primary mt-1 font-medium flex items-center gap-1">
-                        <ShieldCheck className="w-3.5 h-3.5" /> NGO Subsidy Applied: ZMW {(b.subsidyAmount ?? b.amount).toFixed(2)}
-                      </p>
-                    )}
+                    {/* Fee breakdown: shows the Robin Hood model at work on this bill */}
+                    <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">
+                      <div>Standard fee <dd className="inline font-semibold text-foreground">{zmw(b.amount)}</dd></div>
+                      {subsidy > 0 && <div>NGO subsidy <dd className="inline font-semibold text-primary">−{zmw(subsidy)}</dd></div>}
+                      {surplus > 0 && <div>Community contribution <dd className="inline font-semibold text-premium-fg">+{zmw(surplus)}</dd></div>}
+                    </dl>
                   </div>
-                </div>
-
-                <div className="flex items-center sm:flex-col sm:items-end justify-between sm:justify-center gap-2 border-t sm:border-t-0 pt-3 sm:pt-0 border-border">
-                  <div className="text-right">
-                    <p className="font-bold text-foreground text-base">ZMW {payableAmount.toFixed(2)}</p>
-                    <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full mt-1 ${st.cls}`}>
-                      <Icon className="w-3 h-3" />{st.label}
-                    </span>
+                  <div className="flex items-center justify-between md:flex-col md:items-end gap-2 shrink-0">
+                    <p className="text-lg font-bold text-foreground">{zmw(b.status === BillingStatus.SUBSIDIZED || b.status === BillingStatus.WAIVED ? 0 : due(b))}</p>
+                    {b.status === BillingStatus.PENDING && <BillingItemActions billingId={b.id} amount={due(b)} />}
                   </div>
-
-                  {b.status === BillingStatus.PENDING && (
-                    <BillingItemActions billingId={b.id} amount={payableAmount} />
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </Panel>
     </div>
   );
 }

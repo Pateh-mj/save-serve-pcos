@@ -40,6 +40,22 @@ function clinicMonthStart() {
 }
 
 /**
+ * A FREE-tier patient's subsidised visits this month against the active policy's
+ * limit (`max` is null when the policy sets none). Counted exactly as the
+ * booking check below counts them.
+ */
+export async function getFreeVisitAllowance(patientId: string) {
+  const [policy, used] = await Promise.all([
+    prisma.policy.findFirst({ where: { tier: "FREE", isActive: true } }),
+    prisma.billing.count({
+      where: { patientId, status: BillingStatus.SUBSIDIZED, createdAt: { gte: clinicMonthStart() } },
+    }),
+  ]);
+  const max = policy ? parseRules(policy.rules).maxVisitsPerMonth : undefined;
+  return { used, max: typeof max === "number" ? max : null };
+}
+
+/**
  * Calculates billing, subsidies, and Robin Hood economic distribution
  * based on the patient's registered tier and active policies.
  *

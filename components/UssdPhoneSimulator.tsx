@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/components/app/Toaster";
 import { useState, useEffect, useRef } from "react";
 import { Phone, PhoneOff, RotateCcw, Signal, BatteryMedium, WifiOff } from "lucide-react";
 import { normalizeZambianPhone } from "@/lib/phone";
@@ -105,7 +106,7 @@ export default function UssdPhoneSimulator({ initialPhone = "+260971000001", onA
   function applyCustomNumber() {
     const normalized = normalizeZambianPhone(customPhone);
     if (!normalized) {
-      alert("Enter a Zambian mobile number, e.g. 0971234567");
+      toast.error("Enter a Zambian mobile number, e.g. 0971234567");
       return;
     }
     setPhoneNumber(normalized);

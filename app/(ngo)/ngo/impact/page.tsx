@@ -60,7 +60,7 @@ export default async function NgoImpactPage() {
   return (
     <div className="max-w-5xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-foreground">Impact Report</h1>
+        <h1 className="text-2xl font-bold text-foreground">Impact Report</h1>
         <p className="text-sm text-muted-foreground mt-1">
           The last {MONTHS} months of your fund, from the ledger. Net of cancellations, which return their subsidy to the fund.
         </p>
@@ -73,15 +73,15 @@ export default async function NgoImpactPage() {
           { label: "Premium surplus received", value: `ZMW ${totals.premium.toFixed(2)}` },
           { label: "Funded internally", value: `${(internalShare * 100).toFixed(0)}%`, sub: "Premium surplus as a share of all money in" },
         ].map((s) => (
-          <div key={s.label} className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+          <div key={s.label} className="bg-card border border-border rounded-xl p-5 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">{s.label}</p>
-            <p className="text-2xl font-extrabold text-foreground tabular-nums">{s.value}</p>
+            <p className="text-2xl font-bold text-foreground tabular-nums">{s.value}</p>
             {s.sub && <p className="text-xs text-muted-foreground mt-1">{s.sub}</p>}
           </div>
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-2xl overflow-x-auto">
+      <div className="bg-card border border-border rounded-xl overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs text-muted-foreground border-b border-border">

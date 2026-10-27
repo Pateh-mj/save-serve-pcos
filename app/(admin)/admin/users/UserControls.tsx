@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/components/app/Toaster";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, ShieldCheck, ShieldOff, Pencil, Check, X } from "lucide-react";
@@ -30,7 +31,7 @@ export default function UserControls({ user }: Props) {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        alert(data.error ?? "Update failed.");
+        toast.error(data.error ?? "Update failed.");
         return false;
       }
       router.refresh();

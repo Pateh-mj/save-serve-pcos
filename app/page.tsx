@@ -61,7 +61,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative bg-white overflow-hidden">
+      <section className="relative bg-card overflow-hidden">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -95,7 +95,7 @@ export default function Home() {
           </div>
 
           <div className="relative hidden md:flex flex-col items-center gap-4">
-            <div className="w-full max-w-xl bg-white border border-border rounded-lg shadow-xl p-6">
+            <div className="w-full max-w-xl bg-card border border-border rounded-lg shadow-xl p-6">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Two Channels. One System.</p>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col items-center p-4 rounded-lg bg-accent border border-primary/20 text-center">
@@ -147,7 +147,7 @@ export default function Home() {
             {PROBLEMS.map((p, i) => {
               const Icon = PROBLEM_ICONS[i];
               return (
-                <div key={p.title} className="bg-white border border-border rounded-lg p-7 shadow-sm hover:shadow-md transition-shadow">
+                <div key={p.title} className="bg-card border border-border rounded-lg p-7 shadow-sm hover:shadow-md transition-shadow">
                   <div className={`w-11 h-11 rounded-lg flex items-center justify-center mb-5 ${PROBLEM_COLORS[i]}`}>
                     <Icon className="w-5 h-5" strokeWidth={1.75} />
                   </div>
@@ -196,7 +196,7 @@ export default function Home() {
                 { icon: PhoneCall, label: "USSD Channel (*384#)", badge: "No internet needed", badgeCls: "bg-secondary text-muted-foreground", desc: "Menu-driven booking, records, bills and payment over ordinary GSM, with SMS confirmations." },
                 { icon: ShieldCheck, label: "Policy Guardian + Central Database", badge: "Both channels", badgeCls: "bg-primary/10 text-primary", desc: "Both channels write to one central database, and the Policy Guardian applies the same billing policy to every transaction." },
               ].map((item) => (
-                <div key={item.label} className="bg-white border border-border rounded-lg p-6 shadow-sm">
+                <div key={item.label} className="bg-card border border-border rounded-lg p-6 shadow-sm">
                   <div className="flex items-center gap-3 mb-3">
                     <item.icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
                     <span className="font-semibold text-foreground text-sm">{item.label}</span>
@@ -219,7 +219,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f) => (
-              <div key={f.title} className="bg-white border border-border rounded-lg p-7 hover:border-primary/30 hover:shadow-md transition-all">
+              <div key={f.title} className="bg-card border border-border rounded-lg p-7 hover:border-primary/30 hover:shadow-md transition-all">
                 <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center mb-5">
                   <f.icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
                 </div>
@@ -270,7 +270,7 @@ export default function Home() {
                 { n: "3", title: "Billing calculated automatically", desc: "Free-tier visits are funded from the equity fund; Premium pays above the standard tariff, and the surplus refills the fund." },
                 { n: "4", title: "Appointment confirmed + record updated", desc: "Booking saved to the central record and an SMS confirmation sent." },
               ].map((item) => (
-                <div key={item.n} className="flex gap-4 items-start bg-white border border-border rounded-lg p-5 shadow-sm">
+                <div key={item.n} className="flex gap-4 items-start bg-card border border-border rounded-lg p-5 shadow-sm">
                   <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">{item.n}</div>
                   <div>
                     <p className="font-semibold text-foreground text-sm">{item.title}</p>
@@ -356,7 +356,7 @@ export default function Home() {
                 href: "/ngos", cta: "For Partners",
               },
             ].map((item) => (
-              <div key={item.label} className="bg-white border border-border rounded-lg p-8 flex flex-col shadow-sm hover:shadow-md transition-shadow">
+              <div key={item.label} className="bg-card border border-border rounded-lg p-8 flex flex-col shadow-sm hover:shadow-md transition-shadow">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-5 ${item.color}`}>
                   <item.icon className="w-6 h-6" strokeWidth={1.5} />
                 </div>
@@ -386,7 +386,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-2 gap-5">
             {THEORIES.map((t) => (
-              <div key={t.title} className="bg-white border border-border rounded-lg p-6 shadow-sm">
+              <div key={t.title} className="bg-card border border-border rounded-lg p-6 shadow-sm">
                 <div className="flex items-start gap-2 mb-1">
                   <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                   <h3 className="font-bold text-foreground text-sm">{t.title}</h3>
@@ -411,7 +411,7 @@ export default function Home() {
             Register online with a smartphone, or use the USSD menu from a basic phone — the system meets patients where they are.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register" className="px-8 py-3.5 bg-white text-primary font-semibold rounded-lg hover:bg-white/90 transition-colors">Register as a Patient</Link>
+            <Link href="/register" className="px-8 py-3.5 bg-card text-primary font-semibold rounded-lg hover:bg-white/90 transition-colors">Register as a Patient</Link>
             <Link href="/about" className="px-8 py-3.5 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors">About This Research</Link>
           </div>
         </div>

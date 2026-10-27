@@ -19,7 +19,7 @@ export default function UssdSimulatorModal() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-border text-foreground font-semibold rounded-lg hover:bg-secondary transition-colors"
+        className="inline-flex items-center gap-2 px-6 py-3 bg-card border border-border text-foreground font-semibold rounded-lg hover:bg-secondary transition-colors"
       >
         <PhoneCall className="w-4 h-4 text-primary" /> Try USSD *384#
       </button>
@@ -33,7 +33,7 @@ export default function UssdSimulatorModal() {
           aria-label="USSD simulator"
         >
           <div
-            className="bg-card border border-border rounded-2xl shadow-2xl p-5 relative my-auto"
+            className="bg-card border border-border rounded-xl shadow-2xl p-5 relative my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4 gap-6">

@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/components/app/Toaster";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Star, Loader2 } from "lucide-react";
@@ -21,10 +22,11 @@ export default function RateVisit({ appointmentId, existing }: { appointmentId: 
       });
       if (res.ok) {
         setRated(value);
+        toast.success("Thank you. Your rating helps us improve care.");
         router.refresh();
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.error ?? "Could not save your rating.");
+        toast.error(data.error ?? "Could not save your rating.");
       }
     } finally {
       setSaving(false);

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Role } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import UserControls from "./UserControls";
+import { PageHeader } from "@/components/app/PageHeader";
 
 export const metadata = { title: "Users & Tiers" };
 
@@ -36,12 +37,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
 
   return (
     <div className="max-w-6xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-foreground">Users & Classification</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Classify patients into billing tiers for the Policy Guardian, verify practitioner licences, and keep phone numbers current for SMS.
-        </p>
-      </div>
+      <PageHeader title="Users & Classification" description="Classify patients into billing tiers for the Policy Guardian, verify practitioner licences, and keep phone numbers current for SMS." />
 
       <div className="flex gap-2 mb-6 border-b border-border">
         {ROLE_TABS.map((t) => (
@@ -58,19 +54,19 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
       </div>
 
       {users.length === 0 ? (
-        <div className="bg-card border border-border rounded-2xl p-10 text-center text-sm text-muted-foreground">No users in this group.</div>
+        <div className="bg-card border border-border rounded-xl p-10 text-center text-sm text-muted-foreground">No users in this group.</div>
       ) : (
-        <div className="bg-card border border-border rounded-2xl divide-y divide-border">
+        <div className="bg-card border border-border rounded-xl divide-y divide-border">
           {users.map((u) => (
             <div key={u.id} className="flex flex-col md:flex-row md:items-center justify-between gap-3 px-5 py-4">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-semibold text-foreground text-sm">{u.ngo?.name ?? u.name ?? "Unnamed"}</p>
                   {u.role === Role.PATIENT && (
-                    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${TIER_STYLE[u.tier] ?? ""}`}>{u.tier}</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${TIER_STYLE[u.tier] ?? ""}`}>{u.tier}</span>
                   )}
                   {u.practitioner && (
-                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-secondary text-foreground">
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-secondary text-foreground">
                       {u.practitioner.specialty} · {u.practitioner.licenseNo}
                     </span>
                   )}

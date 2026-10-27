@@ -11,7 +11,7 @@ export default function PatientsPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="bg-white border-b border-border py-20">
+      <section className="bg-card border-b border-border py-20">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">For Patients</p>
           <h1 className="text-3xl md:text-5xl font-extrabold text-foreground mb-6">
@@ -40,8 +40,8 @@ export default function PatientsPage() {
             <h2 className="text-3xl font-extrabold text-foreground">You Choose How to Connect</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white border border-border rounded-2xl p-8 shadow-sm">
-              <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center mb-5">
+            <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center mb-5">
                 <Globe className="w-6 h-6 text-primary" strokeWidth={1.5} />
               </div>
               <h3 className="text-xl font-bold text-foreground mb-3">Web App (PWA)</h3>
@@ -65,8 +65,8 @@ export default function PatientsPage() {
                 Register now <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
-            <div className="bg-foreground text-white rounded-2xl p-8 shadow-sm">
-              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
+            <div className="bg-foreground text-white rounded-xl p-8 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-5">
                 <PhoneCall className="w-6 h-6 text-primary" strokeWidth={1.5} />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">USSD — Dial *384#</h3>
@@ -108,7 +108,7 @@ export default function PatientsPage() {
               { icon: CreditCard, title: "Transparent Billing", desc: "See what you will pay before confirming. Community-tier patients are subsidised automatically." },
               { icon: Bell, title: "SMS Notifications", desc: "Confirmations, reminders and receipts by SMS — no internet needed to receive them." },
             ].map((item) => (
-              <div key={item.title} className="bg-white border border-border rounded-2xl p-6 shadow-sm">
+              <div key={item.title} className="bg-card border border-border rounded-xl p-6 shadow-sm">
                 <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4">
                   <item.icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
                 </div>
@@ -124,7 +124,7 @@ export default function PatientsPage() {
       <section className="py-16 bg-background">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center mx-auto mb-5">
+            <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center mx-auto mb-5">
               <CreditCard className="w-6 h-6 text-primary" strokeWidth={1.5} />
             </div>
             <h2 className="text-2xl font-bold text-foreground mb-4">How Billing Works</h2>
@@ -139,7 +139,7 @@ export default function PatientsPage() {
               { tier: "Basic (standard)", desc: "You pay the standard consultation fee." },
               { tier: "Premium", desc: "You pay above the standard fee; the extra funds care for community-tier patients." },
             ].map((t) => (
-              <div key={t.tier} className="bg-white border border-border rounded-xl p-5 shadow-sm">
+              <div key={t.tier} className="bg-card border border-border rounded-xl p-5 shadow-sm">
                 <p className="font-bold text-foreground text-sm mb-1">{t.tier}</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">{t.desc}</p>
               </div>
@@ -167,7 +167,7 @@ export default function PatientsPage() {
               { step: "4", title: "Confirm", desc: "Review the practitioner, time, fee and priority before you press 1 to confirm." },
               { step: "5", title: "Receive an SMS", desc: "A confirmation SMS follows, plus a reminder before the visit. Use the menu to cancel, see records, pay or rate a visit." },
             ].map((item) => (
-              <div key={item.step} className="flex gap-5 items-start p-5 bg-white rounded-2xl border border-border shadow-sm">
+              <div key={item.step} className="flex gap-5 items-start p-5 bg-card rounded-xl border border-border shadow-sm">
                 <div className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shrink-0">
                   {item.step}
                 </div>
@@ -186,7 +186,7 @@ export default function PatientsPage() {
         <h2 className="text-3xl font-extrabold mb-4">Start Your Healthcare Journey</h2>
         <p className="text-white/70 mb-8">Register online or use the USSD menu — the system meets you where you are.</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/register" className="px-7 py-3 bg-white text-primary font-semibold rounded-xl hover:bg-white/90">Register Online</Link>
+          <Link href="/register" className="px-7 py-3 bg-card text-primary font-semibold rounded-xl hover:bg-white/90">Register Online</Link>
           <Link href="/login" className="px-7 py-3 border border-white/30 text-white font-semibold rounded-xl hover:bg-white/10">Sign In</Link>
         </div>
       </section>

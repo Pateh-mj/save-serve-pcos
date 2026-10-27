@@ -9,6 +9,7 @@ const inter = Inter({
   display: "swap",
 });
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import { Toaster } from "@/components/app/Toaster";
 
 export const metadata: Metadata = {
   title: { default: "SaveServe — PCOS Healthcare Platform", template: "%s · SaveServe" },
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <body className="antialiased">
         {children}
+        <Toaster />
         <ServiceWorkerRegister />
       </body>
     </html>

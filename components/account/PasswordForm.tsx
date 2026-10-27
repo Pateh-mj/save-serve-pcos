@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
+import { inputCls, btnOutline } from "@/components/app/buttons";
 import { KeyRound, Loader2 } from "lucide-react";
 
-const inputCls =
-  "mt-1 w-full px-3 py-2 rounded-lg border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring";
 
 export default function PasswordForm() {
   const [current, setCurrent] = useState("");
@@ -44,28 +43,28 @@ export default function PasswordForm() {
     <form onSubmit={submit} className="space-y-4">
       <div className="grid sm:grid-cols-3 gap-4">
         <label className="block">
-          <span className="text-xs font-medium text-muted-foreground">Current password</span>
+          <span className="block text-sm font-medium text-foreground mb-1.5">Current password</span>
           <input type="password" required autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} className={inputCls} />
         </label>
         <label className="block">
-          <span className="text-xs font-medium text-muted-foreground">New password</span>
+          <span className="block text-sm font-medium text-foreground mb-1.5">New password</span>
           <input type="password" required minLength={8} autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} className={inputCls} />
         </label>
         <label className="block">
-          <span className="text-xs font-medium text-muted-foreground">Confirm new password</span>
+          <span className="block text-sm font-medium text-foreground mb-1.5">Confirm new password</span>
           <input type="password" required minLength={8} autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className={inputCls} />
         </label>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className={`text-xs ${message ? (message.ok ? "text-success-fg" : "text-destructive") : "text-muted-foreground"}`}>
+        <p className={`text-xs ${message ? (message.ok ? "text-success-fg" : "text-danger-fg") : "text-muted-foreground"}`}>
           {message?.text ?? "At least 8 characters."}
         </p>
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center gap-1.5 px-4 py-2 bg-secondary text-foreground text-xs font-semibold rounded-lg hover:bg-muted disabled:opacity-60"
+          className={btnOutline}
         >
-          {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <KeyRound className="w-3.5 h-3.5" />}
+          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />}
           Change password
         </button>
       </div>

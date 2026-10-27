@@ -56,13 +56,13 @@ export default async function PatientChartPage({ params }: { params: Promise<{ i
         <ArrowLeft className="w-4 h-4" /> All patients
       </Link>
 
-      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm mb-6">
+      <div className="bg-card border border-border rounded-xl p-6 shadow-sm mb-6">
         <div className="flex flex-wrap items-start gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-xl shrink-0">
+          <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-xl shrink-0">
             {patient.user.name?.[0]?.toUpperCase() ?? "P"}
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-extrabold text-foreground">{patient.user.name}</h1>
+            <h1 className="text-2xl font-bold text-foreground">{patient.user.name}</h1>
             <p className="text-sm text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-1">
               {patient.user.phone && (
                 <span className="inline-flex items-center gap-1 text-primary"><Phone className="w-3.5 h-3.5" /> {patient.user.phone}</span>
@@ -101,7 +101,7 @@ export default async function PatientChartPage({ params }: { params: Promise<{ i
               <div key={a.id} className="bg-card border border-border rounded-xl p-4">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-semibold text-foreground">{formatDateTime(a.scheduledAt)}</p>
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${STATUS_STYLE[a.status] ?? ""}`}>{a.status}</span>
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${STATUS_STYLE[a.status] ?? ""}`}>{a.status}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   {a.channel} ·{" "}

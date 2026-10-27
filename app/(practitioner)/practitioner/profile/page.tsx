@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import AccountSection from "@/components/account/AccountSection";
 import ProfileForm from "@/components/account/ProfileForm";
 import PasswordForm from "@/components/account/PasswordForm";
+import { PageHeader } from "@/components/app/PageHeader";
 
 export const metadata = { title: "My Profile" };
 
@@ -20,10 +21,7 @@ export default async function PractitionerProfilePage() {
 
   return (
     <div className="max-w-4xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-foreground">My Profile</h1>
-        <p className="text-sm text-muted-foreground mt-1">What patients see when they book, and how SaveServe reaches you.</p>
-      </div>
+      <PageHeader title="My Profile" description="What patients see when they book, and how SaveServe reaches you." />
 
       <AccountSection title="Licence">
         <dl className="grid sm:grid-cols-3 gap-4 text-sm">

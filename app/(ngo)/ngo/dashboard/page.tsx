@@ -32,7 +32,7 @@ export default async function NGODashboard() {
     <div className="max-w-5xl">
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-foreground">{ngo.name}</h1>
+          <h1 className="text-2xl font-bold text-foreground">{ngo.name}</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Healthcare Equity & Subsidy Management Command Center
           </p>
@@ -42,20 +42,20 @@ export default async function NGODashboard() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         {stats.map((s) => (
-          <div key={s.label} className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+          <div key={s.label} className="bg-card border border-border rounded-xl p-5 shadow-sm">
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{s.label}</p>
               <s.icon className="w-4 h-4 text-primary" strokeWidth={1.5} />
             </div>
-            <p className="text-2xl font-extrabold text-foreground">{s.value}</p>
+            <p className="text-2xl font-bold text-foreground">{s.value}</p>
             <p className="text-xs text-muted-foreground mt-1">{s.sub}</p>
           </div>
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-8 mb-8">
+      <div className="bg-card border border-border rounded-xl p-8 mb-8">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
             <Heart className="w-6 h-6" />
           </div>
           <div>
@@ -72,7 +72,7 @@ export default async function NGODashboard() {
       <div>
         <h3 className="text-lg font-bold text-foreground mb-4">Recent Subsidized Beneficiaries</h3>
         {subsidizedBillings.length === 0 ? (
-          <div className="bg-card border border-border rounded-2xl p-8 text-center text-muted-foreground">
+          <div className="bg-card border border-border rounded-xl p-8 text-center text-muted-foreground">
             <ShieldCheck className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
             <p className="text-sm">No subsidized appointments recorded yet.</p>
           </div>
@@ -111,11 +111,11 @@ export default async function NGODashboard() {
           </span>
         </div>
         {totals.recentTransactions.length === 0 ? (
-          <div className="bg-card border border-border rounded-2xl p-8 text-center text-sm text-muted-foreground">
+          <div className="bg-card border border-border rounded-xl p-8 text-center text-sm text-muted-foreground">
             No fund movements recorded yet.
           </div>
         ) : (
-          <div className="bg-card border border-border rounded-2xl divide-y divide-border">
+          <div className="bg-card border border-border rounded-xl divide-y divide-border">
             {totals.recentTransactions.map((t) => (
               <div key={t.id} className="flex items-center justify-between px-5 py-3 text-sm">
                 <div>

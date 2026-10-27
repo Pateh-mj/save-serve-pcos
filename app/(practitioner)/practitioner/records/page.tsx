@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { FileText } from "lucide-react";
 import { formatDate } from "@/lib/format";
+import { PageHeader } from "@/components/app/PageHeader";
 
 export const metadata = { title: "EHR Records" };
 
@@ -24,13 +25,10 @@ export default async function PractitionerRecordsPage() {
 
   return (
     <div className="max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-2xl font-extrabold text-foreground">EHR Records</h1>
-        <p className="text-sm text-muted-foreground mt-1">Clinical records you have authored</p>
-      </div>
+      <PageHeader title="EHR Records" description="Clinical records you have authored" />
 
       {practitioner.ehrRecords.length === 0 ? (
-        <div className="text-center py-20 bg-card rounded-2xl border border-border">
+        <div className="text-center py-20 bg-card rounded-xl border border-border">
           <FileText className="w-10 h-10 text-muted-foreground mx-auto mb-4" strokeWidth={1} />
           <p className="font-semibold text-foreground">No records yet</p>
           <p className="text-sm text-muted-foreground mt-1">

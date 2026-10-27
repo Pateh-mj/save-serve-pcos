@@ -144,9 +144,9 @@ function BookingForm() {
         <div className="w-16 h-16 rounded-full bg-success-soft flex items-center justify-center mb-4">
           <CheckCircle2 className="w-8 h-8 text-success" />
         </div>
-        <h2 className="text-2xl font-extrabold text-foreground mb-1">Appointment Booked</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-1">Appointment Booked</h2>
         <p className="text-sm text-muted-foreground mb-6">Reference {booked.id.slice(-6).toUpperCase()} · an SMS confirmation is on its way</p>
-        <div className="w-full bg-card border border-border rounded-2xl p-5 text-left text-sm space-y-2 mb-6">
+        <div className="w-full bg-card border border-border rounded-xl p-5 text-left text-sm space-y-2 mb-6">
           <p className="flex justify-between"><span className="text-muted-foreground">Priority</span>
             <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${TRIAGE_STYLE[booked.triageLevel] ?? ""}`}>{booked.triageLevel}</span>
           </p>
@@ -177,14 +177,14 @@ function BookingForm() {
           <ArrowLeft className="w-5 h-5 text-muted-foreground" />
         </Link>
         <div>
-          <h1 className="text-3xl font-extrabold text-foreground">Book an Appointment</h1>
+          <h1 className="text-3xl font-bold text-foreground">Book an Appointment</h1>
           <p className="text-muted-foreground text-sm mt-0.5">Select a practitioner and a time slot.</p>
         </div>
       </div>
 
       <form onSubmit={handleBook} className="space-y-6">
         {/* Symptom triage */}
-        <div className="bg-card border border-border rounded-2xl p-6">
+        <div className="bg-card border border-border rounded-xl p-6">
           <h2 className="font-bold text-foreground mb-1 flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">1</span>
             What brings you in?
@@ -265,7 +265,7 @@ function BookingForm() {
         </div>
 
         {/* Practitioner selection */}
-        <div className="bg-card border border-border rounded-2xl p-6">
+        <div className="bg-card border border-border rounded-xl p-6">
           <h2 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">2</span>
             Select Practitioner
@@ -307,7 +307,7 @@ function BookingForm() {
         </div>
 
         {/* Date & time */}
-        <div className="bg-card border border-border rounded-2xl p-6">
+        <div className="bg-card border border-border rounded-xl p-6">
           <h2 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">3</span>
             Choose Date & Time
@@ -363,7 +363,7 @@ function BookingForm() {
         </div>
 
         {/* Notes */}
-        <div className="bg-card border border-border rounded-2xl p-6">
+        <div className="bg-card border border-border rounded-xl p-6">
           <h2 className="font-bold text-foreground mb-4 flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold">4</span>
             Additional Notes <span className="text-xs font-normal text-muted-foreground">(optional)</span>

@@ -61,14 +61,14 @@ export default async function PractitionerPatientsPage() {
   return (
     <div className="max-w-5xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-extrabold text-foreground">My Patients</h1>
+        <h1 className="text-2xl font-bold text-foreground">My Patients</h1>
         <p className="text-sm text-muted-foreground mt-1">
           {patients.length} patient{patients.length === 1 ? "" : "s"} booked with you across Web and USSD
         </p>
       </div>
 
       {patients.length === 0 ? (
-        <div className="bg-card border border-border rounded-2xl p-12 text-center">
+        <div className="bg-card border border-border rounded-xl p-12 text-center">
           <Users className="w-12 h-12 text-muted-foreground mx-auto mb-3" strokeWidth={1} />
           <p className="font-semibold text-foreground text-lg">No patients yet</p>
           <p className="text-sm text-muted-foreground mt-1">
@@ -83,7 +83,7 @@ export default async function PractitionerPatientsPage() {
               href={`/practitioner/patients/${id}`}
               className="bg-card border border-border rounded-xl p-5 shadow-sm flex items-center gap-4 hover:border-primary/40 hover:shadow-md transition"
             >
-              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg shrink-0">
                 {p.name?.[0]?.toUpperCase() ?? "P"}
               </div>
               <div className="flex-1 min-w-0">

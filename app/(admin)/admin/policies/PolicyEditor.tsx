@@ -48,7 +48,7 @@ export function PolicyEditor({ policy, fee }: Props) {
   }
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+    <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3 mb-4">
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-primary">{policy.tier}</p>

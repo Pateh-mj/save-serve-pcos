@@ -17,7 +17,7 @@ export default async function AdminAccountPage() {
   return (
     <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-foreground">My Account</h1>
+        <h1 className="text-2xl font-bold text-foreground">My Account</h1>
         <p className="text-sm text-muted-foreground mt-1">{user.email}</p>
       </div>
 

@@ -6,6 +6,7 @@ import { clinicDateKey, formatDateTime } from "@/lib/format";
 import AccountSection from "@/components/account/AccountSection";
 import ProfileForm from "@/components/account/ProfileForm";
 import PasswordForm from "@/components/account/PasswordForm";
+import { PageHeader } from "@/components/app/PageHeader";
 
 export const metadata = { title: "My Profile" };
 
@@ -34,10 +35,7 @@ export default async function PatientProfilePage() {
 
   return (
     <div className="max-w-4xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-foreground">My Profile</h1>
-        <p className="text-sm text-muted-foreground mt-1">Your details, billing tier and messages.</p>
-      </div>
+      <PageHeader title="My Profile" description="Your details, billing tier and messages." />
 
       <AccountSection title="Personal details" description="Your phone number receives SMS confirmations and lets you use the USSD menu (*384#).">
         <ProfileForm

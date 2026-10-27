@@ -2,8 +2,11 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { FileText, Plus } from "lucide-react";
+import { FileText, Pill, NotebookPen, CalendarClock, Stethoscope } from "lucide-react";
 import { formatDate } from "@/lib/format";
+import { PageHeader } from "@/components/app/PageHeader";
+import { Panel, EmptyState } from "@/components/app/Panel";
+import { btnPrimary } from "@/components/app/buttons";
 
 export const metadata = { title: "Health Records" };
 
@@ -15,66 +18,84 @@ export default async function RecordsPage() {
     where: { user: { email: session.user.email } },
     include: {
       ehrRecords: {
-        orderBy: { createdAt: "desc" },
+        orderBy: { visitDate: "desc" },
         include: { practitioner: { include: { user: true } } },
       },
     },
   });
-
   if (!patient) redirect("/login");
+  const records = patient.ehrRecords;
 
   return (
-    <div className="max-w-4xl">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-extrabold text-foreground">Health Records</h1>
-          <p className="text-sm text-muted-foreground mt-1">Your complete visit history and clinical notes</p>
-        </div>
-      </div>
+    <div className="max-w-3xl">
+      <PageHeader
+        eyebrow="Health records"
+        title="My clinical history"
+        description="Written by your practitioner after each visit. Also available by USSD: dial *384# and choose 3."
+      />
 
-      {patient.ehrRecords.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-2xl border border-border">
-          <FileText className="w-10 h-10 text-muted-foreground mx-auto mb-4" strokeWidth={1} />
-          <p className="font-semibold text-foreground">No health ehrRecords yet</p>
-          <p className="text-sm text-muted-foreground mt-1 mb-6">Records are created by practitioners after each completed visit.</p>
-          <Link href="/patient/appointments/new" className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-lg hover:opacity-90">
-            Book an Appointment
-          </Link>
-        </div>
+      {records.length === 0 ? (
+        <Panel>
+          <EmptyState
+            icon={FileText}
+            title="No health records yet"
+            action={<Link href="/patient/appointments/new" className={btnPrimary}>Book a visit</Link>}
+          >
+            A record is created when a practitioner completes your visit.
+          </EmptyState>
+        </Panel>
       ) : (
-        <div className="space-y-3">
-          {patient.ehrRecords.map((r) => (
-            <div key={r.id} className="bg-white border border-border rounded-xl p-5 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <p className="font-semibold text-foreground text-sm">{r.practitioner.user.name}</p>
-                  <p className="text-xs text-muted-foreground">{formatDate(r.createdAt, { weekday: "short", year: "numeric", month: "short", day: "numeric" })}</p>
-                </div>
-                <span className="text-xs bg-accent text-primary px-2.5 py-1 rounded-full font-semibold">
-                  Visit
-                </span>
-              </div>
-              {r.diagnosis && (
-                <div className="mb-2">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Diagnosis</p>
-                  <p className="text-sm text-foreground">{r.diagnosis}</p>
-                </div>
-              )}
-              {r.prescription && (
-                <div className="mb-2">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Prescription</p>
-                  <p className="text-sm text-foreground">{r.prescription}</p>
-                </div>
-              )}
-              {r.notes && (
-                <div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">Notes</p>
-                  <p className="text-sm text-muted-foreground">{r.notes}</p>
-                </div>
-              )}
-            </div>
+        <ol className="relative border-l-2 border-border ml-3 space-y-6">
+          {records.map((r) => (
+            <li key={r.id} className="relative pl-8">
+              <span aria-hidden className="absolute -left-2.75 top-5 w-5 h-5 rounded-full bg-card border-2 border-primary flex items-center justify-center">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+              </span>
+              <article className="bg-card border border-border rounded-xl shadow-xs">
+                <header className="flex flex-wrap items-center justify-between gap-2 px-5 py-4 border-b border-border">
+                  <div>
+                    <p className="font-semibold text-foreground">
+                      {formatDate(r.visitDate, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                    </p>
+                    <p className="text-sm text-muted-foreground inline-flex items-center gap-1.5">
+                      <Stethoscope className="w-3.5 h-3.5" /> {r.practitioner.user.name}
+                      <span className="capitalize">· {r.practitioner.specialty.toLowerCase()}</span>
+                    </p>
+                  </div>
+                  {r.followUpDate && (
+                    <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-full bg-info-soft border border-info-border text-xs font-semibold text-info-fg">
+                      <CalendarClock className="w-3.5 h-3.5" /> Follow-up {formatDate(r.followUpDate, { day: "numeric", month: "short" })}
+                    </span>
+                  )}
+                </header>
+                <dl className="px-5 py-4 space-y-4 text-sm">
+                  <div>
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Diagnosis</dt>
+                    <dd className="text-foreground font-medium">{r.diagnosis ?? "Not recorded"}</dd>
+                  </div>
+                  {r.prescription && (
+                    <div className="flex gap-3 rounded-lg bg-info-soft border border-info-border p-3">
+                      <Pill className="w-4 h-4 text-info shrink-0 mt-0.5" />
+                      <div>
+                        <dt className="text-xs font-semibold uppercase tracking-wide text-info-fg mb-0.5">Prescription &amp; treatment</dt>
+                        <dd className="text-info-deep">{r.prescription}</dd>
+                      </div>
+                    </div>
+                  )}
+                  {r.notes && (
+                    <div className="flex gap-3">
+                      <NotebookPen className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                      <div>
+                        <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Advice</dt>
+                        <dd className="text-foreground">{r.notes}</dd>
+                      </div>
+                    </div>
+                  )}
+                </dl>
+              </article>
+            </li>
           ))}
-        </div>
+        </ol>
       )}
     </div>
   );

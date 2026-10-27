@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { BillingStatus } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import { abbreviateName } from "@/lib/ngo";
+import { PageHeader } from "@/components/app/PageHeader";
 
 export const metadata = { title: "Beneficiaries" };
 
@@ -31,10 +32,7 @@ export default async function NgoBeneficiariesPage() {
 
   return (
     <div className="max-w-5xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-foreground">Beneficiaries</h1>
-        <p className="text-sm text-muted-foreground mt-1">Visits paid for from your fund.</p>
-      </div>
+      <PageHeader title="Beneficiaries" description="Visits paid for from your fund." />
 
       <div className="grid sm:grid-cols-3 gap-4 mb-6">
         {[
@@ -42,9 +40,9 @@ export default async function NgoBeneficiariesPage() {
           { label: "Beneficiaries", value: `${beneficiaries}` },
           { label: "Subsidy value", value: `ZMW ${total.toFixed(2)}` },
         ].map((s) => (
-          <div key={s.label} className="bg-card border border-border rounded-2xl p-5 shadow-sm">
+          <div key={s.label} className="bg-card border border-border rounded-xl p-5 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">{s.label}</p>
-            <p className="text-2xl font-extrabold text-foreground tabular-nums">{s.value}</p>
+            <p className="text-2xl font-bold text-foreground tabular-nums">{s.value}</p>
           </div>
         ))}
       </div>
@@ -55,12 +53,12 @@ export default async function NgoBeneficiariesPage() {
       </p>
 
       {visits.length === 0 ? (
-        <div className="bg-card border border-border rounded-2xl p-10 text-center">
+        <div className="bg-card border border-border rounded-xl p-10 text-center">
           <ShieldCheck className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
           <p className="text-sm text-muted-foreground">No visits have been funded from your pool yet.</p>
         </div>
       ) : (
-        <div className="bg-card border border-border rounded-2xl overflow-x-auto">
+        <div className="bg-card border border-border rounded-xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-muted-foreground border-b border-border">
