@@ -39,7 +39,7 @@ export default async function AdminSmsPage() {
 
       <div className="grid md:grid-cols-4 gap-4 mb-6">
         <div className={`rounded-xl p-5 border ${live ? "bg-success-soft border-success-border" : "bg-warning-soft border-warning-border"}`}>
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Provider</p>
+          <p className="text-sm font-medium text-muted-foreground mb-1">Provider</p>
           <p className="text-lg font-bold text-foreground">{live ? "Live (HTTP)" : "Log only"}</p>
           <p className="text-xs text-muted-foreground mt-1">
             {live
@@ -50,21 +50,21 @@ export default async function AdminSmsPage() {
           </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-5">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Credit guard</p>
+          <p className="text-sm font-medium text-muted-foreground mb-1">Credit guard</p>
           <p className="text-lg font-bold text-foreground">
             {config.allowlist.length > 0 ? `${config.allowlist.length} allowlisted` : "Open"}
           </p>
           <p className="text-xs text-muted-foreground mt-1">Max {config.dailyLimit} SMS / number / day</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-5">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Last 30 days</p>
+          <p className="text-sm font-medium text-muted-foreground mb-1">Last 30 days</p>
           <p className="text-lg font-bold text-foreground">{count("SENT") + count("DELIVERED")} sent</p>
           <p className="text-xs text-muted-foreground mt-1">
             {count("DELIVERED")} delivered · {count("FAILED")} failed · {count("SKIPPED")} skipped
           </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-5">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Credits used</p>
+          <p className="text-sm font-medium text-muted-foreground mb-1">Credits used</p>
           <p className="text-lg font-bold text-foreground">{segments._sum.segments ?? 0} segments</p>
           <p className="text-xs text-muted-foreground mt-1">Real sends only (160 chars each)</p>
         </div>

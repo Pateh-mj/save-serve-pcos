@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/format";
 import { LEDGER_LABEL } from "@/lib/ngo";
+import { PageHeader } from "@/components/app/PageHeader";
 import NgoTopupModal from "../dashboard/NgoTopupModal";
 
 export const metadata = { title: "Funding & Ledger" };
@@ -26,25 +27,19 @@ export default async function NgoFundingPage() {
 
   return (
     <div className="max-w-5xl">
-      <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Funding &amp; Ledger</h1>
-          <p className="text-sm text-muted-foreground mt-1">Every movement of the community health equity fund held by {ngo.name}.</p>
-        </div>
-        <NgoTopupModal />
-      </div>
+      <PageHeader eyebrow="Funding" title="Funding &amp; ledger" description={<>Every movement of the community health equity fund held by {ngo.name}.</>} actions={<NgoTopupModal />} />
 
       <div className="grid md:grid-cols-[1fr_2fr] gap-6 mb-8">
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Current balance</p>
+        <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
+          <p className="text-sm font-medium text-muted-foreground mb-2">Current balance</p>
           <p className="text-3xl font-bold text-foreground tabular-nums">ZMW {ngo.fundBalance.toFixed(2)}</p>
           <p className={`mt-3 inline-flex items-center gap-1.5 text-xs font-semibold ${reconciled ? "text-success-fg" : "text-danger-fg"}`}>
             {reconciled ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
             {reconciled ? "Reconciles with the ledger" : `Ledger total ZMW ${ledgerTotal.toFixed(2)} differs`}
           </p>
         </div>
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Totals by movement type</p>
+        <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
+          <p className="text-sm font-medium text-muted-foreground mb-3">Totals by movement type</p>
           <dl className="space-y-2 text-sm">
             {TYPE_ORDER.map((type) => {
               const row = byType.find((t) => t.type === type);
@@ -64,14 +59,14 @@ export default async function NgoFundingPage() {
         </div>
       </div>
 
-      <h2 className="text-lg font-bold text-foreground mb-3">Ledger</h2>
+      <h2 className="font-semibold text-foreground mb-3">Ledger</h2>
       {ledger.length === 0 ? (
         <div className="bg-card border border-border rounded-xl p-10 text-center text-sm text-muted-foreground">No fund movements yet.</div>
       ) : (
         <div className="bg-card border border-border rounded-xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-muted-foreground border-b border-border">
+              <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground bg-secondary/60 border-b border-border">
                 <th className="px-5 py-3 font-semibold">Date</th>
                 <th className="px-3 py-3 font-semibold">Movement</th>
                 <th className="px-3 py-3 font-semibold">Note</th>

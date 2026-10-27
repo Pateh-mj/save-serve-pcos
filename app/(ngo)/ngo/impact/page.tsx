@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { clinicDateKey, formatDate } from "@/lib/format";
+import { PageHeader } from "@/components/app/PageHeader";
+import { Panel } from "@/components/app/Panel";
+import { BarChart } from "@/components/charts/BarChart";
 
 export const metadata = { title: "Impact Report" };
 
@@ -59,12 +62,7 @@ export default async function NgoImpactPage() {
 
   return (
     <div className="max-w-5xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Impact Report</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          The last {MONTHS} months of your fund, from the ledger. Net of cancellations, which return their subsidy to the fund.
-        </p>
-      </div>
+      <PageHeader eyebrow="Impact" title="Impact report" description={<>The last {MONTHS} months of your fund, from the ledger. Net of cancellations, which return their subsidy to the fund.</>} />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
@@ -73,18 +71,28 @@ export default async function NgoImpactPage() {
           { label: "Premium surplus received", value: `ZMW ${totals.premium.toFixed(2)}` },
           { label: "Funded internally", value: `${(internalShare * 100).toFixed(0)}%`, sub: "Premium surplus as a share of all money in" },
         ].map((s) => (
-          <div key={s.label} className="bg-card border border-border rounded-xl p-5 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">{s.label}</p>
+          <div key={s.label} className="bg-card border border-border rounded-xl p-5 shadow-xs">
+            <p className="text-sm font-medium text-muted-foreground mb-2">{s.label}</p>
             <p className="text-2xl font-bold text-foreground tabular-nums">{s.value}</p>
             {s.sub && <p className="text-xs text-muted-foreground mt-1">{s.sub}</p>}
           </div>
         ))}
       </div>
 
+      <Panel title="Money into the pool by source" description="Premium surplus is the Robin Hood share: care for some, funded by others" className="mb-6">
+        <BarChart
+          title="Money into the pool per month by source"
+          unit="zmw"
+          data={months.map((mo) => ({ label: formatDate(`${mo.key}-15T12:00:00Z`, { month: "short" }), values: [mo.topups, mo.premium] }))}
+          series={[{ name: "Partner top-ups", color: "var(--chart-1)" }, { name: "Premium surplus", color: "var(--chart-2)" }]}
+          height={170}
+        />
+      </Panel>
+
       <div className="bg-card border border-border rounded-xl overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs text-muted-foreground border-b border-border">
+            <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground bg-secondary/60 border-b border-border">
               <th className="px-5 py-3 font-semibold">Month</th>
               <th className="px-3 py-3 font-semibold text-right">Visits funded</th>
               <th className="px-3 py-3 font-semibold text-right">Subsidy disbursed</th>

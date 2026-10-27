@@ -3,6 +3,7 @@ import { toast } from "@/components/app/Toaster";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Loader2, CreditCard, X } from "lucide-react";
+import { btnPrimary, btnOutline, inputCls, labelCls } from "@/components/app/buttons";
 
 export default function NgoTopupModal() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function NgoTopupModal() {
 
       if (res.ok) {
         setOpen(false);
+        toast.success(`ZMW ${num.toFixed(2)} added to the pool. Thank you for funding care.`);
         router.refresh();
       } else {
         const data = await res.json().catch(() => ({}));
@@ -42,18 +44,18 @@ export default function NgoTopupModal() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="px-4 py-2 bg-primary text-primary-foreground text-xs font-semibold rounded-xl hover:opacity-90 flex items-center gap-1.5 transition shadow-sm"
+        className={btnPrimary}
       >
-        <Plus className="w-4 h-4" /> Top-Up Subsidy Fund
+        <Plus className="w-4 h-4" /> Top up pool
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-card border border-border w-full max-w-md rounded-xl shadow-2xl p-6 relative">
             <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
               <div className="flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-primary" />
-                <h3 className="font-bold text-foreground text-base">Top Up Subsidy Pool</h3>
+                <h3 className="font-semibold text-foreground">Top up the equity pool</h3>
               </div>
               <button
                 onClick={() => setOpen(false)}
@@ -65,8 +67,8 @@ export default function NgoTopupModal() {
 
             <form onSubmit={handleTopup} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-foreground mb-1.5">
-                  Top-up Amount (ZMW)
+                <label className={labelCls}>
+                  Amount (ZMW)
                 </label>
                 <input
                   type="number"
@@ -75,19 +77,19 @@ export default function NgoTopupModal() {
                   required
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring transition"
+                  className={inputCls}
                 />
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {["500", "1000", "2500", "5000"].map((v) => (
                   <button
                     key={v}
                     type="button"
                     onClick={() => setAmount(v)}
-                    className="px-2.5 py-1 rounded-lg bg-secondary text-foreground text-xs font-medium hover:bg-muted"
+                    className={`h-8 px-3 rounded-lg border text-xs font-semibold transition ${amount === v ? "border-primary bg-accent text-accent-foreground" : "border-border bg-card text-foreground hover:bg-secondary"}`}
                   >
-                    +ZMW {v}
+                    ZMW {Number(v).toLocaleString()}
                   </button>
                 ))}
               </div>
@@ -100,17 +102,17 @@ export default function NgoTopupModal() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground"
+                  className={btnOutline}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2.5 bg-primary text-primary-foreground font-semibold rounded-xl text-xs hover:opacity-90 disabled:opacity-60 flex items-center gap-2 shadow-sm"
+                  className={btnPrimary}
                 >
                   {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                  Confirm Deposit
+                  Confirm top-up
                 </button>
               </div>
             </form>

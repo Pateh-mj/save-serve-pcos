@@ -96,7 +96,7 @@ export default function Home() {
 
           <div className="relative hidden md:flex flex-col items-center gap-4">
             <div className="w-full max-w-xl bg-card border border-border rounded-lg shadow-xl p-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">Two Channels. One System.</p>
+              <p className="text-sm font-medium text-muted-foreground mb-4">Two Channels. One System.</p>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col items-center p-4 rounded-lg bg-accent border border-primary/20 text-center">
                   <Globe className="w-8 h-8 text-primary mb-2" strokeWidth={1.5} />

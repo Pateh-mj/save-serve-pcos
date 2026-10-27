@@ -75,7 +75,7 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
       <div className="space-y-2 mb-6">
         {(Object.keys(FILTERS) as (keyof Search)[]).map((key) => (
           <div key={key} className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground w-16">{key}</span>
+            <span className="text-sm font-medium text-muted-foreground w-16">{key}</span>
             {[undefined, ...FILTERS[key]].map((value) => {
               const active = current[key] === value;
               return (
@@ -100,7 +100,7 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
         <div className="bg-card border border-border rounded-xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-muted-foreground border-b border-border">
+              <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground bg-secondary/60 border-b border-border">
                 <th className="px-5 py-3 font-semibold">When</th>
                 <th className="px-3 py-3 font-semibold">Patient</th>
                 <th className="px-3 py-3 font-semibold">Practitioner</th>

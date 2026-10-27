@@ -65,7 +65,7 @@ export default async function SchedulePage() {
                         <div className="space-y-6">
                             {Array.from(grouped.entries()).map(([day, appts]) => (
                                 <div key={day}>
-                                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">
+                                    <p className="text-sm font-medium text-muted-foreground mb-2">
                                         {formatDate(appts[0].scheduledAt, { weekday: "long", month: "short", day: "numeric" })}
                                     </p>
                                     <div className="space-y-2">

@@ -40,8 +40,8 @@ export default async function NgoBeneficiariesPage() {
           { label: "Beneficiaries", value: `${beneficiaries}` },
           { label: "Subsidy value", value: `ZMW ${total.toFixed(2)}` },
         ].map((s) => (
-          <div key={s.label} className="bg-card border border-border rounded-xl p-5 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">{s.label}</p>
+          <div key={s.label} className="bg-card border border-border rounded-xl p-5 shadow-xs">
+            <p className="text-sm font-medium text-muted-foreground mb-2">{s.label}</p>
             <p className="text-2xl font-bold text-foreground tabular-nums">{s.value}</p>
           </div>
         ))}
@@ -61,7 +61,7 @@ export default async function NgoBeneficiariesPage() {
         <div className="bg-card border border-border rounded-xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-muted-foreground border-b border-border">
+              <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground bg-secondary/60 border-b border-border">
                 <th className="px-5 py-3 font-semibold">Beneficiary</th>
                 <th className="px-3 py-3 font-semibold">Service</th>
                 <th className="px-3 py-3 font-semibold">Visit date</th>

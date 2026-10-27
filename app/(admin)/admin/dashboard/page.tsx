@@ -59,9 +59,9 @@ export default async function AdminDashboard() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         {stats.map((s) => (
-          <div key={s.label} className="bg-card border border-border rounded-xl p-5 shadow-sm">
+          <div key={s.label} className="bg-card border border-border rounded-xl p-5 shadow-xs">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{s.label}</p>
+              <p className="text-sm font-medium text-muted-foreground">{s.label}</p>
               <s.icon className="w-4 h-4 text-primary" strokeWidth={1.5} />
             </div>
             <p className="text-2xl font-bold text-foreground">{s.value}</p>
@@ -72,7 +72,7 @@ export default async function AdminDashboard() {
 
       <div className="grid md:grid-cols-3 gap-4">
         {breakdowns.map((b) => (
-          <div key={b.title} className="bg-card border border-border rounded-xl p-5 shadow-sm">
+          <div key={b.title} className="bg-card border border-border rounded-xl p-5 shadow-xs">
             <h2 className="text-sm font-bold text-foreground mb-3">{b.title}</h2>
             <dl className="space-y-2">
               {b.rows.map(([key, count]) => (

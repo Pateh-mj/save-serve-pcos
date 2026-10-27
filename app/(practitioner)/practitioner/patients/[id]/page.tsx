@@ -56,7 +56,7 @@ export default async function PatientChartPage({ params }: { params: Promise<{ i
         <ArrowLeft className="w-4 h-4" /> All patients
       </Link>
 
-      <div className="bg-card border border-border rounded-xl p-6 shadow-sm mb-6">
+      <div className="bg-card border border-border rounded-xl p-6 shadow-xs mb-6">
         <div className="flex flex-wrap items-start gap-4">
           <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-xl shrink-0">
             {patient.user.name?.[0]?.toUpperCase() ?? "P"}

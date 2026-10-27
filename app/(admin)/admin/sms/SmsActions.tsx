@@ -46,7 +46,7 @@ export default function SmsActions() {
   }
 
   return (
-    <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+    <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
       <form onSubmit={sendTest} className="grid sm:grid-cols-[180px_1fr_auto] gap-3 items-end">
         <label className="block">
           <span className="text-xs text-muted-foreground">Phone number</span>

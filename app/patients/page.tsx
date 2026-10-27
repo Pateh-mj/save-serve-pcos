@@ -40,7 +40,7 @@ export default function PatientsPage() {
             <h2 className="text-3xl font-extrabold text-foreground">You Choose How to Connect</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
+            <div className="bg-card border border-border rounded-xl p-8 shadow-xs">
               <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center mb-5">
                 <Globe className="w-6 h-6 text-primary" strokeWidth={1.5} />
               </div>
@@ -108,7 +108,7 @@ export default function PatientsPage() {
               { icon: CreditCard, title: "Transparent Billing", desc: "See what you will pay before confirming. Community-tier patients are subsidised automatically." },
               { icon: Bell, title: "SMS Notifications", desc: "Confirmations, reminders and receipts by SMS — no internet needed to receive them." },
             ].map((item) => (
-              <div key={item.title} className="bg-card border border-border rounded-xl p-6 shadow-sm">
+              <div key={item.title} className="bg-card border border-border rounded-xl p-6 shadow-xs">
                 <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center mb-4">
                   <item.icon className="w-5 h-5 text-primary" strokeWidth={1.5} />
                 </div>
@@ -139,7 +139,7 @@ export default function PatientsPage() {
               { tier: "Basic (standard)", desc: "You pay the standard consultation fee." },
               { tier: "Premium", desc: "You pay above the standard fee; the extra funds care for community-tier patients." },
             ].map((t) => (
-              <div key={t.tier} className="bg-card border border-border rounded-xl p-5 shadow-sm">
+              <div key={t.tier} className="bg-card border border-border rounded-xl p-5 shadow-xs">
                 <p className="font-bold text-foreground text-sm mb-1">{t.tier}</p>
                 <p className="text-xs text-muted-foreground leading-relaxed">{t.desc}</p>
               </div>

@@ -81,7 +81,7 @@ export default async function PractitionerPatientsPage() {
             <Link
               key={id}
               href={`/practitioner/patients/${id}`}
-              className="bg-card border border-border rounded-xl p-5 shadow-sm flex items-center gap-4 hover:border-primary/40 hover:shadow-md transition"
+              className="bg-card border border-border rounded-xl p-5 shadow-xs flex items-center gap-4 hover:border-primary/40 hover:shadow-md transition"
             >
               <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg shrink-0">
                 {p.name?.[0]?.toUpperCase() ?? "P"}

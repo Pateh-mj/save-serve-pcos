@@ -38,7 +38,7 @@ export default async function PractitionerRecordsPage() {
       ) : (
         <div className="space-y-3">
           {practitioner.ehrRecords.map((r) => (
-            <div key={r.id} className="bg-card border border-border rounded-xl p-5 shadow-sm">
+            <div key={r.id} className="bg-card border border-border rounded-xl p-5 shadow-xs">
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <p className="font-semibold text-foreground text-sm">{r.patient.user.name}</p>

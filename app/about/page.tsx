@@ -223,7 +223,7 @@ export default function AboutPage() {
           <SectionLabel>Conceptual Framework</SectionLabel>
           <h2 className="text-3xl font-extrabold text-foreground mb-8">Inputs, Orchestration, Output</h2>
           <div className="space-y-3 text-center">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Inputs</p>
+            <p className="text-sm font-medium text-muted-foreground">Inputs</p>
             <div className="grid sm:grid-cols-2 gap-3">
               <div className="bg-info-soft border border-info-border rounded-lg p-4">
                 <p className="font-bold text-info-deep text-sm">Feature phone users</p>
@@ -250,7 +250,7 @@ export default function AboutPage() {
               </div>
             </div>
             <ArrowDown className="w-5 h-5 text-muted-foreground mx-auto" />
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Output</p>
+            <p className="text-sm font-medium text-muted-foreground">Output</p>
             <div className="bg-premium-soft border border-premium-border rounded-lg p-4 max-w-md mx-auto">
               <p className="font-bold text-premium-deep text-sm">Equitable healthcare access</p>
               <p className="text-xs text-premium-deep">Unified records, appointments, billing</p>
@@ -267,7 +267,7 @@ export default function AboutPage() {
           <div className="bg-card border border-border rounded-lg overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground bg-secondary/60 border-b border-border">
                   <th className="px-4 py-3 font-semibold">System</th>
                   <th className="px-4 py-3 font-semibold">Main features</th>
                   <th className="px-4 py-3 font-semibold">Strengths</th>
