@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PhoneCall, Globe, CheckCircle2, ArrowRight, Calendar, FileText, CreditCard, Bell, Activity } from "lucide-react";
 import { USSD_PROTOTYPE_NOTE } from "@/lib/research";
 
-export const metadata = { title: "For Patients — SaveServe PCOS" };
+export const metadata = { title: "For Patients" };
 
 export default function PatientsPage() {
   return (

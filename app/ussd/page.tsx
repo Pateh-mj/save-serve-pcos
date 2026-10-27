@@ -3,6 +3,8 @@ import UssdPhoneSimulator from "@/components/UssdPhoneSimulator";
 import { PhoneCall, ShieldCheck, Heart, Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
+export const metadata = { title: "USSD Access *384#" };
+
 export default function UssdSimulatorPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">

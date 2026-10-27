@@ -5,6 +5,8 @@ import AccountSection from "@/components/account/AccountSection";
 import ProfileForm from "@/components/account/ProfileForm";
 import PasswordForm from "@/components/account/PasswordForm";
 
+export const metadata = { title: "My Account" };
+
 export default async function AdminAccountPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
@@ -13,7 +15,7 @@ export default async function AdminAccountPage() {
   if (!user) redirect("/login");
 
   return (
-    <div className="p-8 max-w-4xl space-y-6">
+    <div className="max-w-4xl space-y-6">
       <div>
         <h1 className="text-2xl font-extrabold text-foreground">My Account</h1>
         <p className="text-sm text-muted-foreground mt-1">{user.email}</p>

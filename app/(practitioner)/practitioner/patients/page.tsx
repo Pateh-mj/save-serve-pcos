@@ -6,6 +6,8 @@ import { Users, Phone, CalendarDays, ChevronRight } from "lucide-react";
 import { AppointmentStatus } from "@/lib/constants";
 import { formatDate, formatDateTime } from "@/lib/format";
 
+export const metadata = { title: "Patients" };
+
 export default async function PractitionerPatientsPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
@@ -57,7 +59,7 @@ export default async function PractitionerPatientsPage() {
   const patients = Array.from(byPatient.entries());
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="max-w-5xl">
       <div className="mb-8">
         <h1 className="text-2xl font-extrabold text-foreground">My Patients</h1>
         <p className="text-sm text-muted-foreground mt-1">

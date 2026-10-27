@@ -6,6 +6,8 @@ import NgoTopupModal from "./NgoTopupModal";
 import { abbreviateName, getNgoSubsidyStats, LEDGER_LABEL } from "@/lib/ngo";
 import { formatDate } from "@/lib/format";
 
+export const metadata = { title: "Partner Dashboard" };
+
 export default async function NGODashboard() {
   const session = await auth();
   if (!session?.user?.email) redirect("/login");
@@ -27,7 +29,7 @@ export default async function NGODashboard() {
   ];
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="max-w-5xl">
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-foreground">{ngo.name}</h1>
@@ -102,7 +104,7 @@ export default async function NGODashboard() {
           <h3 className="text-lg font-bold text-foreground">Fund Ledger</h3>
           <span
             className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
-              reconciled ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-700 border-red-200"
+              reconciled ? "bg-success-soft text-success-fg border-success-border" : "bg-danger-soft text-danger-fg border-danger-border"
             }`}
           >
             {reconciled ? "Balance reconciles with ledger" : `Ledger total ZMW ${totals.ledgerBalance.toFixed(2)} differs from balance`}
@@ -123,7 +125,7 @@ export default async function NGODashboard() {
                     {t.note ? ` · ${t.note}` : ""}
                   </p>
                 </div>
-                <p className={`font-bold tabular-nums ${t.amount >= 0 ? "text-emerald-700" : "text-red-600"}`}>
+                <p className={`font-bold tabular-nums ${t.amount >= 0 ? "text-success-fg" : "text-danger"}`}>
                   {t.amount >= 0 ? "+" : "−"}ZMW {Math.abs(t.amount).toFixed(2)}
                 </p>
               </div>

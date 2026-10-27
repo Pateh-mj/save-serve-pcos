@@ -6,7 +6,7 @@ import {
   RESEARCH, RESEARCH_QUESTIONS, SIGNIFICANCE, SPECIFIC_OBJECTIVES, THEORIES,
 } from "@/lib/research";
 
-export const metadata = { title: "About PCOS — SaveServe" };
+export const metadata = { title: "About PCOS" };
 
 const SIGNIFICANCE_ICONS = [Users, Stethoscope, Code2];
 
@@ -225,13 +225,13 @@ export default function AboutPage() {
           <div className="space-y-3 text-center">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Inputs</p>
             <div className="grid sm:grid-cols-2 gap-3">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="font-bold text-blue-900 text-sm">Feature phone users</p>
-                <p className="text-xs text-blue-800">Dial the USSD short code</p>
+              <div className="bg-info-soft border border-info-border rounded-lg p-4">
+                <p className="font-bold text-info-deep text-sm">Feature phone users</p>
+                <p className="text-xs text-info-deep">Dial the USSD short code</p>
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="font-bold text-blue-900 text-sm">Smartphone &amp; admin users</p>
-                <p className="text-xs text-blue-800">Log in to the web app (PWA)</p>
+              <div className="bg-info-soft border border-info-border rounded-lg p-4">
+                <p className="font-bold text-info-deep text-sm">Smartphone &amp; admin users</p>
+                <p className="text-xs text-info-deep">Log in to the web app (PWA)</p>
               </div>
             </div>
             <ArrowDown className="w-5 h-5 text-muted-foreground mx-auto" />
@@ -239,21 +239,21 @@ export default function AboutPage() {
               <p className="font-bold text-foreground text-sm">PCOS orchestration core</p>
               <p className="text-xs text-muted-foreground mb-3">Policy Guardian applies tier and subsidy rules in real time</p>
               <div className="grid sm:grid-cols-2 gap-3">
-                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
-                  <p className="font-bold text-emerald-900 text-sm">USSD gateway</p>
-                  <p className="text-xs text-emerald-800">Session &amp; data sync</p>
+                <div className="bg-success-soft border border-success-border rounded-lg p-3">
+                  <p className="font-bold text-success-deep text-sm">USSD gateway</p>
+                  <p className="text-xs text-success-deep">Session &amp; data sync</p>
                 </div>
-                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
-                  <p className="font-bold text-emerald-900 text-sm">Policy Guardian</p>
-                  <p className="text-xs text-emerald-800">Tier &amp; subsidy rules</p>
+                <div className="bg-success-soft border border-success-border rounded-lg p-3">
+                  <p className="font-bold text-success-deep text-sm">Policy Guardian</p>
+                  <p className="text-xs text-success-deep">Tier &amp; subsidy rules</p>
                 </div>
               </div>
             </div>
             <ArrowDown className="w-5 h-5 text-muted-foreground mx-auto" />
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Output</p>
-            <div className="bg-violet-50 border border-violet-200 rounded-lg p-4 max-w-md mx-auto">
-              <p className="font-bold text-violet-900 text-sm">Equitable healthcare access</p>
-              <p className="text-xs text-violet-800">Unified records, appointments, billing</p>
+            <div className="bg-premium-soft border border-premium-border rounded-lg p-4 max-w-md mx-auto">
+              <p className="font-bold text-premium-deep text-sm">Equitable healthcare access</p>
+              <p className="text-xs text-premium-deep">Unified records, appointments, billing</p>
             </div>
           </div>
         </div>

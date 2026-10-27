@@ -13,11 +13,13 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+export const metadata = { title: "My Health" };
+
 const STATUS_STYLE: Record<string, { label: string; cls: string; icon: React.ElementType }> = {
-  PENDING:   { label: "Pending",   cls: "bg-yellow-50 text-yellow-700 border-yellow-200", icon: Clock },
-  CONFIRMED: { label: "Confirmed", cls: "bg-blue-50 text-blue-700 border-blue-200",       icon: CheckCircle2 },
-  COMPLETED: { label: "Completed", cls: "bg-green-50 text-green-700 border-green-200",    icon: CheckCircle2 },
-  CANCELLED: { label: "Cancelled", cls: "bg-red-50 text-red-700 border-red-200",          icon: AlertCircle },
+  PENDING:   { label: "Pending",   cls: "bg-warning-soft text-warning-fg border-warning-border", icon: Clock },
+  CONFIRMED: { label: "Confirmed", cls: "bg-info-soft text-info-fg border-info-border",       icon: CheckCircle2 },
+  COMPLETED: { label: "Completed", cls: "bg-success-soft text-success-fg border-success-border",    icon: CheckCircle2 },
+  CANCELLED: { label: "Cancelled", cls: "bg-danger-soft text-danger-fg border-danger-border",          icon: AlertCircle },
 };
 
 export default async function PatientDashboard() {
@@ -48,7 +50,7 @@ export default async function PatientDashboard() {
   const stats = [
     { label: "Upcoming", value: upcoming.length, icon: CalendarDays, href: "/patient/appointments", color: "text-primary" },
     { label: "Total Visits", value: totalVisits,  icon: FileText,     href: "/patient/records",      color: "text-brand-emerald" },
-    { label: "Pending Bills", value: pendingBills, icon: CreditCard,  href: "/patient/billing",      color: "text-yellow-600" },
+    { label: "Pending Bills", value: pendingBills, icon: CreditCard,  href: "/patient/billing",      color: "text-warning" },
   ];
 
   const firstName = session.user.name?.split(" ")[0] ?? "there";

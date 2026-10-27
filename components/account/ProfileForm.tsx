@@ -70,7 +70,7 @@ export default function ProfileForm({ fields, note }: { fields: ProfileField[]; 
         ))}
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className={`text-xs ${message ? (message.ok ? "text-emerald-700" : "text-destructive") : "text-muted-foreground"}`}>
+        <p className={`text-xs ${message ? (message.ok ? "text-success-fg" : "text-destructive") : "text-muted-foreground"}`}>
           {message?.text ?? note ?? ""}
         </p>
         <button

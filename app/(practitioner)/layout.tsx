@@ -1,22 +1,6 @@
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import DashboardSidebar from "@/components/DashboardSidebar";
+import DashboardShell from "@/components/app/DashboardShell";
 import { Role } from "@/lib/constants";
 
-export default async function PractitionerLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
-
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== Role.PRACTITIONER) redirect("/login");
-
-  return (
-    <div className="min-h-screen bg-background">
-      <DashboardSidebar
-        role={session.user.role}
-        userName={session.user.name}
-        userEmail={session.user.email}
-      />
-      <main className="ml-64 min-h-screen">{children}</main>
-    </div>
-  );
+export default function PractitionerLayout({ children }: { children: React.ReactNode }) {
+  return <DashboardShell role={Role.PRACTITIONER}>{children}</DashboardShell>;
 }

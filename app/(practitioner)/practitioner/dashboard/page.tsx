@@ -7,8 +7,10 @@ import PractitionerAppointmentActions from "./PractitionerAppointmentActions";
 import { clinicDateKey, formatDateTime } from "@/lib/format";
 import { TRIAGE_PRIORITY, TriageLevel, symptomLabels } from "@/lib/triage";
 
+export const metadata = { title: "Triage Queue" };
+
 const TRIAGE_BADGE: Record<string, string> = {
-  [TriageLevel.EMERGENCY]: "bg-red-600 text-white border-red-600",
+  [TriageLevel.EMERGENCY]: "bg-danger text-white border-danger",
   [TriageLevel.URGENT]: "bg-amber-100 text-amber-800 border-amber-300",
   [TriageLevel.ROUTINE]: "bg-secondary text-muted-foreground border-border",
 };
@@ -57,13 +59,13 @@ export default async function PractitionerDashboard() {
 
   const stats = [
     { label: "Today's Schedule", value: todayAppts.length, icon: CalendarDays, color: "text-primary" },
-    { label: "Active Queue", value: pendingOrUpcoming.length, icon: Clock, color: "text-amber-600" },
-    { label: "Urgent / Emergency", value: flagged.length, icon: AlertTriangle, color: "text-red-600" },
-    { label: "Completed Consultations", value: completed.length, icon: CheckCircle2, color: "text-emerald-600" },
+    { label: "Active Queue", value: pendingOrUpcoming.length, icon: Clock, color: "text-warning" },
+    { label: "Urgent / Emergency", value: flagged.length, icon: AlertTriangle, color: "text-danger" },
+    { label: "Completed Consultations", value: completed.length, icon: CheckCircle2, color: "text-success" },
   ];
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="max-w-6xl">
       {/* Top Header */}
       <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -73,11 +75,11 @@ export default async function PractitionerDashboard() {
           <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
             <span className="font-semibold text-primary">{practitioner.specialty}</span> · {practitioner.location || "Lusaka, Zambia"} · 
             {practitioner.isVerified ? (
-              <span className="inline-flex items-center gap-1 text-emerald-600 font-semibold text-xs">
+              <span className="inline-flex items-center gap-1 text-success font-semibold text-xs">
                 <ShieldCheck className="w-3.5 h-3.5" /> Licensed & Verified ({practitioner.licenseNo})
               </span>
             ) : (
-              <span className="text-amber-600 font-medium text-xs">Verification in progress</span>
+              <span className="text-warning font-medium text-xs">Verification in progress</span>
             )}
           </p>
         </div>
@@ -119,7 +121,7 @@ export default async function PractitionerDashboard() {
               key={a.id}
               className={`bg-card border rounded-2xl p-6 shadow-sm ${
                 a.triageLevel === TriageLevel.EMERGENCY && pendingOrUpcoming.includes(a)
-                  ? "border-red-300 ring-1 ring-red-200"
+                  ? "border-danger-border-strong ring-1 ring-danger-border"
                   : "border-border"
               }`}
             >
@@ -136,12 +138,12 @@ export default async function PractitionerDashboard() {
                       </span>
                       <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                         a.status === AppointmentStatus.COMPLETED
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          ? "bg-success-soft text-success-fg border border-success-border"
                           : a.status === AppointmentStatus.CONFIRMED
-                          ? "bg-blue-50 text-blue-700 border border-blue-200"
+                          ? "bg-info-soft text-info-fg border border-info-border"
                           : a.status === AppointmentStatus.CANCELLED
-                          ? "bg-red-50 text-red-700 border border-red-200"
-                          : "bg-amber-50 text-amber-700 border border-amber-200"
+                          ? "bg-danger-soft text-danger-fg border border-danger-border"
+                          : "bg-warning-soft text-warning-fg border border-warning-border"
                       }`}>
                         {a.status}
                       </span>
@@ -174,11 +176,11 @@ export default async function PractitionerDashboard() {
                     )}
 
                     {a.ehrRecord && (
-                      <div className="mt-3 p-3 bg-emerald-50/70 border border-emerald-200/60 rounded-xl text-xs space-y-1">
-                        <p className="font-bold text-emerald-900">Recorded Clinical EHR:</p>
-                        <p><span className="font-semibold text-emerald-800">Diagnosis:</span> {a.ehrRecord.diagnosis}</p>
+                      <div className="mt-3 p-3 bg-success-soft/70 border border-success-border/60 rounded-xl text-xs space-y-1">
+                        <p className="font-bold text-success-deep">Recorded Clinical EHR:</p>
+                        <p><span className="font-semibold text-success-deep">Diagnosis:</span> {a.ehrRecord.diagnosis}</p>
                         {a.ehrRecord.prescription && (
-                          <p><span className="font-semibold text-emerald-800">Prescription:</span> {a.ehrRecord.prescription}</p>
+                          <p><span className="font-semibold text-success-deep">Prescription:</span> {a.ehrRecord.prescription}</p>
                         )}
                       </div>
                     )}

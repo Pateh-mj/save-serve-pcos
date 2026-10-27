@@ -4,6 +4,8 @@ import { Role } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import UserControls from "./UserControls";
 
+export const metadata = { title: "Users & Tiers" };
+
 const ROLE_TABS = [
   { role: Role.PATIENT, label: "Patients" },
   { role: Role.PRACTITIONER, label: "Practitioners" },
@@ -12,9 +14,9 @@ const ROLE_TABS = [
 ];
 
 const TIER_STYLE: Record<string, string> = {
-  FREE: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  FREE: "bg-success-soft text-success-fg border-success-border",
   BASIC: "bg-secondary text-foreground border-border",
-  PREMIUM: "bg-violet-50 text-violet-700 border-violet-200",
+  PREMIUM: "bg-premium-soft text-premium-fg border-premium-border",
 };
 
 export default async function AdminUsersPage({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
@@ -33,7 +35,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
   const countFor = (r: string) => counts.find((c) => c.role === r)?._count ?? 0;
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="max-w-6xl">
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold text-foreground">Users & Classification</h1>
         <p className="text-sm text-muted-foreground mt-1">

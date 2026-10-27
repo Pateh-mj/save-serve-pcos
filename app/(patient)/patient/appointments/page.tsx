@@ -9,11 +9,13 @@ import RateVisit from "./RateVisit";
 import { formatDateTime } from "@/lib/format";
 import { TriageLevel } from "@/lib/triage";
 
+export const metadata = { title: "My Appointments" };
+
 const STATUS_STYLE: Record<string, string> = {
-  [AppointmentStatus.PENDING]:   "bg-amber-50 text-amber-700 border border-amber-200",
-  [AppointmentStatus.CONFIRMED]: "bg-blue-50 text-blue-700 border border-blue-200",
+  [AppointmentStatus.PENDING]:   "bg-warning-soft text-warning-fg border border-warning-border",
+  [AppointmentStatus.CONFIRMED]: "bg-info-soft text-info-fg border border-info-border",
   [AppointmentStatus.COMPLETED]: "bg-accent text-primary border border-primary/20",
-  [AppointmentStatus.CANCELLED]: "bg-red-50 text-red-600 border border-red-200",
+  [AppointmentStatus.CANCELLED]: "bg-danger-soft text-danger border border-danger-border",
 };
 
 export default async function AppointmentsPage() {
@@ -41,7 +43,7 @@ export default async function AppointmentsPage() {
   const past = appointments.filter((a) => !upcoming.includes(a));
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="max-w-4xl">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-extrabold text-foreground">My Appointments</h1>
@@ -74,7 +76,7 @@ export default async function AppointmentsPage() {
                 </div>
                 {a.triageLevel !== TriageLevel.ROUTINE && (
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${
-                    a.triageLevel === TriageLevel.EMERGENCY ? "bg-red-50 text-red-700 border-red-200" : "bg-amber-50 text-amber-700 border-amber-200"
+                    a.triageLevel === TriageLevel.EMERGENCY ? "bg-danger-soft text-danger-fg border-danger-border" : "bg-warning-soft text-warning-fg border-warning-border"
                   }`}>
                     {a.triageLevel}
                   </span>

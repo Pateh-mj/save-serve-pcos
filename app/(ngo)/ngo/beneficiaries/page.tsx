@@ -6,6 +6,8 @@ import { BillingStatus } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import { abbreviateName } from "@/lib/ngo";
 
+export const metadata = { title: "Beneficiaries" };
+
 const SPECIALTY: Record<string, string> = { NURSE: "Nursing", PHARMACIST: "Pharmacy", PHYSIOTHERAPIST: "Physiotherapy" };
 
 export default async function NgoBeneficiariesPage() {
@@ -28,7 +30,7 @@ export default async function NgoBeneficiariesPage() {
   const total = visits.reduce((sum, v) => sum + (v.subsidyAmount ?? 0), 0);
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="max-w-5xl">
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold text-foreground">Beneficiaries</h1>
         <p className="text-sm text-muted-foreground mt-1">Visits paid for from your fund.</p>

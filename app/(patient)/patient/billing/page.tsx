@@ -7,11 +7,13 @@ import { BillingStatus } from "@/lib/constants";
 import BillingItemActions from "./BillingItemActions";
 import { formatDate } from "@/lib/format";
 
+export const metadata = { title: "My Billing" };
+
 const STATUS_STYLE: Record<string, { cls: string; label: string; icon: typeof CheckCircle2 }> = {
-  [BillingStatus.PAID]:       { cls: "bg-emerald-50 text-emerald-700 border border-emerald-200", label: "Paid", icon: CheckCircle2 },
-  [BillingStatus.SUBSIDIZED]: { cls: "bg-emerald-50 text-emerald-700 border border-emerald-200", label: "100% Subsidised", icon: ShieldCheck },
-  [BillingStatus.PENDING]:    { cls: "bg-amber-50 text-amber-700 border border-amber-200", label: "Pending Payment", icon: Clock },
-  [BillingStatus.WAIVED]:     { cls: "bg-blue-50 text-blue-700 border border-blue-200", label: "Fee Waived", icon: CheckCircle2 },
+  [BillingStatus.PAID]:       { cls: "bg-success-soft text-success-fg border border-success-border", label: "Paid", icon: CheckCircle2 },
+  [BillingStatus.SUBSIDIZED]: { cls: "bg-success-soft text-success-fg border border-success-border", label: "100% Subsidised", icon: ShieldCheck },
+  [BillingStatus.PENDING]:    { cls: "bg-warning-soft text-warning-fg border border-warning-border", label: "Pending Payment", icon: Clock },
+  [BillingStatus.WAIVED]:     { cls: "bg-info-soft text-info-fg border border-info-border", label: "Fee Waived", icon: CheckCircle2 },
 };
 
 export default async function BillingPage() {
@@ -47,7 +49,7 @@ export default async function BillingPage() {
     .reduce((sum, b) => sum + (b.discountedAmount ?? b.amount), 0);
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="max-w-4xl">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-extrabold text-foreground">My Billing & Subsidies</h1>
@@ -64,7 +66,7 @@ export default async function BillingPage() {
       <div className="grid sm:grid-cols-3 gap-4 mb-10">
         <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Pending Payment</p>
-          <p className="text-3xl font-extrabold text-amber-600">ZMW {totalPending.toFixed(2)}</p>
+          <p className="text-3xl font-extrabold text-warning">ZMW {totalPending.toFixed(2)}</p>
           <p className="text-xs text-muted-foreground mt-1">Outstanding patient share</p>
         </div>
         <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">

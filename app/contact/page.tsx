@@ -3,7 +3,7 @@ import { Mail, MapPin, Phone, BookOpen, GraduationCap } from "lucide-react";
 import { RESEARCH } from "@/lib/research";
 import ContactForm from "./ContactForm";
 
-export const metadata = { title: "Contact — SaveServe PCOS" };
+export const metadata = { title: "Contact" };
 
 export default function ContactPage() {
   return (

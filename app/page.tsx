@@ -11,7 +11,7 @@ import {
 } from "@/lib/research";
 
 const PROBLEM_ICONS = [WifiOff, FileText, AlertTriangle];
-const PROBLEM_COLORS = ["text-red-500 bg-red-50", "text-blue-500 bg-blue-50", "text-amber-500 bg-amber-50"];
+const PROBLEM_COLORS = ["text-danger bg-danger-soft", "text-info bg-info-soft", "text-warning bg-warning-soft"];
 
 const features = [
   {
@@ -324,7 +324,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
               {
-                icon: Users, label: "Patients", color: "bg-blue-50 text-blue-600",
+                icon: Users, label: "Patients", color: "bg-info-soft text-info",
                 points: [
                   "Book on the web or by USSD — no internet needed on USSD",
                   "Symptom triage when booking",
@@ -335,7 +335,7 @@ export default function Home() {
                 href: "/patients", cta: "For Patients",
               },
               {
-                icon: Stethoscope, label: "Healthcare Staff", color: "bg-green-50 text-primary",
+                icon: Stethoscope, label: "Healthcare Staff", color: "bg-success-soft text-primary",
                 points: [
                   "Practitioner command centre with a triage-ordered queue",
                   "Weekly availability and schedule",
@@ -346,7 +346,7 @@ export default function Home() {
                 href: "/login", cta: "Staff Login",
               },
               {
-                icon: HandCoins, label: "Funding Partners", color: "bg-violet-50 text-violet-600",
+                icon: HandCoins, label: "Funding Partners", color: "bg-premium-soft text-premium",
                 points: [
                   "Top up the community health equity fund",
                   "See every subsidised visit the fund paid for",

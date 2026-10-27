@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { Users, CalendarDays, Heart, CreditCard } from "lucide-react";
 import { AppointmentStatus, BillingStatus, Channel, Role } from "@/lib/constants";
 
+export const metadata = { title: "Admin Dashboard" };
+
 /** Zero-filled counts for every known key, so empty categories still show. */
 function tally(keys: readonly string[], counts: [string, number][]) {
   const out: Record<string, number> = Object.fromEntries(keys.map((k) => [k, 0]));
@@ -51,7 +53,7 @@ export default async function AdminDashboard() {
   ];
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="max-w-6xl">
       <div className="mb-8">
         <h1 className="text-2xl font-extrabold text-foreground">System Overview</h1>
         <p className="text-sm text-muted-foreground mt-1">Platform-wide usage and Robin Hood subsidy totals</p>

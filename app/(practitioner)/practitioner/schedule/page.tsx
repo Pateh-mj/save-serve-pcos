@@ -6,6 +6,8 @@ import { AppointmentStatus } from "@/lib/constants";
 import AvailabilityEditor from "./AvailabilityEditor";
 import { clinicDateKey, formatDate, formatTime } from "@/lib/format";
 
+export const metadata = { title: "Schedule" };
+
 export default async function SchedulePage() {
     const session = await auth();
     if (!session?.user?.email) redirect("/login");
@@ -43,7 +45,7 @@ export default async function SchedulePage() {
     });
 
     return (
-        <div className="p-8 max-w-6xl">
+        <div className="max-w-6xl">
             <div className="mb-8">
                 <h1 className="text-2xl font-extrabold text-foreground">Schedule</h1>
                 <p className="text-sm text-muted-foreground mt-1">
@@ -85,8 +87,8 @@ export default async function SchedulePage() {
                                                     </p>
                                                 </div>
                                                 <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${a.status === AppointmentStatus.CONFIRMED
-                                                        ? "bg-blue-50 text-blue-700 border border-blue-200"
-                                                        : "bg-amber-50 text-amber-700 border border-amber-200"
+                                                        ? "bg-info-soft text-info-fg border border-info-border"
+                                                        : "bg-warning-soft text-warning-fg border border-warning-border"
                                                     }`}>
                                                     {a.status}
                                                 </span>

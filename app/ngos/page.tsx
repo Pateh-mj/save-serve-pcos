@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { Heart, BarChart3, Users, ShieldCheck, ArrowRight, BookOpen } from "lucide-react";
 
-export const metadata = { title: "For Funding Partners — SaveServe" };
+export const metadata = { title: "For Funding Partners" };
 
 export default function NGOsPage() {
   return (

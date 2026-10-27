@@ -5,6 +5,8 @@ import Link from "next/link";
 import { FileText, Plus } from "lucide-react";
 import { formatDate } from "@/lib/format";
 
+export const metadata = { title: "Health Records" };
+
 export default async function RecordsPage() {
   const session = await auth();
   if (!session?.user?.email) redirect("/login");
@@ -22,7 +24,7 @@ export default async function RecordsPage() {
   if (!patient) redirect("/login");
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="max-w-4xl">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-extrabold text-foreground">Health Records</h1>

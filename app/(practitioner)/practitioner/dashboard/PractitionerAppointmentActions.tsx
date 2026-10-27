@@ -124,7 +124,7 @@ export default function PractitionerAppointmentActions({ appointment }: Props) {
             <button
               onClick={() => setShowEhrModal(true)}
               disabled={loading}
-              className="px-3.5 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-xl hover:bg-emerald-700 disabled:opacity-60 flex items-center gap-1.5 transition shadow-sm"
+              className="px-3.5 py-2 bg-success text-white text-xs font-semibold rounded-xl hover:bg-success-fg disabled:opacity-60 flex items-center gap-1.5 transition shadow-sm"
             >
               <FileText className="w-3.5 h-3.5" /> Complete Consultation & EHR
             </button>

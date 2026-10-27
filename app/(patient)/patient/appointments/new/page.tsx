@@ -12,9 +12,9 @@ import {
 } from "@/lib/triage";
 
 const TRIAGE_STYLE: Record<string, string> = {
-  [TriageLevel.EMERGENCY]: "bg-red-50 text-red-700 border-red-200",
-  [TriageLevel.URGENT]: "bg-amber-50 text-amber-700 border-amber-200",
-  [TriageLevel.ROUTINE]: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  [TriageLevel.EMERGENCY]: "bg-danger-soft text-danger-fg border-danger-border",
+  [TriageLevel.URGENT]: "bg-warning-soft text-warning-fg border-warning-border",
+  [TriageLevel.ROUTINE]: "bg-success-soft text-success-fg border-success-border",
 };
 
 const DURATIONS = [
@@ -141,8 +141,8 @@ function BookingForm() {
     const fee = booked.billing?.discountedAmount ?? booked.billing?.amount ?? 0;
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center max-w-lg mx-auto">
-        <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mb-4">
-          <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+        <div className="w-16 h-16 rounded-full bg-success-soft flex items-center justify-center mb-4">
+          <CheckCircle2 className="w-8 h-8 text-success" />
         </div>
         <h2 className="text-2xl font-extrabold text-foreground mb-1">Appointment Booked</h2>
         <p className="text-sm text-muted-foreground mb-6">Reference {booked.id.slice(-6).toUpperCase()} · an SMS confirmation is on its way</p>
@@ -156,7 +156,7 @@ function BookingForm() {
           <p className="text-xs text-muted-foreground pt-1 border-t border-border">{booked.billingExplanation}</p>
         </div>
         {booked.triageLevel === TriageLevel.EMERGENCY && (
-          <p className="w-full text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-6 text-left">
+          <p className="w-full text-sm text-danger-fg bg-danger-soft border border-danger-border rounded-xl px-4 py-3 mb-6 text-left">
             You reported danger signs. Do not wait for this appointment if you feel worse: call 991 or go to the nearest health facility now.
           </p>
         )}
@@ -210,7 +210,7 @@ function BookingForm() {
             ))}
           </div>
 
-          <p className="text-xs font-semibold text-red-700 mb-2 flex items-center gap-1.5">
+          <p className="text-xs font-semibold text-danger-fg mb-2 flex items-center gap-1.5">
             <AlertTriangle className="w-3.5 h-3.5" /> Danger signs
           </p>
           <div className="flex flex-wrap gap-2 mb-5">
@@ -221,8 +221,8 @@ function BookingForm() {
                 onClick={() => toggleSymptom(code)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   symptoms.includes(code)
-                    ? "bg-red-600 text-white border-red-600"
-                    : "bg-background text-red-700 border-red-200 hover:border-red-400"
+                    ? "bg-danger text-white border-danger"
+                    : "bg-background text-danger-fg border-danger-border hover:border-danger-border-strong"
                 }`}
               >
                 {SYMPTOMS[code].label}

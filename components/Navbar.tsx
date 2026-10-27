@@ -36,11 +36,11 @@ export default function Navbar() {
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${active
                   ? "text-primary bg-accent font-semibold"
                   : highlight
-                    ? "text-amber-900 bg-amber/10 hover:bg-amber/20 font-semibold"
-                    : "text-amber/70 hover:text-foreground hover:bg-secondary"
+                    ? "text-warning-deep bg-warning-soft hover:bg-warning-muted font-semibold"
+                    : "text-foreground/70 hover:text-foreground hover:bg-secondary"
                   }`}
               >
-                {highlight && <PhoneCall className="w-3.5 h-3.5 text-primary" />}
+                {highlight && <PhoneCall className="w-3.5 h-3.5 text-warning-fg" />}
                 {label}
               </Link>
             );

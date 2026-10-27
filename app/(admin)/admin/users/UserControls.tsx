@@ -53,7 +53,7 @@ export default function UserControls({ user }: Props) {
           <button
             aria-label="Save phone"
             onClick={async () => (await update({ phone: phone || null })) && setEditingPhone(false)}
-            className="p-1 rounded-md hover:bg-secondary text-emerald-700"
+            className="p-1 rounded-md hover:bg-secondary text-success-fg"
           >
             <Check className="w-3.5 h-3.5" />
           </button>
@@ -90,8 +90,8 @@ export default function UserControls({ user }: Props) {
           onClick={() => update({ isVerified: !user.isVerified })}
           className={`flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border ${
             user.isVerified
-              ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
-              : "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+              ? "bg-success-soft text-success-fg border-success-border hover:bg-success-muted"
+              : "bg-warning-soft text-warning-fg border-warning-border hover:bg-warning-muted"
           }`}
         >
           {user.isVerified ? <ShieldCheck className="w-3.5 h-3.5" /> : <ShieldOff className="w-3.5 h-3.5" />}

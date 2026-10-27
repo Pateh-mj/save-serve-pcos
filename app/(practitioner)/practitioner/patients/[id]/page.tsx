@@ -7,11 +7,13 @@ import { AppointmentStatus } from "@/lib/constants";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { symptomLabels, TriageLevel } from "@/lib/triage";
 
+export const metadata = { title: "Patient Chart" };
+
 const STATUS_STYLE: Record<string, string> = {
-  PENDING: "bg-amber-50 text-amber-700 border-amber-200",
-  CONFIRMED: "bg-blue-50 text-blue-700 border-blue-200",
-  COMPLETED: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  CANCELLED: "bg-red-50 text-red-700 border-red-200",
+  PENDING: "bg-warning-soft text-warning-fg border-warning-border",
+  CONFIRMED: "bg-info-soft text-info-fg border-info-border",
+  COMPLETED: "bg-success-soft text-success-fg border-success-border",
+  CANCELLED: "bg-danger-soft text-danger-fg border-danger-border",
 };
 
 function age(dob: Date | null) {
@@ -49,7 +51,7 @@ export default async function PatientChartPage({ params }: { params: Promise<{ i
   const years = age(patient.dateOfBirth);
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="max-w-5xl">
       <Link href="/practitioner/patients" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6">
         <ArrowLeft className="w-4 h-4" /> All patients
       </Link>
@@ -103,7 +105,7 @@ export default async function PatientChartPage({ params }: { params: Promise<{ i
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   {a.channel} ·{" "}
-                  <span className={a.triageLevel === TriageLevel.EMERGENCY ? "text-red-700 font-semibold" : a.triageLevel === TriageLevel.URGENT ? "text-amber-700 font-semibold" : ""}>
+                  <span className={a.triageLevel === TriageLevel.EMERGENCY ? "text-danger-fg font-semibold" : a.triageLevel === TriageLevel.URGENT ? "text-warning-fg font-semibold" : ""}>
                     {a.triageLevel}
                   </span>
                   {a.symptoms && ` · ${symptomLabels(a.symptoms).join(", ")}`}

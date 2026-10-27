@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { FileText } from "lucide-react";
 import { formatDate } from "@/lib/format";
 
+export const metadata = { title: "EHR Records" };
+
 export default async function PractitionerRecordsPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
@@ -21,7 +23,7 @@ export default async function PractitionerRecordsPage() {
   if (!practitioner) redirect("/login");
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="max-w-4xl">
       <div className="mb-8">
         <h1 className="text-2xl font-extrabold text-foreground">EHR Records</h1>
         <p className="text-sm text-muted-foreground mt-1">Clinical records you have authored</p>

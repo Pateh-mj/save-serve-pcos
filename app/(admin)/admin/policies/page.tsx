@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { getConsultationFee } from "@/lib/settings";
 import { FeeEditor, PolicyEditor } from "./PolicyEditor";
 
+export const metadata = { title: "Policy Guardian" };
+
 const TIER_ORDER: Record<string, number> = { FREE: 0, BASIC: 1, PREMIUM: 2 };
 
 function maxVisits(rules: string): number | null {
@@ -18,7 +20,7 @@ export default async function AdminPoliciesPage() {
   policies.sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="max-w-4xl">
       <div className="mb-8">
         <h1 className="text-2xl font-extrabold text-foreground">Policy Guardian Settings</h1>
         <p className="text-sm text-muted-foreground mt-1">

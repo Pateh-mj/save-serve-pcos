@@ -6,6 +6,8 @@ import { formatDate } from "@/lib/format";
 import { LEDGER_LABEL } from "@/lib/ngo";
 import NgoTopupModal from "../dashboard/NgoTopupModal";
 
+export const metadata = { title: "Funding & Ledger" };
+
 const TYPE_ORDER = ["OPENING", "TOPUP", "PREMIUM_CREDIT", "SUBSIDY_DEBIT", "SUBSIDY_REFUND"];
 
 export default async function NgoFundingPage() {
@@ -23,7 +25,7 @@ export default async function NgoFundingPage() {
   const reconciled = Math.abs(ledgerTotal - ngo.fundBalance) < 0.01;
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="max-w-5xl">
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-foreground">Funding &amp; Ledger</h1>
@@ -36,7 +38,7 @@ export default async function NgoFundingPage() {
         <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Current balance</p>
           <p className="text-3xl font-extrabold text-foreground tabular-nums">ZMW {ngo.fundBalance.toFixed(2)}</p>
-          <p className={`mt-3 inline-flex items-center gap-1.5 text-xs font-semibold ${reconciled ? "text-emerald-700" : "text-red-700"}`}>
+          <p className={`mt-3 inline-flex items-center gap-1.5 text-xs font-semibold ${reconciled ? "text-success-fg" : "text-danger-fg"}`}>
             {reconciled ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
             {reconciled ? "Reconciles with the ledger" : `Ledger total ZMW ${ledgerTotal.toFixed(2)} differs`}
           </p>
@@ -52,7 +54,7 @@ export default async function NgoFundingPage() {
                   <dt className="text-muted-foreground">
                     {LEDGER_LABEL[type]} <span className="text-xs">({row?._count ?? 0})</span>
                   </dt>
-                  <dd className={`font-semibold tabular-nums ${amount < 0 ? "text-red-600" : "text-foreground"}`}>
+                  <dd className={`font-semibold tabular-nums ${amount < 0 ? "text-danger" : "text-foreground"}`}>
                     {amount < 0 ? "−" : ""}ZMW {Math.abs(amount).toFixed(2)}
                   </dd>
                 </div>
@@ -84,7 +86,7 @@ export default async function NgoFundingPage() {
                   </td>
                   <td className="px-3 py-2.5 font-medium text-foreground">{LEDGER_LABEL[t.type] ?? t.type}</td>
                   <td className="px-3 py-2.5 text-muted-foreground">{t.note ?? ""}</td>
-                  <td className={`px-5 py-2.5 text-right font-semibold tabular-nums ${t.amount >= 0 ? "text-emerald-700" : "text-red-600"}`}>
+                  <td className={`px-5 py-2.5 text-right font-semibold tabular-nums ${t.amount >= 0 ? "text-success-fg" : "text-danger"}`}>
                     {t.amount >= 0 ? "+" : "−"}ZMW {Math.abs(t.amount).toFixed(2)}
                   </td>
                 </tr>

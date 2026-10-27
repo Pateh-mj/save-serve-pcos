@@ -7,6 +7,8 @@ import AccountSection from "@/components/account/AccountSection";
 import ProfileForm from "@/components/account/ProfileForm";
 import PasswordForm from "@/components/account/PasswordForm";
 
+export const metadata = { title: "My Profile" };
+
 const TIER_TEXT: Record<string, string> = {
   FREE: "Community tier: your visits are funded from the community health equity fund, up to a monthly limit.",
   BASIC: "Standard tier: you pay the standard consultation fee.",

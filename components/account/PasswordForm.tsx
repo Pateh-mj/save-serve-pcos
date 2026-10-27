@@ -57,7 +57,7 @@ export default function PasswordForm() {
         </label>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className={`text-xs ${message ? (message.ok ? "text-emerald-700" : "text-destructive") : "text-muted-foreground"}`}>
+        <p className={`text-xs ${message ? (message.ok ? "text-success-fg" : "text-destructive") : "text-muted-foreground"}`}>
           {message?.text ?? "At least 8 characters."}
         </p>
         <button

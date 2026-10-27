@@ -6,6 +6,8 @@ import AccountSection from "@/components/account/AccountSection";
 import ProfileForm from "@/components/account/ProfileForm";
 import PasswordForm from "@/components/account/PasswordForm";
 
+export const metadata = { title: "My Profile" };
+
 const SPECIALTY: Record<string, string> = { NURSE: "Nurse", PHARMACIST: "Pharmacist", PHYSIOTHERAPIST: "Physiotherapist" };
 
 export default async function PractitionerProfilePage() {
@@ -17,7 +19,7 @@ export default async function PractitionerProfilePage() {
   const p = user.practitioner;
 
   return (
-    <div className="p-8 max-w-4xl space-y-6">
+    <div className="max-w-4xl space-y-6">
       <div>
         <h1 className="text-2xl font-extrabold text-foreground">My Profile</h1>
         <p className="text-sm text-muted-foreground mt-1">What patients see when they book, and how SaveServe reaches you.</p>
@@ -35,7 +37,7 @@ export default async function PractitionerProfilePage() {
           </div>
           <div>
             <dt className="text-xs text-muted-foreground">Status</dt>
-            <dd className={`font-semibold inline-flex items-center gap-1 ${p.isVerified ? "text-emerald-700" : "text-amber-700"}`}>
+            <dd className={`font-semibold inline-flex items-center gap-1 ${p.isVerified ? "text-success-fg" : "text-warning-fg"}`}>
               {p.isVerified ? <ShieldCheck className="w-4 h-4" /> : <ShieldAlert className="w-4 h-4" />}
               {p.isVerified ? "Verified" : "Awaiting administrator verification"}
             </dd>

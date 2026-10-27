@@ -6,6 +6,8 @@ import { TriageLevel } from "@/lib/triage";
 import { formatDateTime } from "@/lib/format";
 import CancelAppointmentButton from "@/app/(patient)/patient/appointments/CancelAppointmentButton";
 
+export const metadata = { title: "Appointments" };
+
 const FILTERS = {
   status: Object.values(AppointmentStatus) as string[],
   channel: Object.values(Channel) as string[],
@@ -13,15 +15,15 @@ const FILTERS = {
 };
 
 const STATUS_STYLE: Record<string, string> = {
-  PENDING: "bg-amber-50 text-amber-700 border-amber-200",
-  CONFIRMED: "bg-blue-50 text-blue-700 border-blue-200",
-  COMPLETED: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  CANCELLED: "bg-red-50 text-red-700 border-red-200",
+  PENDING: "bg-warning-soft text-warning-fg border-warning-border",
+  CONFIRMED: "bg-info-soft text-info-fg border-info-border",
+  COMPLETED: "bg-success-soft text-success-fg border-success-border",
+  CANCELLED: "bg-danger-soft text-danger-fg border-danger-border",
 };
 
 const TRIAGE_STYLE: Record<string, string> = {
-  EMERGENCY: "text-red-700 font-bold",
-  URGENT: "text-amber-700 font-semibold",
+  EMERGENCY: "text-danger-fg font-bold",
+  URGENT: "text-warning-fg font-semibold",
   ROUTINE: "text-muted-foreground",
 };
 
@@ -62,7 +64,7 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
   ]);
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="max-w-6xl">
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold text-foreground">Appointments</h1>
         <p className="text-sm text-muted-foreground mt-1">
@@ -134,7 +136,7 @@ export default async function AdminAppointmentsPage({ searchParams }: { searchPa
                           <p className="text-[11px] text-muted-foreground">{a.billing.status}</p>
                         </>
                       ) : (
-                        <span className="text-xs text-red-600">missing</span>
+                        <span className="text-xs text-danger">missing</span>
                       )}
                     </td>
                     <td className="px-5 py-2.5 text-right">{active && <CancelAppointmentButton appointmentId={a.id} />}</td>

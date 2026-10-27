@@ -1,6 +1,8 @@
 import { CheckCircle2, XCircle, Info, Download } from "lucide-react";
 import { getEvaluationReport } from "@/lib/evaluation";
 
+export const metadata = { title: "Evaluation" };
+
 // Evaluation dashboard for report objective 4 / RQ4: system response time,
 // synchronisation accuracy and user satisfaction, measured from live usage.
 
@@ -32,7 +34,7 @@ export default async function EvaluationPage() {
   ];
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="max-w-6xl">
       <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-foreground">System Evaluation</h1>
@@ -114,7 +116,7 @@ export default async function EvaluationPage() {
           </div>
           <span
             className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full border ${
-              failing === 0 ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-700 border-red-200"
+              failing === 0 ? "bg-success-soft text-success-fg border-success-border" : "bg-danger-soft text-danger-fg border-danger-border"
             }`}
           >
             {failing === 0 ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
@@ -126,9 +128,9 @@ export default async function EvaluationPage() {
             const state = c.passed ? "pass" : c.informational ? "info" : "fail";
             return (
               <div key={c.name} className="flex items-start gap-3 px-5 py-3">
-                {state === "pass" && <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />}
-                {state === "fail" && <XCircle className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />}
-                {state === "info" && <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />}
+                {state === "pass" && <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0" />}
+                {state === "fail" && <XCircle className="w-4 h-4 text-danger mt-0.5 shrink-0" />}
+                {state === "info" && <Info className="w-4 h-4 text-warning mt-0.5 shrink-0" />}
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-foreground">{c.name}</p>
                   <p className="text-xs text-muted-foreground">{c.detail}</p>

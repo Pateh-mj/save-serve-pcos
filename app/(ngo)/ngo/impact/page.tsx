@@ -3,6 +3,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { clinicDateKey, formatDate } from "@/lib/format";
 
+export const metadata = { title: "Impact Report" };
+
 const MONTHS = 6;
 
 type Month = { key: string; visits: number; subsidy: number; refunds: number; premium: number; topups: number };
@@ -56,7 +58,7 @@ export default async function NgoImpactPage() {
   const internalShare = totals.premium + totals.topups > 0 ? totals.premium / (totals.premium + totals.topups) : 0;
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="max-w-5xl">
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold text-foreground">Impact Report</h1>
         <p className="text-sm text-muted-foreground mt-1">

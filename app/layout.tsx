@@ -11,7 +11,7 @@ const inter = Inter({
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "SaveServe — PCOS Healthcare Platform",
+  title: { default: "SaveServe — PCOS Healthcare Platform", template: "%s · SaveServe" },
   description:
     "Patient-Centric Orchestration System connecting patients with mobile healthcare practitioners across Zambia via web and USSD.",
   applicationName: "SaveServe",
